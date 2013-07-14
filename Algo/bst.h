@@ -44,7 +44,8 @@ public:
 	void insert(int* p,int size);
 	void insert(const vector<int>& v);
 
-	vector<int> walk(WALKORDER wo, bool recursive);
+	vector<int> walk(WALKORDER wo, bool norecursive=true);
+	void nullify();// set all the keys to NULL Do it iteratively in O(N) time with O(1) space complexity where N is the number of nodes in the tree.
 
 
 	size_t height();

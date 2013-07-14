@@ -134,8 +134,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive){
 			stack<bstnode*> stk;
 			bstnode*tmp=proot;
 			helper_pushallleftsidenodes(proot,stk,v);
-			while (!stk.empty())
-			{
+			while (!stk.empty()){
 				bstnode* tmp=stk.top();
 				//v.push_back(tmp->d);
 				stk.pop();
@@ -143,26 +142,6 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive){
 					helper_pushallleftsidenodes(tmp->r,stk,v);
 				}
 			}
-#if 0
-			while(tmp){
-				v.push_back(tmp->d);
-				stk.push(tmp);
-				if (tmp->l){
-					tmp=tmp->l;
-				}else{
-					// look for the first right child of the nodes in stack - tmp2
-					tmp=NULL;
-					while (!tmp){
-						if (!stk.empty()){
-							tmp=stk.top()->r;
-							stk.pop();
-						}else{
-							tmp=NULL;break; // break the two while loops
-						}
-					}
-				}
-			}
-#endif
 		}else{
 
 		}
@@ -171,8 +150,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive){
 			//iteratively
 			stack<bstnode*> stk;
 			helper_pushallleftsidenodes(proot,stk);
-			while (!stk.empty())
-			{
+			while (!stk.empty()){
 				bstnode* tmp=stk.top();
 				v.push_back(tmp->d);
 				stk.pop();
@@ -180,56 +158,16 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive){
 					helper_pushallleftsidenodes(tmp->r,stk);
 				}
 			}
-#if 0
-			stack<bstnode*> stk;//ditto
-			set<bstnode*> processed_nodes; // processed but not printed
-			bstnode*tmp=proot;//ditto
-			bool pushmode=true;
-			while (tmp){
-				if(pushmode){
-					stk.push(tmp);
-					processed_nodes.insert(tmp);
-					if (tmp->l){
-						tmp=tmp->l;
-					}else if (tmp->r){
-						cout<< tmp->d << endl;// PRINT WHEN POPPING OUT
-						stk.pop();
-						tmp=tmp->r;
-					}else{
-						//leaf
-						stk.pop();
-						pushmode=false;
-						cout<< tmp->d << endl;// PRINT WHEN POPPING OUT
-						v.push_back(tmp->d);
-						if (!stk.empty()){tmp=stk.top();}else{break;}
-					}
-				}else{
-					if (tmp->r && processed_nodes.count(tmp->r)==0){
-						cout<< tmp->d << endl;
-						stk.pop();
-						tmp=tmp->r;
-						pushmode=true;
-					}else{
-						stk.pop();
-						cout<< tmp->d << endl;
-						v.push_back(tmp->d);
-						if (!stk.empty()){tmp=stk.top();}else{break;}
-
-					}
-				}
-			}
-#endif
 		}else{
 			v=walk_from_node(proot,wo,norecursive);
-			
 		}
 	}else if(wo==POSTORDER){
 		if (norecursive){
+			// http://www.geeksforgeeks.org/iterative-postorder-traversal/
 			stack<bstnode*> stk;
 			bstnode*tmp=proot;
 			helper_pushallrightsidenodes(proot,stk,v);
-			while (!stk.empty())
-			{
+			while (!stk.empty()){
 				bstnode* tmp=stk.top();
 				//v.push_back(tmp->d);
 				stk.pop();
@@ -238,58 +176,12 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive){
 				}
 			}
 			reverse(v.begin(),v.end());
-
-
-#if 0
-			// the key point is
-			//(1)what is inside the stack  left->left->left
-			//(2)when to print the node[push/pop] 
-			// the last one must be the root
-			stack<bstnode*> stk;//ditto
-			set<bstnode*> processed_nodes; // processed but not printed
-			bstnode*tmp=proot;//ditto
-			bool pushmode=true;
-			while (tmp){
-				if(pushmode){
-					stk.push(tmp);
-					processed_nodes.insert(tmp);
-					if (tmp->l){
-						tmp=tmp->l;
-					}else if (tmp->r){
-						tmp=tmp->r;
-					}else{
-						//leaf
-						stk.pop();
-						pushmode=false;
-						//cout<< tmp->d << endl; PRINT WHEN POPPING OUT
-						v.push_back(tmp->d);
-						if (!stk.empty()){tmp=stk.top();}else{break;}
-					}
-				}else{
-					if (tmp->r && processed_nodes.count(tmp->r)==0){
-						tmp=tmp->r;
-						pushmode=true;
-					}else{
-						stk.pop();
-						//cout<< tmp->d << endl;
-						v.push_back(tmp->d);
-						if (!stk.empty()){tmp=stk.top();}else{break;}
-
-					}
-				}
-			}
-#endif
 		}else{
 			v=walk_from_node(proot,POSTORDER,true);
-			
-
 		}
-		
-
 	}else if(wo==LAYERBYLAYER){
 
 	}
-
 	return v;
 }
 

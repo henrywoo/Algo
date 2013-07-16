@@ -51,7 +51,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -67,7 +67,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -79,18 +79,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bst.cpp" />
+    <ClCompile Include="dlist.cpp" />
     <ClCompile Include="m.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bst.h" />
     <ClInclude Include="deque.h" />
-    <ClInclude Include="dlist.h" />
+    <ClInclude Include="list.h" />
     <ClInclude Include="dp.h" />
     <ClInclude Include="heap.h" />
     <ClInclude Include="htable.h" />
     <ClInclude Include="queue.h" />
-    <ClInclude Include="slist.h" />
+    <ClCompile Include="slist.cpp" />
     <ClInclude Include="stack.h" />
+    <ClInclude Include="tick.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

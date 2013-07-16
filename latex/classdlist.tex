@@ -1,0 +1,174 @@
+\hypertarget{classdlist}{\section{dlist Class Reference}
+\label{classdlist}\index{dlist@{dlist}}
+}
+
+
+A H\-E\-A\-D\-\_\-\-T\-A\-I\-L Double Linked List.  
+
+
+
+
+{\ttfamily \#include $<$list.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classdlist_a663ac3a48e3d2b426ca2c9a6ee091af3}{dlist} ()
+\item 
+\hyperlink{classdlist_ab185b9b5e9ff48e7f2f1e3a02af30cfd}{dlist} (int $\ast$p, int $\ast$q)
+\item 
+\hyperlink{classdlist_a70f123b97444609b43afcaa13153fd8b}{dlist} (int $\ast$p, int \hyperlink{classdlist_a426b9acc0f63b01e5f4551da5c7f1b84}{size})
+\item 
+\hyperlink{classdlist_ab63bbbb092e126601d75169a60457c04}{dlist} (const vector$<$ int $>$ \&v)
+\item 
+\hyperlink{classdlist_a5636a21a46af659872820e5bd12b0147}{$\sim$dlist} ()
+\item 
+\hyperlink{structdlist__node}{dlist\-\_\-node} $\ast$ \hyperlink{classdlist_a1e591a17f27f9b24eec115f5d74cc8d6}{end} ()
+\begin{DoxyCompactList}\small\item\em pass the end, which is the same as the sentinel in this case \end{DoxyCompactList}\item 
+\hyperlink{structdlist__node}{dlist\-\_\-node} $\ast$ \hyperlink{classdlist_ab8c324da167de0651de38d8302b790fd}{begin} ()
+\item 
+size\-\_\-t \hyperlink{classdlist_a426b9acc0f63b01e5f4551da5c7f1b84}{size} ()
+\item 
+void \hyperlink{classdlist_a0e57be4acd4778e5e97acafe702d265d}{push\-\_\-front} (int n)
+\begin{DoxyCompactList}\small\item\em push new node as the next of sentinel \end{DoxyCompactList}\item 
+void \hyperlink{classdlist_a04759f7a2f3e9026ab1bd17ba44261af}{push\-\_\-front} (int $\ast$p, int $\ast$q)
+\item 
+void \hyperlink{classdlist_a8b296336bec13013bc4068b2d5285e73}{push\-\_\-end} (int n)
+\begin{DoxyCompactList}\small\item\em push new node as the previous of sentinel\par
+ A.\-next=B then B.\-prev=A, they always appear as a pair \end{DoxyCompactList}\item 
+void \hyperlink{classdlist_aec0249d97bef78564429292903a5a331}{reverse} ()
+\begin{DoxyCompactList}\small\item\em swap pointer prev and next for every node including sentinel \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{classdlist_a4939b60463b87c6097dd8d098e2f4b52}{test} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A H\-E\-A\-D\-\_\-\-T\-A\-I\-L Double Linked List. 
+
+Definition at line 24 of file list.\-h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classdlist_a663ac3a48e3d2b426ca2c9a6ee091af3}{\index{dlist@{dlist}!dlist@{dlist}}
+\index{dlist@{dlist}!dlist@{dlist}}
+\subsubsection[{dlist}]{\setlength{\rightskip}{0pt plus 5cm}dlist\-::dlist (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classdlist_a663ac3a48e3d2b426ca2c9a6ee091af3}
+\hypertarget{classdlist_ab185b9b5e9ff48e7f2f1e3a02af30cfd}{\index{dlist@{dlist}!dlist@{dlist}}
+\index{dlist@{dlist}!dlist@{dlist}}
+\subsubsection[{dlist}]{\setlength{\rightskip}{0pt plus 5cm}dlist\-::dlist (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{p, }
+\item[{int $\ast$}]{q}
+\end{DoxyParamCaption}
+)}}\label{classdlist_ab185b9b5e9ff48e7f2f1e3a02af30cfd}
+\hypertarget{classdlist_a70f123b97444609b43afcaa13153fd8b}{\index{dlist@{dlist}!dlist@{dlist}}
+\index{dlist@{dlist}!dlist@{dlist}}
+\subsubsection[{dlist}]{\setlength{\rightskip}{0pt plus 5cm}dlist\-::dlist (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{p, }
+\item[{int}]{size}
+\end{DoxyParamCaption}
+)}}\label{classdlist_a70f123b97444609b43afcaa13153fd8b}
+\hypertarget{classdlist_ab63bbbb092e126601d75169a60457c04}{\index{dlist@{dlist}!dlist@{dlist}}
+\index{dlist@{dlist}!dlist@{dlist}}
+\subsubsection[{dlist}]{\setlength{\rightskip}{0pt plus 5cm}dlist\-::dlist (
+\begin{DoxyParamCaption}
+\item[{const vector$<$ int $>$ \&}]{v}
+\end{DoxyParamCaption}
+)}}\label{classdlist_ab63bbbb092e126601d75169a60457c04}
+\hypertarget{classdlist_a5636a21a46af659872820e5bd12b0147}{\index{dlist@{dlist}!$\sim$dlist@{$\sim$dlist}}
+\index{$\sim$dlist@{$\sim$dlist}!dlist@{dlist}}
+\subsubsection[{$\sim$dlist}]{\setlength{\rightskip}{0pt plus 5cm}dlist\-::$\sim$dlist (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classdlist_a5636a21a46af659872820e5bd12b0147}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classdlist_ab8c324da167de0651de38d8302b790fd}{\index{dlist@{dlist}!begin@{begin}}
+\index{begin@{begin}!dlist@{dlist}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}{\bf dlist\-\_\-node}$\ast$ dlist\-::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classdlist_ab8c324da167de0651de38d8302b790fd}
+\hypertarget{classdlist_a1e591a17f27f9b24eec115f5d74cc8d6}{\index{dlist@{dlist}!end@{end}}
+\index{end@{end}!dlist@{dlist}}
+\subsubsection[{end}]{\setlength{\rightskip}{0pt plus 5cm}{\bf dlist\-\_\-node}$\ast$ dlist\-::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classdlist_a1e591a17f27f9b24eec115f5d74cc8d6}
+
+
+pass the end, which is the same as the sentinel in this case 
+
+\hypertarget{classdlist_a8b296336bec13013bc4068b2d5285e73}{\index{dlist@{dlist}!push\-\_\-end@{push\-\_\-end}}
+\index{push\-\_\-end@{push\-\_\-end}!dlist@{dlist}}
+\subsubsection[{push\-\_\-end}]{\setlength{\rightskip}{0pt plus 5cm}void dlist\-::push\-\_\-end (
+\begin{DoxyParamCaption}
+\item[{int}]{n}
+\end{DoxyParamCaption}
+)}}\label{classdlist_a8b296336bec13013bc4068b2d5285e73}
+
+
+push new node as the previous of sentinel\par
+ A.\-next=B then B.\-prev=A, they always appear as a pair 
+
+\hypertarget{classdlist_a0e57be4acd4778e5e97acafe702d265d}{\index{dlist@{dlist}!push\-\_\-front@{push\-\_\-front}}
+\index{push\-\_\-front@{push\-\_\-front}!dlist@{dlist}}
+\subsubsection[{push\-\_\-front}]{\setlength{\rightskip}{0pt plus 5cm}void dlist\-::push\-\_\-front (
+\begin{DoxyParamCaption}
+\item[{int}]{n}
+\end{DoxyParamCaption}
+)}}\label{classdlist_a0e57be4acd4778e5e97acafe702d265d}
+
+
+push new node as the next of sentinel 
+
+\hypertarget{classdlist_a04759f7a2f3e9026ab1bd17ba44261af}{\index{dlist@{dlist}!push\-\_\-front@{push\-\_\-front}}
+\index{push\-\_\-front@{push\-\_\-front}!dlist@{dlist}}
+\subsubsection[{push\-\_\-front}]{\setlength{\rightskip}{0pt plus 5cm}void dlist\-::push\-\_\-front (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{p, }
+\item[{int $\ast$}]{q}
+\end{DoxyParamCaption}
+)}}\label{classdlist_a04759f7a2f3e9026ab1bd17ba44261af}
+\hypertarget{classdlist_aec0249d97bef78564429292903a5a331}{\index{dlist@{dlist}!reverse@{reverse}}
+\index{reverse@{reverse}!dlist@{dlist}}
+\subsubsection[{reverse}]{\setlength{\rightskip}{0pt plus 5cm}void dlist\-::reverse (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classdlist_aec0249d97bef78564429292903a5a331}
+
+
+swap pointer prev and next for every node including sentinel 
+
+\hypertarget{classdlist_a426b9acc0f63b01e5f4551da5c7f1b84}{\index{dlist@{dlist}!size@{size}}
+\index{size@{size}!dlist@{dlist}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t dlist\-::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classdlist_a426b9acc0f63b01e5f4551da5c7f1b84}
+\hypertarget{classdlist_a4939b60463b87c6097dd8d098e2f4b52}{\index{dlist@{dlist}!test@{test}}
+\index{test@{test}!dlist@{dlist}}
+\subsubsection[{test}]{\setlength{\rightskip}{0pt plus 5cm}static void dlist\-::test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classdlist_a4939b60463b87c6097dd8d098e2f4b52}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+Algo/\hyperlink{list_8h}{list.\-h}\end{DoxyCompactItemize}

@@ -117,9 +117,84 @@ public:
 		}
 	}
 
-private:
+	void printbycolumn(){
+		size_t len=ts.size();
+		double *pc=new double[len];
+		double *tmp=pc;
+		for (list<tick>::const_iterator i=ts.begin();i!=ts.end();++i){
+			//cout << i->changes.vwap<< endl;
+			*tmp++ = i->changes.vwap;
+		}
+
+		/// statistics: max, min, mean
+		double ma=INT_MIN,mi=INT_MAX;
+		double *tmp2=pc+len;
+		tmp=pc;
+		while (tmp!=tmp2){
+			if(*tmp<mi){mi=*tmp;}
+			if(*tmp>ma){ma=*tmp;}
+			tmp++;
+		}
+		double mean=getmean(pc,len);
+		cout << mean << endl;
+		delete [] pc;
+	}
+
+
+//private:
 	list<tick> ts;
 	string symbol;
+
+
+	static tick gettk(const char* s){
+		struct tm timeinfo={};
+		double price;
+		int volume;
+		char tag[3]={};
+		char tstr[20]={};//strlen("01/02/2013 01:20:00") + 1
+
+		//Don't use a precision specifier for sscanf, and use %lf, %f is for floats.
+		//(note: this applies to scanf only, not printf).
+		sscanf(s,"%d/%d/%d %d:%d:%d,%lf,%d,%s",
+			&timeinfo.tm_mon,&timeinfo.tm_mday,&timeinfo.tm_year,
+			&timeinfo.tm_hour,&timeinfo.tm_min,&timeinfo.tm_sec,&price,&volume,tag);
+		timeinfo.tm_year -= 1900;
+		timeinfo.tm_mon -= 1;
+		PV t={price,volume};
+		time_t tt=mktime(&timeinfo);
+
+		tick tk;
+		tk.pvs.push_back(t);
+		strncpy(tk.tag,tag,3);
+		tk.timestamp=tt;
+		tk.vwap=price;
+		tk.sumofvol=volume;
+		tk.sumofcash=volume*price/1000;
+		const char* x=strchr(s,',');
+		strncpy(tstr,s,x-s);
+		tk.timestr=tstr;
+		return tk;
+	}
+
+	static void test(){
+		fstream ts("1.csv");
+		tickdata* ptd= new tickdata("1.HK");
+		///"01/02/2013 01:20:00,119.3,23000,U"
+		string line;
+		int num=0;
+		if (ts.is_open()){
+			while (ts.good() && !ts.eof()){
+				getline(ts,line);
+				if (!line.empty()){
+					ptd->push(gettk(line.c_str()));
+				}
+			}
+		}
+		ptd->update();
+		//ptd->head();
+
+		ptd->printbycolumn();
+	}
 };
 
 tickdata::tickdata(const string& s):symbol(s)
@@ -129,3 +204,4 @@ tickdata::tickdata(const string& s):symbol(s)
 tickdata::~tickdata()
 {
 }
+

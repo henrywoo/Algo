@@ -149,6 +149,7 @@ public:
 		while (tmphead<=tail)
 		{
 			tmpsum+=*tmphead;
+			tmphead++;
 		}
 		cout << tmpsum << endl;
 

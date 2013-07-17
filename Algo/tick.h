@@ -197,12 +197,14 @@ public:
 		tickdata* ptd= new tickdata("1.HK");
 		///"01/02/2013 01:20:00,119.3,23000,U"
 		string line;
+		const int linebufsize=256;
+		char ln[linebufsize]={};
 		int num=0;
 		if (ts.is_open()){
 			while (ts.good() && !ts.eof()){
-				getline(ts,line);
-				if (!line.empty()){
-					ptd->push(gettk(line.c_str()));
+				ts.getline(ln,linebufsize,'\n');
+				if (*ln){
+					ptd->push(gettk(ln));
 				}
 			}
 		}

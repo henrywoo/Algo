@@ -37,7 +37,8 @@ int tm_isdst;   /* daylight savings time flag */
 int main(int argc,char* argv[]){
 	//dclist::test();
 	//slist::test();
-	util::test();
+	//util::test();
+	tickdata::test();
 	return 0;
 }
 

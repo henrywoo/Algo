@@ -137,6 +137,21 @@ public:
 		}
 		double mean=getmean(pc,len);
 		cout << mean << endl;
+
+		//get the max sum sub array
+		double * head=NULL, * tail=NULL;
+		double maxsum=maxsubarray(pc,len,head,tail);
+		copy(head,tail+1,ostream_iterator<double>(cout," "));
+		cout<< endl << maxsum << "size of the result:" << tail-head+1 <<endl;
+
+		double* tmphead=head;
+		double tmpsum=0;
+		while (tmphead<=tail)
+		{
+			tmpsum+=*tmphead;
+		}
+		cout << tmpsum << endl;
+
 		delete [] pc;
 	}
 

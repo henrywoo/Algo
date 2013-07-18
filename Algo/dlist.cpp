@@ -45,7 +45,7 @@ size_t dclist::size(){
 
 ///@brief push new node as the next of sentinel
 void dclist::push_front(int n){
-	dlist_node* ln=new dlist_node(n);
+	dlist_node* ln=new (std::nothrow) dlist_node(n);
 
 	dlist_node* tmp=psentinel->next;
 

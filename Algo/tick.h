@@ -1,6 +1,7 @@
 #include <string>
 #include <list>
-#include <iomanip> //setw
+
+
 using namespace std;
 
 ///@brief price and volume
@@ -25,7 +26,7 @@ public:
 		double vwap;
 		double vol;
 		double cash;
-		double time;
+		time_t time;
 	} changes;
 	
 	int lastupdate;	
@@ -34,11 +35,13 @@ public:
 };
 
 
-class tickdata
+///@brief is-implemented-in-terms-of list<tick>
+class tickseries
 {
 public:
-	tickdata(const string& s);
-	~tickdata();
+	tickseries(const string& s);
+	~tickseries();
+
 	void push(tick t);
 	void update();
 	void head();

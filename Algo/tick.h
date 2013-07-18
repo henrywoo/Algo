@@ -21,6 +21,7 @@ public:
 	double vwap;
 	int sumofvol;
 	double sumofcash;//unit of 1K
+	double logreturn;//continuous return per second
 	
 	struct {
 		double vwap;

@@ -16,11 +16,12 @@ int main(int argc,char* argv[]){
 	//dclist::test();
 	//slist::test();
 	//util::test();
-	//tickseries::test();
+	tickseries::test();
 	sandbox::heap<double> h;
 	h.insert(0.2);
 
 	heap::test();
+	system("pause");
 	return 0;
 }
 

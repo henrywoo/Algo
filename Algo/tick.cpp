@@ -4,10 +4,11 @@
 #include <iomanip> //setw
 #include "util.h"
 #include <memory>
+#include <math.h>
 
 using namespace std;
 
-tick::tick():vwap(0),sumofcash(0),sumofvol(0){
+tick::tick():vwap(0),sumofcash(0),sumofvol(0),logreturn(0){
 	memset(tag,'\0',3);
 	changes.vwap=0;
 	changes.vol=0;
@@ -54,6 +55,10 @@ void tickseries::update(){
 		i->changes.cash = i->sumofcash - tmp->sumofcash;
 		i->changes.time = i->timestamp - tmp->timestamp;
 		i->changes.vol  = i->sumofvol - tmp->sumofvol;
+		i->logreturn    = 10000*log(i->vwap/tmp->vwap)/i->changes.time;//bps
+		if (i->logreturn < 0.01){
+			i->logreturn=0;
+		}
 		tmp=i;
 	}
 }
@@ -69,7 +74,9 @@ void tickseries::head(){
 		<< left << std::setw(10) << "c.time"
 		<< left << std::setw(20) << "c.vwap"
 		<< left << std::setw(10) << "c.vol"
-		<< left << std::setw(10) << "c.cash" << endl;
+		<< left << std::setw(10) << "c.cash"
+		<< left << std::setw(20) << "logreturn"
+		<< endl;
 	int n=0;
 	for (list<tick>::const_iterator i=ts.begin();i!=ts.end();i++,n++){
 		if (n>50){
@@ -83,7 +90,9 @@ void tickseries::head(){
 			<< left << std::setw(10) << i->changes.time<< ""
 			<< left << std::setw(20) << i->changes.vwap<< ""
 			<< left << std::setw(10) << i->changes.vol<< ""
-			<< left << std::setw(10) << i->changes.cash << endl;
+			<< left << std::setw(10) << i->changes.cash 
+			<< left << setprecision(10) << std::setw(20) << i->logreturn
+			<< endl;
 
 	}
 }
@@ -177,9 +186,9 @@ void tickseries::test(){
 			}
 		}
 		ptd->update();
-		//ptd->head();
+		ptd->head();
 
-		ptd->printbycolumn();
+		//ptd->printbycolumn();
 	}
 
 tickseries::tickseries(const string& s):symbol(s)

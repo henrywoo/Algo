@@ -44,6 +44,10 @@ protected:
 	vector<int> v;
 	virtual void insert(int){}
 public:
+	inline int PARENTPOS(int i){return (i/2);}
+	inline int LCHILDPOS(int i){return (i*2+1);}
+	inline int RCHILDPOS(int i){return (i*2+2);}
+
 	bt_complete(){}
 	~bt_complete(){}
 };
@@ -94,17 +98,19 @@ public:
 ///@brief read black tree is a binary search tree
 class RBbst:public bst{};
 
-///@brief heap is implemented in terms of a binary tree - private inheritance
-class heap:private bt_complete{
+///@brief heap is implemented in terms of a binary tree - private inheritance/composition+public inheritance
+class heap{
+	class heaper:public bt_complete{
+	public:
+		void insert(int);
+		int pop();
+		void print();
+	} _h;
+
 public:
-	virtual void insert(int);
-	virtual int pop();
-
-	inline int PARENTPOS(int i){return (i/2);}
-	inline int LCHILDPOS(int i){return (i*2+1);}
-	inline int RCHILDPOS(int i){return (i*2+2);}
-
-	void print();
+	void insert(int n){_h.insert(n);}
+	int pop(){return _h.pop();}
+	void print(){_h.print();}
 
 	static bool test();
 };

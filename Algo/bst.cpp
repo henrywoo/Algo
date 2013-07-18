@@ -298,7 +298,7 @@ bool bst::test(){
 }
 
 
-void heap::print(){
+void heap::heaper::print(){
 	copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));
 }
 
@@ -317,7 +317,7 @@ bool heap::test(){
 	return true;
 }
 
-void heap::insert(int n){
+void heap::heaper::insert(int n){
 	v.push_back(n);
 	int pos=v.size()-1;
 	while (v.at(PARENTPOS(pos))<n){
@@ -333,7 +333,7 @@ void heap::insert(int n){
 
 ///@brief pop one element from heap
 ///NOTE: pop_back is to remove the last item from the vector
-int heap::pop(){
+int heap::heaper::pop(){
 	int r=v.at(0);
 	v.at(0)=*v.rbegin();
 	v.pop_back();
@@ -366,16 +366,6 @@ int heap::pop(){
 	}
 	return r;
 }
-
-
-
-
-
-
-
-
-
-
 
 //////////////////////////////////////////////////////////////////////////
 namespace sandbox{

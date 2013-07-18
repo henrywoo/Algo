@@ -5,6 +5,7 @@
 #include <deque>
 #include <set>
 #include <iterator>
+#include "util.h"
 
 bst::bst(){
 }
@@ -310,6 +311,9 @@ bool heap::test(){
 		b++;
 	}
 	h.print();
+	int p=h.pop();
+	cout << p << endl;
+	h.print();
 	return true;
 }
 
@@ -326,6 +330,43 @@ void heap::insert(int n){
 		pos=PARENTPOS(pos);
 	}
 }
+
+///@brief pop one element from heap
+///NOTE: pop_back is to remove the last item from the vector
+int heap::pop(){
+	int r=v.at(0);
+	v.at(0)=*v.rbegin();
+	v.pop_back();
+
+	int pos=0;
+	int lastpos=v.size()-1;
+	while (pos<lastpos){
+		int l=LCHILDPOS(pos);
+		int r=RCHILDPOS(pos);
+		if (l>lastpos && r>lastpos)break;
+		if (r>lastpos){
+			if (v[pos]<v[l]){
+				util::swap(v.at(pos),v.at(l));
+				pos=l;
+			}
+		}else{
+			if (v.at(l)>v.at(r))
+			{
+				if (v[pos]<v[l]){
+					util::swap(v.at(pos),v.at(l));
+					pos=l;
+				}
+			}else{
+				if (v[pos]<v[r]){
+					util::swap(v.at(pos),v.at(r));
+					pos=r;
+				}
+			}
+		}
+	}
+	return r;
+}
+
 
 
 

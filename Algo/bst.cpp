@@ -16,7 +16,7 @@ bst::~bst(){
 /// @
 void bst::insert(int n){
 	//cout << "insert " << n << endl;
-	btnode* p=new btnode(n);
+	btnode* p= new (nothrow) btnode(n);
 	if(proot==NULL){
 		proot=p;
 	}else{
@@ -243,8 +243,14 @@ bool bst::isBST(const bst& t){
 	}
 	return true;
 }
+
 WALKORDER bst::getOrder(const vector<int>& v){
 	return NONE;
+}
+
+vector<int> bst::getdepth(int n){
+	vector<int> v;
+	return v;
 }
 
 bool bst::test(){
@@ -288,4 +294,63 @@ bool bst::test(){
 
 	bst::isBST(t);
 	return true;
+}
+
+
+void heap::print(){
+	copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));
+}
+
+bool heap::test(){
+	heap h;
+	int a[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
+	int* b=a;
+	while(b!=a+sizeof(a)/sizeof(int)){
+		h.insert(*b);
+		b++;
+	}
+	h.print();
+	return true;
+}
+
+void heap::insert(int n){
+	v.push_back(n);
+	int pos=v.size()-1;
+	while (v.at(PARENTPOS(pos))<n){
+		int tmp=v.at(PARENTPOS(pos));
+		v.at(PARENTPOS(pos))=n;
+		v.at(pos)=tmp;
+		if (pos==0){
+			break;
+		}
+		pos=PARENTPOS(pos);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+namespace sandbox{
+template<class T>
+void heap<T>::insert(const T& n){
+	cout << n << endl;
+}
+
+
+/// No need to call this TemporaryFunction() function,
+/// it's just to avoid link error.
+#include <assert.h>
+void TemporaryFunction ()
+{
+	assert(1);
+	heap<double> TempObj;
+	TempObj.insert(.0);
+}
 }

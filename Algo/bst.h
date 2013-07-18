@@ -98,6 +98,7 @@ class RBbst:public bst{};
 class heap:private bt_complete{
 public:
 	virtual void insert(int);
+	virtual int pop();
 
 	inline int PARENTPOS(int i){return (i/2);}
 	inline int LCHILDPOS(int i){return (i*2+1);}

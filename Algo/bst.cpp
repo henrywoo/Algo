@@ -173,6 +173,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 	}else if(wo==POSTORDER){
 		if (norecursive){
 			// http://www.geeksforgeeks.org/iterative-postorder-traversal/
+#ifdef GEEK
 			stack<btnode*> stk;
 			btnode*tmp=proot;
 			helper_pushallrightsidenodes(proot,stk,v);
@@ -185,6 +186,19 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 				}
 			}
 			reverse(v.begin(),v.end());
+#else
+			stack<btnode*> stk;
+			btnode*tmp=proot;
+			helper_pushallleftsidenodes(proot,stk);
+			while (!stk.empty())
+			{
+				btnode* tmp=stk.top();
+				stk.pop();
+				if (tmp)
+				{
+				}
+			}
+#endif
 		}else{
 			v=walk_from_node(proot,POSTORDER);
 		}
@@ -294,6 +308,14 @@ bool bst::test(){
 	cout << endl;
 
 	bst::isBST(t);
+
+	//bst t;
+	bst_iterator_postorder bip(t);
+	btnode* p=bip.begin();
+	while(p){
+		cout << p->d << endl;
+		p=bip.next();
+	}
 	return true;
 }
 

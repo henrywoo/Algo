@@ -2,6 +2,8 @@
 #define __ALGO_BST__
 
 #include <vector>
+#include <stack>
+#include <set>
 
 using namespace std;
 
@@ -23,6 +25,7 @@ struct btnode{
 	btnode* r;// right node
 	int d;
 	short color;
+	btnode* par;
 	btnode(int n):l(NULL),r(NULL),d(n),color(0){}
 };
 
@@ -33,6 +36,7 @@ protected:
 	virtual void insert(int)=0;
 public:
 	bt():proot(NULL){}
+	btnode *getroot(){return proot;}
 };
 
 ///@brief A complete binary tree is a binary tree in which
@@ -71,7 +75,6 @@ public:
 	bst(const vector<int>& v);
 
 	~bst();
-	
 
 	void insert(int n);
 	void insert(int* p,int* q);
@@ -93,6 +96,105 @@ public:
 	static WALKORDER getOrder(const vector<int>& v);
 	static bool test();
 
+};
+
+class treeiterator{
+public:
+	virtual btnode* next()=0;
+	virtual btnode* begin()=0;
+	virtual btnode* end()=0;
+	virtual int operator*()=0;
+	/*virtual int operator++()=0;    /// ++()
+	virtual int operator++(int)=0; /// ()++
+	virtual int operator--()=0;
+	virtual int operator--(int)=0;*/
+};
+
+/**
+bst t;
+bst_iterator_postorder bip(t);
+while(btnode* p=bip.next()){
+	cout << p->d << endl;
+}
+*/
+class bst_iterator_postorder:public treeiterator{
+	bst& t;
+	stack<btnode*> stk;//ditto
+	btnode*tmp;
+	set<btnode*> processed_nodes;
+	bool pushmode;
+
+	void findfirstnode(){
+		tmp=t.getroot();
+		while(true){
+			stk.push(tmp);
+			processed_nodes.insert(tmp);
+			if (tmp->l){
+				tmp=tmp->l;
+			}else if (tmp->r){
+				tmp=tmp->r;
+			}else{
+				stk.pop();
+				pushmode=false;
+				break;
+			}
+		}
+	}
+public:
+	bst_iterator_postorder(bst& lhs):t(lhs){
+		tmp=NULL;
+		pushmode=true;
+		findfirstnode();
+	}
+	~bst_iterator_postorder(){}
+
+	void reset(){
+		//tmp=t.getroot();
+		pushmode=true;
+		processed_nodes.clear();
+		findfirstnode();
+		//assert(stk.empty());
+	}
+	virtual btnode* next(){
+		// the key point is
+		//(1)what is inside the stack  left->left->left
+		//(2)when to print the node[push/pop] 
+		// the last one must be the root
+		//static set<btnode*> processed_nodes; // processed but not printed
+		//btnode*tmp=t.getroot();//ditto
+		//bool pushmode=true;
+		if(stk.empty()){return NULL;}
+		tmp=stk.top();
+		while(tmp){
+			if(pushmode){
+				stk.push(tmp);
+				processed_nodes.insert(tmp);
+				if (tmp->l){
+					tmp=tmp->l;
+				}else if (tmp->r){
+					tmp=tmp->r;
+				}else{
+					//leaf
+					stk.pop();
+					pushmode=false;
+					return tmp;
+				}
+			}else{
+				if (tmp->r && processed_nodes.count(tmp->r)==0){
+					tmp=tmp->r;
+					pushmode=true;
+				}else{
+					stk.pop();
+					return tmp;
+				}
+			}
+		}
+		reset();
+		return NULL;
+	}
+	virtual btnode* begin(){return tmp;}
+	virtual btnode* end(){return t.getroot();}
+	virtual int operator*(){return 0;}
 };
 
 ///@brief read black tree is a binary search tree

@@ -13,14 +13,15 @@
 using namespace std;
 
 int main(int argc,char* argv[]){
+	bst::test();
 	//dclist::test();
 	//slist::test();
 	//util::test();
-	tickseries::test();
-	sandbox::heap<double> h;
-	h.insert(0.2);
+	//tickseries::test();
+	//sandbox::heap<double> h;
+	//h.insert(0.2);
 
-	heap::test();
+	//heap::test();
 	system("pause");
 	return 0;
 }

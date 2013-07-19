@@ -9,6 +9,8 @@
 #include "tick.h"
 #include <memory>//shared_ptr
 #include <time.h>
+#include "sort.h"
+#include "algo.h"
 
 using namespace std;
 
@@ -22,6 +24,8 @@ int main(int argc,char* argv[]){
 	//h.insert(0.2);
 
 	//heap::test();
+	//sorting::test();
+	DP::test();
 	system("pause");
 	return 0;
 }

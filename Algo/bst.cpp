@@ -326,6 +326,9 @@ void heap::heaper::print(){
 
 bool heap::test(){
 	heap h;
+	h.print2();
+	const heap h2;
+	h2.print2();
 	int a[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
 	int* b=a;
 	while(b!=a+sizeof(a)/sizeof(int)){

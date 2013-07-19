@@ -26,7 +26,8 @@ struct btnode{
 	int d;
 	short color;
 	btnode* par;
-	btnode(int n):l(NULL),r(NULL),d(n),color(0){}
+	double weight;
+	btnode(int n):l(NULL),r(NULL),d(n),color(0),weight(.0){}
 };
 
 ///@brief an arbitrary binary tree
@@ -202,17 +203,24 @@ class RBbst:public bst{};
 
 ///@brief heap is implemented in terms of a binary tree - private inheritance/composition+public inheritance
 class heap{
+	int test2;
+private:
 	class heaper:public bt_complete{
+		int test;
 	public:
 		void insert(int);
 		int pop();
 		void print();
+		void check(heap lhs){lhs.test2;}
 	} _h;
 
 public:
+	heap(){/*_h.test=0;*/}
 	void insert(int n){_h.insert(n);}
 	int pop(){return _h.pop();}
 	void print(){_h.print();}
+	void print2(){printf("1\n");}
+	void print2()const{printf("2\n");}
 
 	static bool test();
 };

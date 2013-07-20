@@ -15,7 +15,7 @@
 using namespace std;
 
 int main(int argc,char* argv[]){
-	bst::test();
+	//bst::test();
 	//dclist::test();
 	//slist::test();
 	//util::test();
@@ -24,8 +24,8 @@ int main(int argc,char* argv[]){
 	//h.insert(0.2);
 
 	//heap::test();
-	//sorting::test();
-	DP::test();
+	sorting::test();
+	//DP::test();
 	system("pause");
 	return 0;
 }

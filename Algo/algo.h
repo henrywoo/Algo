@@ -43,7 +43,6 @@ namespace DP{
 	else
 	  = max(longest(i+1,j),longest(i,j-1))
 	************************************************************************/
-
     #define MAX(x,y) (x>y?x:y)
 	int Longest_Palindrome(const char* x,const char*y){
 		static map<string,int> m;

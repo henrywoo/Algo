@@ -27,7 +27,7 @@ int main(int argc,char* argv[]){
 
 	//heap::test();
 	//sorting::test();
-	//DP::test();
+	DP::test();
 	//deque2::test();
 	//wufuheng::stackwithminmax<double>::test();
 	//vector<int> v;v.back();

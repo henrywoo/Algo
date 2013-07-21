@@ -6,6 +6,9 @@
 #include <map>
 #include <set>
 #include <queue>
+#include <unordered_set>
+#include <unordered_map>
+#include <hash_set>
 
 namespace Augmentation{
 
@@ -163,9 +166,8 @@ namespace DP{
 	using namespace std;
 
 	/// substring -consecutive; subsequence - not necessarily consecutive
-
 	///@
-	bool IsContainChar(const char* p,const char*q, const char& c){
+	bool IsContainChar(const char* p,char const *q, const char c){
 		while (p<=q){
 			if (c==*p){
 				return true;
@@ -177,14 +179,12 @@ namespace DP{
 
 
 	bool HasPalindromeSubSequence(const string& str){
-
 		return true;
 	}
 
 
 	///@brief "carac" is a subsequence of "character"
 	bool IsSubSequence(const string& str,const string& subseq){
-
 		return true;
 	}
 
@@ -192,11 +192,12 @@ namespace DP{
 	/************************************************************************
 	longest(i,j)= j-i if j-i<=1,
 	if x[i]==x[j]
-	  = 2+longest(i+1,j-1) 
+	  = 2+longest(i+1,j-1)
 	else
 	  = max(longest(i+1,j),longest(i,j-1))
 	************************************************************************/
     #define MAX(x,y) (x>y?x:y)
+	///@brief top down method
 	int Longest_Palindrome(const char* x,const char*y){
 		static map<string,int> m;
 		int r=0;
@@ -217,7 +218,7 @@ namespace DP{
 		return r;
 	}
 
-
+	///@brief bottom up method - not ready yet!
 	int Longest_Palindrome(const string& s){
 		int sz=s.size();
 		
@@ -256,6 +257,107 @@ namespace DP{
 		return LP_size;
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	class Solution1{/// O(n^2), best O(n)
+	public:
+		map<string, int> m;//???
+		int lengthOfLongestSubstring(string s) {/// O(n^2)
+			// Start typing your C/C++ solution below
+			// DO NOT write int main() function
+			if(s.empty()) 
+				return 0;
+			else
+				return helper(&s.at(0),&s.back());
+
+		}
+
+		///@brief helper function for lengthOfLongestSubstring(string s)
+		int helper(char* head, char* tail){
+			int sz=tail-head+1;
+			if(sz<=1)
+				return 1;
+			else{
+				char* newtail=tail -1;
+				if (*tail==*newtail){
+					return helper(head,newtail);/// 
+				}else{
+					return std::max(helper(head,newtail),getfromright(head,newtail,*tail)); /// O(n) + ...
+				}
+			}    
+		}
+
+		int getfromright(char* head,char* newtail,char c){
+			if(head==newtail)return 2;
+			char* tmp=newtail-1;
+			int r=2;
+			unordered_set<char> se;
+			//stdext::hash_set<int> hs;
+			se.insert(c);
+			se.insert(*newtail);
+			while(tmp>=head){///O(n)
+				if(se.find(*tmp)==se.end()){
+					se.insert(*tmp);
+					r++;
+				}else{
+					break;
+				}
+				tmp--;
+			}
+			cout<< newtail-tmp << "\t";
+			copy(tmp,newtail+1,ostream_iterator<char>(cout,""));cout<<c<<endl;
+			return r;
+		}
+
+		///@brief most efficient
+		int lengthOfLongestSubstring_best(string s) {/// O(n)
+			int n = s.length();
+			int i = 0, j = 0;
+			int maxLen = 0;
+			bool exist[256] = { false };
+			while (j < n) {
+				if (exist[s[j]]) {
+					maxLen = max(maxLen, j-i);
+					while (s[i] != s[j]) {
+						exist[s[i]] = false;
+						i++;
+					}
+					i++;
+					j++;
+				} else {
+					exist[s[j]] = true;
+					j++;
+				}
+			}
+			maxLen = max(maxLen, n-i);
+			return maxLen;
+		}
+
+		///@brief Unordered map is an associative container that contains key-value pairs with unique keys.
+		///Search, insertion, and removal have average constant-time complexity. 
+		int lengthOfLongestSubstring2(string s) {
+			if (s.empty()){return 0;}
+			unordered_map<char,int> uomap;
+			int globalmax=0, localmax=0;
+			for (int i=0;i<=s.size()-1;i++){
+				if (uomap.find(s[i])==uomap.end()){
+					printf("%c",s[i]);
+					localmax++;
+				}else{
+					i=uomap[s[i]]+1;
+					uomap.clear();//wrong!
+					globalmax=std::max(globalmax,localmax);
+					if (globalmax+i>s.size()){break;}
+					localmax=1;
+					printf("\n%c",s[i]);
+				}
+				uomap[s[i]]=i;
+			}
+			globalmax=std::max(globalmax,localmax);
+			printf("\n");
+			return globalmax;
+		}
+	};
+
 	void test(){
 		/*int LP_sz1=Longest_Palindrome("character");
 		cout << LP_sz1<< endl;
@@ -263,6 +365,19 @@ namespace DP{
 		cout << LP_sz2<< endl;
 		int LP_sz3=Longest_Palindrome("charcatera"); // carac, cacac - 5
 		*/
+
+		/*Run Status: Accepted!
+		Program Runtime: 308 milli secs
+		Progress: 1001/1001 test cases passed.*/
+		Solution1 slu;
+		slu.lengthOfLongestSubstring("abcddcbae");
+		string //ss("wlrbbmqhcbdarzowkk");
+		ss("hchzvfrkmlnozjk");
+		cout<< slu.lengthOfLongestSubstring_best(ss) << endl;
+		cout<< slu.lengthOfLongestSubstring2(ss) << endl;
+		//reverse(ss.begin(),ss.end());
+		//cout<< slu.lengthOfLongestSubstring2(ss) << endl;
+		cout<< slu.lengthOfLongestSubstring(ss) << endl;
 
 		string s="character";
 		int ls=Longest_Palindrome(&s.at(0),&s.at(s.size()-1));

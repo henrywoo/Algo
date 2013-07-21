@@ -178,6 +178,7 @@ namespace sorting{
 		return head+smallsize;
 	}
 
+	/// @brief used in quick sort and findkthsmallest
 	int* quicksort_sub_inplace(int* head,int* tail){
 		//copy(head,tail+1,ostream_iterator<int>(cout," "));cout << endl;
 		int pivot=*tail;
@@ -216,11 +217,15 @@ namespace sorting{
 	int findKthsmallest(int* head,int* tail,int k){//smallest -> k=1
 		int sz=tail-head+1;
 		if (sz<k){return INT_MIN;}
+#if DEBUGSIMON
 		copy(head,tail+1,ostream_iterator<int>(cout," "));cout<< endl;
+#endif
 		// the node pivot pointing is the (pivot-head+1) small,(tail-pivot+1) big node
 		while (true){
 			int* pivot=quicksort_sub_inplace(head,tail);
+#if DEBUGSIMON
 			copy(head,tail+1,ostream_iterator<int>(cout," "));cout<< endl;
+#endif
 			if (k==pivot-head+1){
 				return *pivot;
 			}else if(k>pivot-head+1){//X=(pivot-head+1) is the Xth smallest one we've found

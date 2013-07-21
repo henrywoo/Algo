@@ -11,6 +11,8 @@
 #include <time.h>
 #include "sort.h"
 #include "algo.h"
+#include "deque.h"
+#include "stack.h"
 
 using namespace std;
 
@@ -24,8 +26,13 @@ int main(int argc,char* argv[]){
 	//h.insert(0.2);
 
 	//heap::test();
-	sorting::test();
+	//sorting::test();
 	//DP::test();
+	//deque2::test();
+	//wufuheng::stackwithminmax<double>::test();
+	//vector<int> v;v.back();
+	//Augmentation::test();
+	sorting::test();
 	system("pause");
 	return 0;
 }

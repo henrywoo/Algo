@@ -84,9 +84,9 @@ void dclist::push_end(int n){
 void dclist::reverse(){
 	dlist_node* tmp=psentinel;
 	do{
-		dlist_node* tmp_nxt=tmp->next;
+		dlist_node* tmp_next=tmp->next;
 		std::swap(tmp->next,tmp->prev);
-		tmp=tmp_nxt;
+		tmp=tmp_next;
 	}while(tmp!=psentinel);
 }
 

@@ -51,7 +51,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -81,8 +81,11 @@
     <ClCompile Include="bst.cpp" />
     <ClCompile Include="dlist.cpp" />
     <ClCompile Include="m.cpp" />
+    <ClCompile Include="tick.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="algo.h" />
     <ClInclude Include="bst.h" />
     <ClInclude Include="deque.h" />
     <ClInclude Include="list.h" />
@@ -91,6 +94,8 @@
     <ClInclude Include="htable.h" />
     <ClInclude Include="queue.h" />
     <ClCompile Include="slist.cpp" />
+    <ClInclude Include="searching.h" />
+    <ClInclude Include="sort.h" />
     <ClInclude Include="stack.h" />
     <ClInclude Include="tick.h" />
     <ClInclude Include="util.h" />

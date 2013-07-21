@@ -196,7 +196,7 @@ namespace sorting{
 					}
 					R--;
 				}
-				goto OUTTER;// waiting failed and R==L right now!
+				goto OUTTER;// cannot find pair to swap, waiting is ended and R==L right now!
 			}
 			INNER:
 			L++;
@@ -212,11 +212,33 @@ namespace sorting{
 		//copy(head,tail+1,ostream_iterator<int>(cout," "));cout << endl;
 		return L;
 	}
+
+	int findKthsmallest(int* head,int* tail,int k){//smallest -> k=1
+		int sz=tail-head+1;
+		if (sz<k){return INT_MIN;}
+		copy(head,tail+1,ostream_iterator<int>(cout," "));cout<< endl;
+		// the node pivot pointing is the (pivot-head+1) small,(tail-pivot+1) big node
+		while (true){
+			int* pivot=quicksort_sub_inplace(head,tail);
+			copy(head,tail+1,ostream_iterator<int>(cout," "));cout<< endl;
+			if (k==pivot-head+1){
+				return *pivot;
+			}else if(k>pivot-head+1){//X=(pivot-head+1) is the Xth smallest one we've found
+				k=k-(pivot-head+1);
+				head=pivot+1;
+			}else{
+				//k=(pivot-head+1)-k;////SALT - because here is the kth SMALLEST element
+				tail=pivot-1;
+			}
+		}
+	}
+
+
 	
 #include <time.h>
 	void test(){
 		{
-#if 1
+#if 0
             const int N=static_cast<int>(1e3);
 			int* a=new int[N];
 			for(int i=0;i<N;i++){a[i]=i;}
@@ -235,7 +257,7 @@ namespace sorting{
 			double dif = difftime (end,start);
 			printf ("It took you %.2lf seconds to sort.\n", dif ); //It took you 31.00 seconds to sort.
 			//printarray(a,15200,15250);
-			copy(a,a+200,ostream_iterator<int>(cout," "));
+			copy(a,a+100,ostream_iterator<int>(cout," "));
 			delete [] a;
 			//printf("memnum:%d\n",memnum);
 #endif
@@ -243,6 +265,18 @@ namespace sorting{
 		
 		{
 			int b[]={5, 1, 3, 6, 0, 4, 7, 2};
+			int sz=ARRSIZE(b,int);
+			int k=0;
+			if (sz&0x1==1){
+				k=sz/2+1;
+				int median=findKthsmallest(b,b+sizeof(b)/sizeof(int)-1,k);// the smallest one
+			}else{
+				k=sz/2;
+				int median1=findKthsmallest(b,b+sizeof(b)/sizeof(int)-1,k);// the smallest one
+				int median2=findKthsmallest(b,b+sizeof(b)/sizeof(int)-1,k+1);// the smallest one
+				int median=median1/2+median2/2;
+			}
+			
 			//int b[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
 			quicksort2(b,b+sizeof(b)/sizeof(int)-1);
 			copy(b,b+ARRSIZE(b,int),ostream_iterator<int>(cout,","));cout << endl;

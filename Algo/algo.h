@@ -161,11 +161,101 @@ namespace Augmentation{
 	
 }
 
+namespace addTwoArbitraryNumbers_{
+	/*You are given two linked lists representing two non-negative numbers. 
+	///The digits are stored in reverse order and each of their nodes contain 
+	///a single digit. Add the two numbers and return it as a linked list.
+	Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+	Output: 7 -> 0 -> 8*/
+	struct ListNode {//single linked list
+		int val;
+		ListNode *next;
+		ListNode(int x) : val(x), next(NULL) {}
+	};
+	
+	ListNode *addTwoArbitraryNumbers(ListNode *l1, ListNode *l2){ // O(n)
+		if (NULL==l1 || NULL==l2){
+			return NULL;
+		}
+		ListNode *head1=l1;
+		ListNode *head2=l2;
+		int index1(0),index2(0);
+		int overflowdigit=0;
+		/// loop until end of l1 - size(l1)> == < size(l2) ? 
+		ListNode* lastnode=head1;// in case of 5+5 or 91+9 or 9+91
+		do{// use do-while when looping slist??!!
+			int& v1=head1->val;
+			if(head2){
+				v1+=head2->val+overflowdigit;
+				overflowdigit=0;
+				if (v1>=10){//overflow handling
+					overflowdigit=1;// cannot be greater than 1?
+					v1-=10;
+				}
+				head2=head2->next;
+				index2++;
+				if (index2>index1){
+					index2--;// force index1==index2
+				}
+			}
+			//sizel2 < sizel1
+			if (index1>index2){
+				v1+=overflowdigit;
+				overflowdigit=0;
+				if (v1>=10){//overflow handling
+					overflowdigit=1;// cannot be greater than 1?
+					v1-=10;
+				}
+			}
+
+			lastnode=head1;
+			head1=head1->next;
+			index1++;
+		}while(head1);
+		// size l2 > size l1
+		if (head2){
+			lastnode->next= head2;
+			do{
+				//overflow handling
+				head2->val+=overflowdigit;
+				overflowdigit=0;
+				if (head2->val>=10){//overflow handling
+					overflowdigit=1;// cannot be greater than 1?
+					head2->val-=10;
+				}
+				lastnode=head2;
+				head2=head2->next;
+			}while(head2);
+		}
+		if (overflowdigit>0){
+			ListNode* tmp=new ListNode(overflowdigit);
+			lastnode->next=tmp;
+		}
+		return l1;
+	}
+
+	bool test(){
+		ListNode n1(0);
+		
+		ListNode n3(7);ListNode n2(3);n3.next=&n2;
+		//addTwoArbitraryNumbers(NULL, NULL);
+		addTwoArbitraryNumbers(&n1, &n3);
+		//NULL+NULL
+		//0+NULL
+		//NULL+0
+		//9+1
+		//99+1
+		return true;
+	}
+
+}
+
 namespace DP{
 
 	using namespace std;
 
-	/// substring -consecutive; subsequence - not necessarily consecutive
+	namespace Palindrome{
+		/// substring -consecutive; subsequence - not necessarily consecutive
 	///@
 	bool IsContainChar(const char* p,char const *q, const char c){
 		while (p<=q){
@@ -198,7 +288,7 @@ namespace DP{
 	************************************************************************/
     #define MAX(x,y) (x>y?x:y)
 	///@brief top down method
-	int Longest_Palindrome(const char* x,const char*y){
+	int Longest_Palindrome_SubSequence(const char* x,const char*y){
 		static map<string,int> m;
 		int r=0;
 		if (y-x<=1){
@@ -209,9 +299,9 @@ namespace DP{
 				return m[tmp];
 			}
 			if(*x==*y){
-				r=2+Longest_Palindrome(x+1,y-1);
+				r=2+Longest_Palindrome_SubSequence(x+1,y-1);
 			}else{
-				r=MAX(Longest_Palindrome(x,y-1),Longest_Palindrome(x+1,y));
+				r=MAX(Longest_Palindrome_SubSequence(x,y-1),Longest_Palindrome_SubSequence(x+1,y));
 			}
 		}
 		m[string(x,y+1)]=r;
@@ -219,7 +309,7 @@ namespace DP{
 	}
 
 	///@brief bottom up method - not ready yet!
-	int Longest_Palindrome(const string& s){
+	int Longest_Palindrome_SubSequence(const string& s){
 		int sz=s.size();
 		
 		const char* p=&s.at(0);
@@ -253,9 +343,13 @@ namespace DP{
 				lastchar=newchar;//??
 			}
 		}
-
 		return LP_size;
 	}
+
+
+
+	}
+	
 
 	//////////////////////////////////////////////////////////////////////////
 	class Solution1{/// O(n^2), best O(n)
@@ -334,7 +428,7 @@ namespace DP{
 
 		///@brief Unordered map is an associative container that contains key-value pairs with unique keys.
 		///Search, insertion, and removal have average constant-time complexity. 
-		int lengthOfLongestSubstring2(string s) {
+		int lengthOfLongestSubstring_myversion(string s) {
 			if (s.empty()){return 0;}
 			unordered_map<char,int> uomap;
 			int globalmax=0, localmax=0;
@@ -374,13 +468,11 @@ namespace DP{
 		string //ss("wlrbbmqhcbdarzowkk");
 		ss("hchzvfrkmlnozjk");
 		cout<< slu.lengthOfLongestSubstring_best(ss) << endl;
-		cout<< slu.lengthOfLongestSubstring2(ss) << endl;
-		//reverse(ss.begin(),ss.end());
-		//cout<< slu.lengthOfLongestSubstring2(ss) << endl;
+		cout<< slu.lengthOfLongestSubstring_myversion(ss) << endl;
 		cout<< slu.lengthOfLongestSubstring(ss) << endl;
 
 		string s="character";
-		int ls=Longest_Palindrome(&s.at(0),&s.at(s.size()-1));
+		int ls=Palindrome::Longest_Palindrome_SubSequence(&s.at(0),&s.at(s.size()-1));
 		cout << ls << endl;
 	}
 	

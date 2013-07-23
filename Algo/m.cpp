@@ -14,12 +14,24 @@
 #include "deque.h"
 #include "stack.h"
 
-using namespace std;
+#include <boost/graph/adjacency_list.hpp>
 
+using namespace std;
+using namespace boost;
 int main(int argc,char* argv[]){
+
+	adjacency_list<> mygraph;
+	add_edge(1, 2, mygraph);
+	add_edge(1, 3, mygraph);
+	add_edge(1, 4, mygraph);
+	add_edge(2, 4, mygraph);
+	adjacency_list<>::vertex_iterator vertexIt, vertexEnd;
+	adjacency_list<>::adjacency_iterator neighbourIt, neighbourEnd;
+
+
 	//bst::test();
 	//dclist::test();
-	//slist::test();
+	slist::test();
 	//util::test();
 	//tickseries::test();
 	//sandbox::heap<double> h;
@@ -47,7 +59,7 @@ int main(int argc,char* argv[]){
 	cout << a << b << endl;
 #endif
 	//stringrelated::test();
-	integerrelated::test();
+	//integerrelated::test();
 	return getchar();
 }
 

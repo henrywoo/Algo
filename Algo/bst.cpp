@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <iostream>
 #include <stack>
-#include <deque>
+#include <queue>
 #include <set>
 #include <iterator>
 #include "util.h"
@@ -203,6 +203,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 			v=walk_from_node(proot,POSTORDER);
 		}
 	}else if(wo==LAYERBYLAYER){
+#if 0
 		deque<btnode*> dbn;
 		dbn.push_back(proot);
 		while (!dbn.empty()){
@@ -214,6 +215,19 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 			if(tmp->r)
 				dbn.push_back(tmp->r);
 		}
+#else
+		queue<btnode*> dbn;
+		dbn.push(proot);
+		while (!dbn.empty()){
+			btnode* tmp=dbn.front();
+			v.push_back(tmp->d);
+			dbn.pop();
+			if(tmp->l)
+				dbn.push(tmp->l);
+			if(tmp->r)
+				dbn.push(tmp->r);
+		}
+#endif
 	}else if (wo==ZIGZAG){
 		stack<btnode*> stk1;
 		stack<btnode*> stk2;
@@ -356,8 +370,8 @@ void heap::heaper::insert(int n){
 	}
 }
 
-///@brief pop one element from heap
-///NOTE: pop_back is to remove the last item from the vector
+///@brief pop one element(max/min) from heap
+///NOTE: vector<T>::pop_back is to remove the last item from the vector
 int heap::heaper::pop(){
 	int r=v.at(0);
 	v.at(0)=*v.rbegin();

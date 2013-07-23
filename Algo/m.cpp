@@ -33,8 +33,21 @@ int main(int argc,char* argv[]){
 	//vector<int> v;v.back();
 	//Augmentation::test();
 	//sorting::test();
-	addTwoArbitraryNumbers_::test();
-	system("pause");
-	return 0;
+	//addTwoArbitraryNumbers_::test();
+	//integerrelated::test();
+#if 0
+	int i=0x80000000;
+	cout << i << endl;
+	i>>=1;
+	cout << i << endl;
+	cout << hex << i << endl;
+	char a='a';
+	char b='b';
+	util::swap<char>(a,b);
+	cout << a << b << endl;
+#endif
+	//stringrelated::test();
+	integerrelated::test();
+	return getchar();
 }
 

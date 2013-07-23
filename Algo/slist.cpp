@@ -47,6 +47,15 @@ bool slist::test(){
 	for(slist_node* i=sl.begin();i!=sl.end();i=i->next){
 		cout << i->d << endl;
 	}
+
+	// The paradigm of loop a slist
+	slist_node* i=sl.begin();
+	slist_node* lastnode=NULL;// can be assigned to i, it doesnt matter
+	do {
+		///
+		lastnode=i;
+		i=i->next;
+	} while (i->next);
 	return true;
 }
 

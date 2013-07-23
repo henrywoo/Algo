@@ -61,7 +61,7 @@ namespace Augmentation{
 	template<class T>
 	vector<T> MaxInSlidingWindows(T* head, T* tail, int sz){
 		vector<T> v;
-		set<T> se;
+		set<T> se; // should be priority_queue, but unfortunately STL's PQ doesnt provide remove
 		
 		// initial setup - O(M)
 		for (int i=0;i<=sz-1;i++){
@@ -172,6 +172,17 @@ namespace addTwoArbitraryNumbers_{
 		ListNode *next;
 		ListNode(int x) : val(x), next(NULL) {}
 	};
+
+	int AddTwoDigits(int x,int y,bool& carrybit/*in&out*/){
+		int r=x+y+(carrybit?1:0);
+		carrybit=false;
+		if (r>=10){//overflow handling
+			carrybit=true;// cannot be greater than 1?
+			r-=10;
+		}
+		return r;
+	}
+
 	
 	ListNode *addTwoArbitraryNumbers(ListNode *l1, ListNode *l2){ // O(n)
 		if (NULL==l1 || NULL==l2){
@@ -180,31 +191,25 @@ namespace addTwoArbitraryNumbers_{
 		ListNode *head1=l1;
 		ListNode *head2=l2;
 		int index1(0),index2(0);
-		int overflowdigit=0;
+		bool carrybit=false;
 		/// loop until end of l1 - size(l1)> == < size(l2) ? 
 		ListNode* lastnode=head1;// in case of 5+5 or 91+9 or 9+91
 		do{// use do-while when looping slist??!!
 			int& v1=head1->val;
 			if(head2){
-				v1+=head2->val+overflowdigit;
-				overflowdigit=0;
-				if (v1>=10){//overflow handling
-					overflowdigit=1;// cannot be greater than 1?
-					v1-=10;
-				}
+				v1=AddTwoDigits(v1,head2->val,carrybit);
 				head2=head2->next;
 				index2++;
 				if (index2>index1){
 					index2--;// force index1==index2
 				}
 			}
-			//sizel2 < sizel1
+			//sizel1 > sizel2
 			if (index1>index2){
-				v1+=overflowdigit;
-				overflowdigit=0;
-				if (v1>=10){//overflow handling
-					overflowdigit=1;// cannot be greater than 1?
-					v1-=10;
+				if (carrybit){
+					v1=AddTwoDigits(v1,0,carrybit);
+				}else{// all the work has been done here!
+					break;// we may return l1 here actaually
 				}
 			}
 
@@ -217,18 +222,13 @@ namespace addTwoArbitraryNumbers_{
 			lastnode->next= head2;
 			do{
 				//overflow handling
-				head2->val+=overflowdigit;
-				overflowdigit=0;
-				if (head2->val>=10){//overflow handling
-					overflowdigit=1;// cannot be greater than 1?
-					head2->val-=10;
-				}
+				head2->val = AddTwoDigits(head2->val,0,carrybit);
 				lastnode=head2;
 				head2=head2->next;
 			}while(head2);
 		}
-		if (overflowdigit>0){
-			ListNode* tmp=new ListNode(overflowdigit);
+		if (carrybit){
+			ListNode* tmp=new ListNode(1);
 			lastnode->next=tmp;
 		}
 		return l1;
@@ -247,8 +247,279 @@ namespace addTwoArbitraryNumbers_{
 		//99+1
 		return true;
 	}
+}
+
+namespace integerrelated{
+
+	int power(int x,int y){
+		int r=1;
+		while (y>0){
+			r*=x;y--;
+		}
+		return r;
+	}
+	
+	int getlastNdigit(int x,int n){
+		if (n==1){
+			return x%10;
+		}
+		int tmp=power(10,n);
+		if (x<tmp/10){
+			return -1;
+		}
+		return x-x/tmp*tmp;
+	}
+
+	int reverse(int x) {// 10 -> 1
+		int sign=1;
+		if(x<0){x*=-1;sign=-1;}
+		if(x<10)return x*sign;
+		int r=0;//result
+#if 1
+		// x%10; x/10; x/10<10 // 12
+		do{
+			r = r*10 + x%10; // 2->21
+			x = x/10;//1->0
+		} while (x);
+#else
+		stack<int> stk;
+		int n=1;
+		while(true){
+			int tmp=getlastNdigit(x,n); // x%10 - last one; 
+			if (tmp<0){
+				break;
+			}
+			tmp=tmp/power(10,n-1);
+			stk.push(tmp);
+			n++;
+		}
+		r=0;int n=0;
+		while (!stk.empty()){
+			r += stk.top()*power(10,n);
+			n++;
+			stk.pop();
+		}
+#endif
+
+		r=sign*r;
+		return r;
+	}
+
+#define CHAR2INT(c) (c-'0')
+
+	int myatoi(const char* cc){
+		if(cc==NULL) return 0;
+		if(*cc=='\0') return 0;
+		int sign=1;
+		bool signedalready=false;
+		stack<int> stk;
+		for (int i = 0; i <= strlen(cc)-1; i++){
+			char c=cc[i];
+			// TODO: add sign handling block here
+			if(c=='+'){
+				if(CHAR2INT(cc[i+1])>=10 || CHAR2INT(cc[i+1])<0){break;}
+				if(signedalready) return 0;
+				signedalready=true;
+				continue;
+			}else if(c=='-'){
+				if(CHAR2INT(cc[i+1])>=10 || CHAR2INT(cc[i+1])<0){break;}
+				if(signedalready) return 0;
+				sign=-1;signedalready=true;
+				continue;
+			}else if(c==' '){
+				if(stk.empty())
+					continue;
+				else{break;}
+			}else{
+				int digit=CHAR2INT(c);
+				if (digit>=10 || digit<0){
+					break;
+				}
+				stk.push(digit);
+			}
+		}
+		long long result=0,n=0;
+		while(!stk.empty()){
+			int digit=stk.top();stk.pop();
+			result+=pow(10,n)*digit;
+			n++;
+		}
+		result*=sign;
+		if(result>INT_MAX){return INT_MAX;}
+		if(result<INT_MIN){return INT_MIN;}
+		return result;
+	}
+
+	void test(){
+		int tmp=12309002;
+		cout << tmp << endl;
+		tmp=reverse(tmp);
+		cout << tmp << endl;
+		tmp=10000;
+		cout << tmp << endl;
+		tmp=reverse(tmp);
+		cout << tmp << endl;
+		//cout << myatoi("2147483648") << endl;
+	}
+
 
 }
+
+namespace stringrelated{
+
+	/// O(N*M) [N- size of vector; M- size of longest prefix]
+	string longestCommonPrefix(vector<string> &strs) {
+		if(strs.empty()) return string();
+		if(strs.size()==1) return strs[0];
+
+		//at least two strings inside
+		string r;
+		int sz=strs.size();
+		int j=1;//size of the string
+		while(true){
+			char c=strs[0][j-1];
+			bool allthesame=false;
+			for(int i=1;i<=sz-1;++i){
+				if(strs[i].size()<j){goto longestCommonPrefix_DONE;}//jump out of multiple loops with goto
+				if(c!=strs[i][j-1]){
+					goto longestCommonPrefix_DONE;
+				}
+			}
+			r.push_back(c);
+			j++;
+		}
+longestCommonPrefix_DONE:
+		return r;
+	}
+
+
+	/// worst O(N^2*M) [N - the size of string; M- the size of longest common substr]
+	///http://www.geeksforgeeks.org/longest-common-substring/
+	string longestCommonSubstr(const string &s1, const string &s2){
+		string r;
+		int sz1=s1.size();
+		int sz2=s2.size();
+		for (int i=0;i<=sz1-1;i++){//i - index for s1; O(n^2)
+			int tmp1size=sz1-1-i+1;
+			if (tmp1size < r.size()){//optimization
+				break;
+			}
+			string tmp1=s1.substr(i,tmp1size);
+			int j=0;//j-index for s2
+			while(j<=sz2-1){///O(n*m)
+				int tmp2size=sz2-1-i+1;
+				if (tmp2size < r.size()){//optimization
+					break;
+				}
+				string tmp2=s2.substr(j,tmp2size);
+				vector<string> v;
+				v.push_back(tmp1);
+				v.push_back(tmp2);
+				string tmpr=longestCommonPrefix(v);//O(m)
+				if (tmpr.size()>r.size()){
+					r=tmpr;
+				}
+				j++;
+			}
+		}
+		longestCommonSubstr_DONE1:
+		return r;
+	}
+
+	string longestCommonSubstr(vector<string> &strs) {
+		string r;
+
+		return r;
+	}
+
+	/// Dynamic Programming
+	string longestCommonSubseq(const char* head1,
+		const char* tail1,
+		const char* head2,
+		const char* tail2)
+	{
+		static int count=0;
+		count++;
+		cout<< count <<" ";
+		copy(head1,tail1+1,ostream_iterator<char>(cout,""));cout<<" ";
+		copy(head2,tail2+1,ostream_iterator<char>(cout,""));cout<< endl;
+		int sz1=tail1-head1+1;
+		int sz2=tail2-head2+1;
+		if (sz1==0||sz2==0)
+		{return string();}
+		if (*tail1==*tail2){
+			string s=longestCommonSubseq(head1,tail1-1,head2,tail2-1);
+			s.push_back(*tail1);
+			return s;
+		}else{
+			string s1=longestCommonSubseq(head1,tail1-1,head2,tail2);
+			if (s1.size()>=sz1 || s1.size()>=sz2-1){/// improvement
+				return s1;
+			}
+			string s2=longestCommonSubseq(head1,tail1,head2,tail2-1);
+			if (s1.size()>=s2.size()){
+				return s1;
+			}else{
+				return s2;
+			}
+		}
+	}
+
+#if 0
+    #define pointer2int int*
+    #define pSubSeq list<vector<int*>>
+
+	///@brief Longest monotonically increasing subsequence
+	pSubSeq LMIS(int* head, int* tail){
+		if (head==tail || head==NULL || tail==NULL){
+			pSubSeq tmp;
+			return tmp;
+		}else if(1){
+			int* tmptail=tail;
+			pSubSeq p=LMIS(head,tmptail-1);
+
+			for (pSubSeq::iterator i=p.begin();i!=p.end();i++){
+
+			}
+
+			if (*tail>*p.second){
+				p.second=tail;
+			}else{
+				//TODO
+			}
+			return p;
+		}
+	}
+#endif
+
+
+
+	void test(){
+		//int a[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
+		//pSubSeq p=LMIS(a,a+ARRAYSIZE(a,int)-1);
+		//string s3("ACCGGTCGAGTGCGCGGAAGCCGGCCGAA");
+		//string s4("GTCGTTCGGAATGCCGTTGCTCTGTAAA");
+		string s3("ACCGGTCGAGT");
+		string s4("GTCGTTC");
+		/*
+		1519 ACCGGTCG GTCG
+		1520 ACCGGTC GTC
+		1521 ACCGGT GT
+		1522 ACCGG G
+		1523 ACCG
+		*/
+		string r2=longestCommonSubseq(&s3.at(0),&s3.back(),&s4.at(0),&s4.back());
+
+		string s1("ABABC"),s2("BABCA");
+		string r=longestCommonSubstr(s1, s2);
+		cout<<r.c_str()<< endl;
+
+		
+
+	}
+	
+}
+
 
 namespace DP{
 

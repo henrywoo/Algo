@@ -141,10 +141,12 @@ namespace util{
 		copy(head,tail+1,ostream_iterator<double>(cout," "));
 
 	}
+
 	void swap(int& a,int& b){
-		if (a==b){return;}
-		a=a^b;
-		b=a^b;
-		a=b^a;
+		if (a!=b){
+			a=a^b;
+			b=a^b;
+			a=b^a;
+		}
 	}
 }

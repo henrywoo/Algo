@@ -238,6 +238,86 @@ namespace sorting{
 		}
 	}
 
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#define MAXEDGE 101
+	using namespace std;
+
+	int INDEG[MAXEDGE], node, edge;
+
+	vector<int> TOPOLOGICAL_SORT(int [][MAXEDGE]);
+
+	struct matrix{
+		int* p;
+		int rowlen;
+		int collen;
+
+		//Overloading the parenthesis operator, parameter can be multiple, but subscript operator only 1
+		int& operator()(int row_,int col_){// lval and rval
+			if (row_<=rowlen-1 && col_<=collen-1){
+				return p[row_*rowlen + col_];
+			}
+		}
+
+		matrix(int r,int c){
+			p=new int[r*c];
+			memset(p,'\0',r*c*sizeof(int));
+		}
+		~matrix(){delete[]p;}
+
+	};
+
+	int m(void)
+	{
+		//freopen("toposort.txt", "r", stdin);
+		int adjMatrix[MAXEDGE][MAXEDGE];
+		for(int i=0; i<MAXEDGE; i++)
+			for(int j=0; j<MAXEDGE; j++) {
+				adjMatrix[i][j] = 0;
+				INDEG[i] = 0;
+			}
+			int M, N;
+			cin >> node >> edge;
+			for(int e=1; e<=edge; e++) {
+				cin >> M >> N;
+				adjMatrix[M][N] = 1;
+				INDEG[N]++;
+			}
+			vector<int> orderedList = TOPOLOGICAL_SORT(adjMatrix);
+			for(int i=0; i<orderedList.size(); i++) {
+				cout << orderedList[i] << ends;
+			}
+			return 0;
+	}
+
+	vector<int> TOPOLOGICAL_SORT(int S[][MAXEDGE]) {
+
+		queue<int> Q;
+
+		for(int n=1; n<=node; n++) {
+			if(INDEG[n] == 0) Q.push(n);
+		}
+
+		vector<int> topoList;
+
+		while( !Q.empty()) {
+			int N = Q.front(); Q.pop();
+			topoList.push_back(N);
+			for(int M=1; M<=node; M++) {
+				if(S[N][M] == 1) {
+					INDEG[M]--;
+					if(INDEG[M] == 0) {
+						Q.push(M);
+					}
+				}
+			}
+		}
+		return topoList;
+	}
+
 
 	
 #include <time.h>
@@ -269,6 +349,10 @@ namespace sorting{
 		}
 		
 		{
+			matrix mx(3,4);
+			mx(2,3)=1;
+			cout << mx(2,3) << endl;
+
 			int b[]={5, 1, 3, 6, 0, 4, 7, 2};
 			int sz=ARRSIZE(b,int);
 			int k=0;

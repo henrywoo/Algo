@@ -15,7 +15,7 @@ enum WALKORDER{
 	REVERSE_INORDER,  /// right->head->left
 	REVERSE_POSTORDER,/// head->right->left
 	LAYERBYLAYER, //layer by layer
-	ZIGZAG,
+	ZIGZAG,// via two stacks
 	NONE=-1 //
 };
 

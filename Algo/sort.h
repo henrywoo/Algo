@@ -250,12 +250,15 @@ namespace sorting{
 
 	vector<int> TOPOLOGICAL_SORT(int [][MAXEDGE]);
 
+	///@brief A matrix using linear memory space
+	///@author WuFuheng(fuhengwu@gmail.com)
 	struct matrix{
 		int* p;
 		int rowlen;
 		int collen;
 
-		//Overloading the parenthesis operator, parameter can be multiple, but subscript operator only 1
+		///Overloading the parenthesis operator, parameter can be multiple
+		///but subscript operator only 1
 		int& operator()(int row_,int col_){// lval and rval
 			if (row_<=rowlen-1 && col_<=collen-1){
 				return p[row_*rowlen + col_];

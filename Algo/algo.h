@@ -251,6 +251,7 @@ namespace addTwoArbitraryNumbers_{
 
 namespace integerrelated{
 
+#if 0
 	int power(int x,int y){
 		int r=1;
 		while (y>0){
@@ -269,6 +270,7 @@ namespace integerrelated{
 		}
 		return x-x/tmp*tmp;
 	}
+#endif
 
 	int reverse(int x) {// 10 -> 1
 		int sign=1;

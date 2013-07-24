@@ -98,10 +98,10 @@ public:
 struct slist_node{
 	int d;
 	slist_node* next;
-	slist_node(int n):d(n){}
+	slist_node(int n):d(n),next(NULL){}
 };
 
-///@brief A HEAD_TAIL Single Liked List with a head only
+///@brief A Single Liked List with a head only
 class slist
 {
 public:
@@ -118,6 +118,8 @@ public:
 	static bool test();
 
 	slist_node* end();
+
+	///@deprecated no tail for slist
 	slist_node* begin();
 
 	///@brief find the kth node before the tail
@@ -130,6 +132,10 @@ public:
 	///\exception N.A.
 	///@author Simon (simonwoo2000@gmail.com)
 	///\date 25 July, 2013
+	///@test k=0,-1,1,1000000
+	///@version 1.0
+	///@remarks Two pointer tick, like a sliding window
+	///Time - O(n) where n is the length of the list; Space - O(1)
 	const slist_node* FindKthToTail(int k) const throw(){
 		try{
 			if(k<0){
@@ -148,10 +154,9 @@ public:
 				unsigned int count=0;// the size of the slist
 				while(tmp1!=NULL){
 					tmp1=tmp1->next;
-					if (count>k){
+					if (count++ >k){
 						tmp2=tmp2->next;
 					}
-					++count;
 				}
 				if (count < k+1){// no move for tmp2, which means K+1 > length of the link
 					return NULL;
@@ -162,10 +167,14 @@ public:
 		}catch(...){return NULL;}
 	}
 
+	///@brief if there is a circle inside the single list
+	bool HasCircle() const {
+	}
+
+
 
 private:
 	slist_node* head;
-	//slist_node* tail;
 	size_t lsize;
 
 	

@@ -38,8 +38,7 @@ double maxsubarray_fixed(double *p, size_t sz, double*& end){
 	double tmp=0;
 	for (int i=0;i<sz;i++){
 		tmp+=p[i];// p[i] == *(p+i)
-		if (maxsum<tmp)
-		{
+		if (maxsum<tmp){
 			maxsum=tmp;
 			j=i;
 		}
@@ -71,8 +70,9 @@ double maxsubarray_fixed_reverse(double *p, size_t sz, double*& end){
 
 ///@brief Largest Sum Contiguous Subarray
 ///@param
-/// start - pointer to start of max subarray
-/// end   - pointer to end of max subarray
+/// start - pointer to start of max subarray\n
+/// end   - pointer to end of max subarray\n
+///@remarks bottom up dynamic programming
 double maxsubarray(double *p, size_t sz, double*& start, double*& end)
 {
 	if (sz==0){return INT_MIN;}

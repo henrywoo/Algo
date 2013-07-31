@@ -9,8 +9,17 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <hash_set>
+#include "heap.h"
 
 namespace Augmentation{
+
+    namespace kthmax{
+        ///@todo
+        ///1. kth max in a given unsorted array
+        ///2. kth max in two given unsorted arrays
+        ///3. kth max in x given unsorted/sorted arrays
+        ///http://www.mitbbs.com/article_t/JobHunting/32494041.html
+    }
 
 #if 0 // TODO - difficult
 	class SlidingWindowWithMax{
@@ -48,29 +57,29 @@ namespace Augmentation{
 	///http://codercareer.blogspot.sg/2012/02/no-33-maximums-in-sliding-windows.html
 	template<class T>
 	T GetMaxOfSet(const set<T>& se){
-		set<T>::const_iterator sei=se.end();
-		--sei;
-		return *sei;
+        //set<T>::iterator i=se.end();
+        //--i;
+		return *(--se.end());// refer to code of back() for vector
 	}
 
 
-#define ARRAYSIZE(x,t) (sizeof(x)/sizeof(t))
+#define MYARRAYSIZE(x,t) (sizeof(x)/sizeof(t))
 	///@brief Maximums in Sliding Windows
 	///Time Complexity -> All cases: O(N*logM)
 	///[N-size of the big array; M-size of the window]
 	template<class T>
-	vector<T> MaxInSlidingWindows(T* head, T* tail, int sz){
+	vector<T> MaxInSlidingWindows(T* head, T* tail, int window_sz){
 		vector<T> v;
-		set<T> se; // should be priority_queue, but unfortunately STL's PQ doesnt provide remove
+		set<T> se; // should be priority_queue, but unfortunately STL's PQ doesn't provide remove
 		
 		// initial setup - O(M)
-		for (int i=0;i<=sz-1;i++){
+		for (int i=0;i<=window_sz-1;i++){
 			se.insert(head[i]);
 		}
 		v.push_back(GetMaxOfSet(se));
 
 		// (N-M)*2*logM
-		T* tmppush=head+sz;// the item after the sz'th item
+		T* tmppush=head+window_sz;// the item after the sz'th item
 		T* tmpdele=head;
 		while (tmppush<=tail){
 			se.insert(*tmppush); //O(logN)
@@ -83,6 +92,29 @@ namespace Augmentation{
 
 		return v;
 	}
+
+    /// function has no template specialization or partial specialization
+    vector<int> MaxInSlidingWindows(int* head, int* tail, int window_sz)
+    {
+        vector<int> v;
+        heaping::heap maxh;
+        // initial setup - O(M)
+        for (int i=0;i<=window_sz-1;i++){
+            maxh.insert(head[i]);
+        }
+        v.push_back(*maxh.head());
+        // (N-M)*2*logM
+        int* tmppush=head+window_sz;// the item after the sz'th item
+        int* tmpdele=head;
+        while (tmppush<=tail){
+            maxh.insert(*tmppush); //O(logN)
+            maxh.erase(*tmpdele);  //O(logN)
+            v.push_back(*maxh.head());
+            ++tmppush;
+            ++tmpdele;
+        }
+        return v;
+    }
 
 	vector<int> maxInWindows(const vector<int>& numbers, int windowSize){
 		vector<int> maxInSlidingWindows;
@@ -149,11 +181,12 @@ namespace Augmentation{
 #endif
 
 		int a[]={2, 3, 4, 2, 6, 2, 5, 1};
-		vector<int> v=MaxInSlidingWindows<int>(a,a+ARRAYSIZE(a,int)-1,1);
+		vector<int> v=MaxInSlidingWindows<int>(a,a+MYARRAYSIZE(a,int)-1,3);
+        //4 4 6 6 6 5
 		copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));cout << endl;
 
 		int b[]={9,7,8,6,5,4,3,2,1};
-		vector<int> ip(b,b+ARRAYSIZE(b,int)-1);
+		vector<int> ip(b,b+MYARRAYSIZE(b,int)-1);
 		v=maxInWindows(ip, 1);//requires size of SD>1
 		copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));cout << endl;
 		return true;

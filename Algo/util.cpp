@@ -20,6 +20,54 @@ vector<string> split(const string& str_,char delim){
 	return v;
 }
 
+///@brief failure function of KMP
+///@test "ababa" should return [0,0,1,2,3] the max length of the string \n
+///which is both prefix and suffix of the string
+///\todo
+vector<int> failurefunc(const string& str){
+	vector<int> v;
+	return v;
+}
+
+///@brief implementation of KMP algo
+///@return the pointer to the position of patterns inside original str
+///@test
+///(str="oaoaoq",pattern="oao") returns [str+0]\n
+///(str="aboaobboaoq",pattern="oao") returns [str+2,str+7]
+///\todo
+vector<char*> findpattern(const string& str, const string& pattern){
+	vector<char*> v;
+	return v;
+
+}
+
+/// StringReplace("","xyz","abc")   return string("")
+/// StringReplace("opq","","abc")   return string("opq")
+/// StringReplace("opq","abc","")   return string("opq")
+/// StringReplace("opq","o","")     return string("pq")
+/// StringReplace("oapoaq","oa","abc") return string("abcpabcq")
+/// StringReplace("oaoaoq","oao","abc") return string("abcaoq")
+string StringReplace(const string& str, const string& pattern, const string& newstr){
+	if (str.empty() || pattern.empty()){return str;}
+	vector<char*> v=findpattern(str,pattern);
+	if (v.empty()){
+		return str;
+	}else{
+		int pn=v.size();//the number of patterns we found in str
+		string s;
+		int szdiff=newstr.size()-pattern.size();
+		s.reserve(str.size()+pn*szdiff);
+		for (vector<char*>::iterator i=v.begin();i!=v.end();++i){
+			//TODO
+		}
+		return s;
+	}
+}
+
+
+
+
+
 double getmean(double *p, size_t sz){
 	double *end=p+sz;
 	double *tmp=p;

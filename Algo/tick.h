@@ -36,7 +36,8 @@ public:
 };
 
 
-///@brief is-implemented-in-terms-of list<tick>
+///@brief is-implemented-in-terms-of list<tick>\n
+///a time series of tickdata
 class tickseries
 {
 public:
@@ -49,7 +50,11 @@ public:
 	void printbycolumn();
 	static tick gettk(const char* s);
 	static void test();
+
 //private:
 	list<tick> ts;
 	string symbol;
+	
+	///@brief statistics of the tick series
+
 };

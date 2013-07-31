@@ -10,6 +10,21 @@ using namespace std;
 
 vector<string> split(const string& str_,char delim);
 
+///@brief To replace all oldstr inside str with newstr
+///@param
+/// str - original string\n
+/// oldstr - string to be replaced
+/// newstr - string to be inserted into the original string
+///@return
+/// A new string with all oldstr replaced by newstr
+///@test
+/// StringReplace("","xyz","abc")   return string("")
+/// StringReplace("opq","","abc")   return string("opq")
+/// StringReplace("opq","abc","")   return string("opq")
+/// StringReplace("opq","o","")     return string("pq")
+/// StringReplace("opoq","o","abc") return string("abcpabcq")
+string StringReplace(const string& str, const string& oldstr, const string& newstr);
+
 double getmean(double *p, size_t sz);
 
 double maxsubarray_fixed(double *p, size_t sz, double*& end);

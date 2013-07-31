@@ -129,50 +129,19 @@ public:
 	///        if exception occurs, for instance, corrupted list node, return NULL\n
 	///        otherwise return a pointer of the kth node before the tail node\n
 	///\note The 0th node is the tail itself\n
-	///\exception N.A.
-	///@author Simon (simonwoo2000@gmail.com)
+	///@exception NA
+	///@throws NA
+	///@author Wu Fuheng (simonwoo2000@gmail.com)
 	///\date 25 July, 2013
 	///@test k=0,-1,1,1000000
 	///@version 1.0
 	///@remarks Two pointer tick, like a sliding window
 	///Time - O(n) where n is the length of the list; Space - O(1)
-	const slist_node* FindKthToTail(int k) const throw(){
-		try{
-			if(k<0){
-				return NULL;
-			}else if(k==0){// just return the tailnode itself
-				slist_node* tmp=head;
-				slist_node* prevtmp=NULL;// the prev of tmp
-				while (tmp!=NULL){
-					prevtmp=tmp;
-					tmp=tmp->next;
-				}
-				return prevtmp;
-			}else{
-				slist_node* tmp1=head;
-				slist_node* tmp2=head;
-				unsigned int count=0;// the size of the slist
-				while(tmp1!=NULL){
-					tmp1=tmp1->next;
-					if (count++ >k){
-						tmp2=tmp2->next;
-					}
-				}
-				if (count < k+1){// no move for tmp2, which means K+1 > length of the link
-					return NULL;
-				}else{
-					return tmp2;
-				}
-			}
-		}catch(...){return NULL;}
-	}
+	const slist_node* __cdecl FindKthToTail(int k) const throw();
 
 	///@brief if there is a circle inside the single list
 	bool HasCircle() const {
 	}
-
-
-
 private:
 	slist_node* head;
 	size_t lsize;

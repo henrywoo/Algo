@@ -24,11 +24,15 @@ namespace sorting{
 		}
 	}
 
-	void insertionsort(int* head,int* tail){
+    bool greater(int a,int b){return a>b?true:false;}
+    bool lesser(int a,int b){return a<b?true:false;}
+
+	void insertionsort(int* head,int* tail, bool(*cmp)(int,int)=greater){
 		int sz=tail-head+1;
 		for(int i=1;i<=sz-1;i++){
 			for (int j = i-1; j>=0; j--){
-				if (head[j]<head[j+1]){
+				//if (head[j] > head[j+1]){
+                if (cmp(head[j], head[j+1])){
 					swap(head[j],head[j+1]);
 				}else{break;}
 			}
@@ -263,6 +267,7 @@ namespace sorting{
 			if (row_<=rowlen-1 && col_<=collen-1){
 				return p[row_*rowlen + col_];
 			}
+			return p[0];
 		}
 
 		matrix(int r,int c){

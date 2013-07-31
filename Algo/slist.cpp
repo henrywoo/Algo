@@ -48,6 +48,40 @@ slist_node* slist::begin(){
 	return head;
 }
 
+#define BR __asm{int 3}
+const slist_node* __cdecl slist::FindKthToTail(int k) const throw(){
+	BR
+	try{
+		if(k<0){
+			return NULL;
+		}else if(k==0){/// just return the tailnode itself
+			slist_node* tmp=head;
+			slist_node* prevtmp=NULL;/// the prev of tmp
+			while (tmp!=NULL){
+				prevtmp=tmp;
+				tmp=tmp->next;
+			}
+			return prevtmp;
+		}else{
+			slist_node* tmp1=head;
+			slist_node* tmp2=head;
+			unsigned int count=0;/// the size of the slist
+			while(tmp1!=NULL){
+				tmp1=tmp1->next;
+				if (count++ >k){
+					tmp2=tmp2->next;
+				}
+			}
+			if (count < k+1){/// no move for tmp2, which means K+1 > length of the link
+				return NULL;
+			}else{
+				return tmp2;
+			}
+		}
+	}catch(...){return NULL;}
+}
+
+
 bool slist::test(){
 	int a[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
 	slist sl(a,a+(sizeof(a)/sizeof(int)>>1));

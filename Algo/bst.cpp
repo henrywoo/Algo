@@ -173,6 +173,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 	}else if(wo==POSTORDER){
 		if (norecursive){
 			// http://www.geeksforgeeks.org/iterative-postorder-traversal/
+#define GEEK
 #ifdef GEEK
 			stack<btnode*> stk;
 			btnode*tmp=proot;
@@ -259,16 +260,16 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 	return v;
 }
 
+///@todo could be optimized
 bool bst::isBST(const bst& t){
 	vector<int> v=t.walk(INORDER);
 	int tmp=INT_MIN;
-	for (vector<int>::const_iterator i=v.begin();i!=v.end();++i)
-	{
-		if (tmp<*i)
-		{
+	for (vector<int>::const_iterator i=v.begin();i!=v.end();++i){
+		if (tmp<*i){
 			tmp=*i;
-		}else
-			return false;
+		}else{
+            return false;
+        }
 	}
 	return true;
 }
@@ -280,6 +281,123 @@ WALKORDER bst::getOrder(const vector<int>& v){
 vector<int> bst::getdepth(int n){
 	vector<int> v;
 	return v;
+}
+
+size_t bst::diameter(){
+    return diameter(proot);
+}
+
+size_t bst::height(){
+    return height(proot);
+}
+
+size_t bst::height(btnode* pn){//inclusive
+    if (pn==NULL){
+        return 0;
+    }
+    if (pn->l==NULL && pn->r==NULL){
+        return 1;
+    }
+    int lh=pn->l?height(pn->l):0;
+    int rh=pn->r?height(pn->r):0;
+    return max(lh,rh);
+}
+
+size_t bst::diameter(btnode* pn){//inclusive
+    if (pn==NULL){
+        return 0;
+    }else{
+        if (pn->l==NULL && pn->r==NULL){
+            return 1;
+        }else{
+            int ld=pn->l?diameter(pn->l):0;
+            int rd=pn->r?diameter(pn->r):0;
+
+            int lh=pn->l?height(pn->l):0;
+            int rh=pn->r?height(pn->r):0;
+
+            return max(lh+rh+1,max(ld,rd));
+        }
+    }
+}
+
+bst_iterator_postorder::bst_iterator_postorder(bst& lhs):
+    t(lhs),
+    p2curr_node(NULL),
+    pushmode(true)
+{
+    //p2curr_node=NULL;
+    //pushmode=true;
+    findfirstnode();
+}
+bst_iterator_postorder::~bst_iterator_postorder(){}
+
+void bst_iterator_postorder::reset(){
+    p2curr_node=NULL;
+    pushmode=true;
+    processed_nodes.clear();
+    findfirstnode();
+    //assert(stk.empty());
+}
+
+void bst_iterator_postorder::findfirstnode(){
+    p2curr_node=t.getroot();
+    while(true){
+        stk.push(p2curr_node);
+        processed_nodes.insert(p2curr_node);
+        if (p2curr_node->l){
+            p2curr_node=p2curr_node->l;
+        }else if (p2curr_node->r){
+            p2curr_node=p2curr_node->r;
+        }else{
+            stk.pop();
+            pushmode=false;
+            break;
+        }
+    }
+}
+
+btnode* bst_iterator_postorder::next()
+{
+    p2curr_node=stk.empty()?NULL:stk.top();
+    while(p2curr_node){
+        if(pushmode){
+            stk.push(p2curr_node);
+            processed_nodes.insert(p2curr_node);
+            if (p2curr_node->l){
+                p2curr_node=p2curr_node->l;
+            }else if (p2curr_node->r){
+                p2curr_node=p2curr_node->r;
+            }else{
+                //leaf
+                stk.pop();
+                pushmode=false;
+                return p2curr_node;
+            }
+        }else{
+            if (p2curr_node->r && processed_nodes.count(p2curr_node->r)==0){
+                p2curr_node=p2curr_node->r;
+                pushmode=true;
+            }else{
+                stk.pop();
+                return p2curr_node;
+            }
+        }
+    }
+    if(!p2curr_node) reset();//??
+    return NULL;
+}
+
+bst_iterator_postorder& bst_iterator_postorder::operator++(){
+    p2curr_node=next();
+    return *this;
+}
+
+///post-autoincrement
+bst_iterator_postorder bst_iterator_postorder::operator++(int){
+    bst_iterator_postorder ti=*this;
+    ++*this;//++ti;
+    return ti;
 }
 
 bool bst::test(){
@@ -306,8 +424,9 @@ bool bst::test(){
 	cout << endl;
 	
 	v=t.walk(POSTORDER);
+    cout <<"POST:"<< endl;
 	copy(v.begin(),v.end(),ostream_iterator<int>(cout,","));
-	cout <<'\b'<< endl;
+	cout << endl;
 
 	v=t.walk(LAYERBYLAYER);
 	copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));
@@ -324,87 +443,26 @@ bool bst::test(){
 	bst::isBST(t);
 
 	//bst t;
-	bst_iterator_postorder bip(t);
+	bst_iterator_postorder bip(t);//equivalent to v.begin()
+#if 0
 	btnode* p=bip.begin();
 	while(p){
 		cout << p->d << endl;
 		p=bip.next();
+        //++p;
 	}
+#endif
+
+    while (bip){
+        cout << *bip << endl;
+        //bip.next();
+        ++bip;
+    }
+
 	return true;
 }
 
 
-void heap::heaper::print(){
-	copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));
-}
-
-bool heap::test(){
-	heap h;
-	h.print2();
-	const heap h2;
-	h2.print2();
-	int a[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
-	int* b=a;
-	while(b!=a+sizeof(a)/sizeof(int)){
-		h.insert(*b);
-		b++;
-	}
-	h.print();
-	int p=h.pop();
-	cout << p << endl;
-	h.print();
-	return true;
-}
-
-void heap::heaper::insert(int n){
-	v.push_back(n);
-	int pos=v.size()-1;
-	while (v.at(PARENTPOS(pos))<n){
-		int tmp=v.at(PARENTPOS(pos));
-		v.at(PARENTPOS(pos))=n;
-		v.at(pos)=tmp;
-		if (pos==0){
-			break;
-		}
-		pos=PARENTPOS(pos);
-	}
-}
-
-///@brief pop one element(max/min) from heap
-///NOTE: vector<T>::pop_back is to remove the last item from the vector
-int heap::heaper::pop(){
-	int r=v.at(0);
-	v.at(0)=*v.rbegin();
-	v.pop_back();
-
-	int pos=0;
-	int lastpos=v.size()-1;
-	while (pos<lastpos){
-		int l=LCHILDPOS(pos);
-		int r=RCHILDPOS(pos);
-		if (l>lastpos && r>lastpos)break;
-		if (r>lastpos){
-			if (v[pos]<v[l]){
-				util::swap(v.at(pos),v.at(l));
-				pos=l;
-			}
-		}else{
-			if (v.at(l)>v.at(r))
-			{
-				if (v[pos]<v[l]){
-					util::swap(v.at(pos),v.at(l));
-					pos=l;
-				}
-			}else{
-				if (v[pos]<v[r]){
-					util::swap(v.at(pos),v.at(r));
-					pos=r;
-				}
-			}
-		}
-	}
-	return r;
-}
 
 //////////////////////////////////////////////////////////////////////////
 namespace sandbox{

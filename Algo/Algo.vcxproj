@@ -53,10 +53,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,25 +83,35 @@
   <ItemGroup>
     <ClCompile Include="bst.cpp" />
     <ClCompile Include="dlist.cpp" />
+    <ClCompile Include="graph.cpp" />
+    <ClCompile Include="heap.cpp" />
     <ClCompile Include="m.cpp" />
     <ClCompile Include="tick.cpp" />
     <ClCompile Include="util.cpp" />
+    <ClCompile Include="ziplist.c" />
+    <ClCompile Include="zipmap.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algo.h" />
+    <ClInclude Include="bitops.h" />
     <ClInclude Include="bst.h" />
     <ClInclude Include="deque.h" />
+    <ClInclude Include="graph.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="dp.h" />
     <ClInclude Include="heap.h" />
     <ClInclude Include="htable.h" />
+    <ClInclude Include="mt.h" />
     <ClInclude Include="queue.h" />
     <ClCompile Include="slist.cpp" />
     <ClInclude Include="searching.h" />
+    <ClInclude Include="SkipListTmpl.h" />
     <ClInclude Include="sort.h" />
     <ClInclude Include="stack.h" />
     <ClInclude Include="tick.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="ziplist.h" />
+    <ClInclude Include="zipmap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

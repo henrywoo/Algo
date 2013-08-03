@@ -2,6 +2,7 @@
 #define __ALGO_HEAP__
 
 #include "bst.h"
+#include <iostream>
 
 namespace heaping{
 
@@ -20,7 +21,10 @@ namespace heaping{
         void heapify(int pos);
     public:
 
-        heap(COMP p=heap::greater):comp(p){}
+        heap(COMP p=heap::greater):comp(p){
+            using namespace std;
+            cout<< __FILE__ << __LINE__ << __FUNCDNAME__ << endl;
+        }
         void insert(int n);
         int pop();
         void print();

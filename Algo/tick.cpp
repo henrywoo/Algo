@@ -168,7 +168,7 @@ tick tickseries::gettk(const char* s){
 }
 
 void tickseries::test(){
-		fstream ts("1.csv");
+		ifstream ifs("1.csv");
 		tickseries* ptd= new tickseries("1.HK");
 		/*std::string s1, s2, s3, s4, s5;
 		if (ts >> s1 >> s2 >> s3 >> s4 >> s5){}*/
@@ -177,9 +177,9 @@ void tickseries::test(){
 		const int linebufsize=256;
 		char ln[linebufsize]={};
 		int num=0;
-		if (ts.is_open()){
-			while (ts.good() && !ts.eof()){
-				ts.getline(ln,linebufsize,'\n');
+		if (ifs.is_open()){
+			while (ifs.good() && !ifs.eof()){
+				ifs.getline(ln,linebufsize,'\n');
 				if (*ln){
 					ptd->push(gettk(ln));
 				}

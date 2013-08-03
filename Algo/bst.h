@@ -68,8 +68,11 @@ public:
 ///@brief an binary search tree
 ///BST is-a Binary Tree
 class bst:public bt{
+    /// implementation
 	vector<int> walk_from_node(btnode* p, WALKORDER wo) const;
+    bool save2XML_recursive_hlp(btnode*,ofstream& f);
 public:
+    /// interface
 	bst();
 	bst(int* p,int* q);
 	bst(int* p,int size);
@@ -96,8 +99,14 @@ public:
 	vector<int> getdepth(int n);
     size_t diameter();
 
+    
+    bool save2XML();// 2 means to
+    bool save2Jason();
+
 	static bool isBST(const bst& t);
 	static WALKORDER getOrder(const vector<int>& v);
+    static bst read4XML(const char*);// 4 means from
+    static bool compareBST(const bst&, const bst&);
 	static bool test();
 private:
     size_t height(btnode*);

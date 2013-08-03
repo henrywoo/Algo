@@ -25,9 +25,20 @@
 #include <thread>
 //#include <boost/graph/adjacency_list.hpp>
 
+bst x;
+
+int foo(){
+    int x;
+    _asm mov x,1000b
+    printf("%d\n",x);
+}
+
+
 using namespace std;
 //using namespace boost;
 int main(int argc,char* argv[]){
+    //cout << boolalpha << bool(true^true) << endl;// xor can be used on bool
+    foo();
     bst::test();
     Augmentation::test();
 

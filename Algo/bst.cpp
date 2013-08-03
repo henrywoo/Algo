@@ -1,4 +1,4 @@
-#include "bst.h"
+﻿#include "bst.h"
 #include <assert.h>
 #include <iostream>
 #include <stack>
@@ -6,8 +6,10 @@
 #include <set>
 #include <iterator>
 #include "util.h"
+#include <fstream>
 
 bst::bst(){
+    cout<< __FILE__ << __LINE__ << __FUNCDNAME__ << endl;
 }
 
 bst::~bst(){
@@ -287,6 +289,105 @@ size_t bst::diameter(){
     return diameter(proot);
 }
 
+///@brief save the binary tree into an XML file in an PREORDER order:-)
+/// we can expand this function to save it into INORDER, POSTORDER and so on
+bool bst::save2XML(){
+#ifdef __cplusplus
+    //fs.set_rdbuf()
+    ofstream ofs("_binarytree.xml");
+    if(ofs.is_open() && ofs.good()){
+        ofs << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
+        /// how to <n>p<n>l</n><n>r</n></n>
+        /// rule: write <n> when first encountering the node
+        /// write </n> when all its children are written into the ofile stream
+        if (proot){
+            save2XML_recursive_hlp(proot,ofs);
+        }
+    }else{
+        perror("Cannot open file" __FILE__ __FUNCTION__);// This is OK!:-)
+        return false;
+    }
+#else
+    FILE *p=fopen("tmp.lst","w");
+    if (p){
+        char *c="你好\n";
+        fwrite(c,sizeof(char),strlen(c),p);
+        fclose(p);
+    }
+    
+#endif
+    return true;
+}
+///@ we need a stack, here we use a recursive function to implement the stack
+bool bst::save2XML_recursive_hlp(btnode* bn, ofstream& f){
+    char c[1<<6]={}; //2**6 = 64
+    sprintf(c,"<n>%d",bn->d);
+    f << c << endl;
+    if (bn->l){
+        save2XML_recursive_hlp(bn->l, f);
+    }
+    if (bn->r){
+        save2XML_recursive_hlp(bn->r, f);
+    }
+    f<< "</n>" << endl;
+    return true;
+}
+
+///Static function of binary search tree
+///@param fn - file name
+///@brief construct a binary search tree from an XML file
+bst bst::read4XML(const char* fn){
+    bst t;
+    ifstream ifs("_binarytree.xml");// ifs means input file stream
+    char c[1<<6]={};
+    if (ifs.is_open()){
+        while (!ifs.eof()){
+            ifs.getline(c,1<<6);
+            if (*c=='<'){
+                if(c[0]=='/'){
+                    //scanf()
+                }else if(c[1]=='n'){
+                    int i=atoi(c+3);
+                    t.insert(i);
+                    cout << i << endl;
+                }
+            }
+        }
+    }
+    return t;
+}
+
+/// if both
+bool compnode_recursive(const btnode* n1,const btnode* n2){
+    if (n1->d==n2->d){
+        if (((n1->l!=NULL) ^ (n2->l!=NULL)) || ((n1->r!=NULL) ^ (n2->r!=NULL))){//?? xor with two boolean??
+            return false;
+        }
+        if (n1->l!=NULL && n2->l!=NULL){// &&= illegal.
+            if (!compnode_recursive(n1->l,n2->l)){
+                return false;
+            }
+        }
+        if (n1->r!=NULL && n2->r!=NULL){// &&= illegal.
+            if (!compnode_recursive(n1->r,n2->r)){
+                return false;
+            }
+        }
+        return true;
+    }else{
+        return false;
+    }
+    
+}
+
+bool bst::compareBST(const bst& t1, const bst& t2){
+    return compnode_recursive(t1.proot,t2.proot);
+}
+
+bool bst::save2Jason(){
+    return true;
+}
+
 size_t bst::height(){
     return height(proot);
 }
@@ -408,9 +509,13 @@ bool bst::test(){
 	}
 	bst t;
 	t.insert(a,sizeof(a)/sizeof(int));
+    //t.save2XML();
+    bst t2 = t.read4XML("_binarytree.xml");
+    //bool b=bst::compareBST(t,t2);
+    cout << "Are the two trees the same? " << boolalpha << bst::compareBST(t,t2) << endl;
 
 	/*
-	10 5 7 6 9 8 40 25 13 21 16 19 23 50
+	10 5 7 6 9 8 40 25 13 21 16 19 23 50t
 	5 6 7 8 9 10 13 16 19 21 23 25 40 50
 	6 8 9 7 5 19 16 23 21 13 25 50 40 10
 	*/

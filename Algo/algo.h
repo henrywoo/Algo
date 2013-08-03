@@ -385,7 +385,22 @@ namespace integerrelated{
 		return result;
 	}
 
+    bool isPalindromeInt(int x, int &y) {
+        if (x < 0) return false;
+        if (x == 0) return true;
+        if (isPalindromeInt(x/10, y) && (x%10 == y%10)) {
+            y /= 10;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    bool isPalindromeInt(int x) {
+        return isPalindromeInt(x, x);
+    }
+
 	void test(){
+        isPalindromeInt(3123);
 		int tmp=12309002;
 		cout << tmp << endl;
 		tmp=reverse(tmp);
@@ -457,7 +472,6 @@ longestCommonPrefix_DONE:
 				j++;
 			}
 		}
-		longestCommonSubstr_DONE1:
 		return r;
 	}
 
@@ -527,6 +541,12 @@ longestCommonPrefix_DONE:
 	}
 #endif
 
+    ///@todo
+    bool IsScramble(const string& a,const string& b){
+        return true;
+    }
+
+    ///@todo
 
 
 	void test(){
@@ -548,9 +568,6 @@ longestCommonPrefix_DONE:
 		string s1("ABABC"),s2("BABCA");
 		string r=longestCommonSubstr(s1, s2);
 		cout<<r.c_str()<< endl;
-
-		
-
 	}
 	
 }

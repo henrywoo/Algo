@@ -1,49 +1,8 @@
 #ifndef __ALGO_BST__
 #define __ALGO_BST__
 
-#include <vector>
-#include <stack>
-#include <set>
+#include "bt.h"
 
-using namespace std;
-
-enum WALKORDER{
-	PREORDER=1, /// head->left->right
-	INORDER,    /// left->head->right
-	POSTORDER,  /// left->right->head
-	REVERSE_PREORDER, /// right->left->head
-	REVERSE_INORDER,  /// right->head->left
-	REVERSE_POSTORDER,/// head->right->left
-	LAYERBYLAYER, //layer by layer
-	ZIGZAG,// via two stacks
-	NONE=-1 //
-};
-
-///@brief arbitrary binary tree node[bst,heap,etc]
-struct btnode{
-	btnode* l;// left node
-	btnode* r;// right node
-	int d;
-	short color;
-	btnode* par;
-	double weight;
-	btnode(int n):l(NULL),r(NULL),d(n),color(0),weight(.0){}
-};
-
-///@brief an arbitrary binary tree
-///@interface an ABC(abstract base class) with pure virtual function of a binary tree
-class bt{
-protected:
-	btnode *proot;
-	virtual void insert(int)=0;
-public:
-	bt():proot(NULL){}
-	btnode *getroot(){return proot;}
-};
-
-inline int PARENTPOS(int i){return (((i+1)>>1)-1);}
-inline int LCHILDPOS(int i){return ((i<<1)+1);}
-inline int RCHILDPOS(int i){return ((i<<1)+2);}
 ///@brief A complete binary tree is a binary tree in which
 ///every level, except possibly the last, is completely filled, 
 ///and all nodes are as far left as possible.
@@ -84,6 +43,7 @@ public:
 	void insert(int* p,int* q);
 	void insert(int* p,int size);
 	void insert(const vector<int>& v);
+    bool remove(int);
 
 	vector<int> walk(WALKORDER wo, bool norecursive=true) const;
 
@@ -98,7 +58,6 @@ public:
 
 	vector<int> getdepth(int n);
     size_t diameter();
-
     
     bool save2XML();// 2 means to
     bool save2Jason();

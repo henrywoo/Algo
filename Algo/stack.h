@@ -89,8 +89,8 @@ namespace wufuheng{
 	//////////////////////////////////////////////////////////////////////////
 	///You  can  implement  this  by  having  each  node  in  the \
 	stack  keep  track  of  the  minimum  be-neath itself   Then,\
-	to find the min, you just look at what the top element thinks\
-	is the min.
+	to find the mymin, you just look at what the top element thinks\
+	is the mymin.
 	///wufuheng::stackwithminmax<double>::test();
 	template <typename T>
 	struct stackwithminnode: public stacknode<T>{
@@ -130,8 +130,8 @@ namespace wufuheng{
 
 				tmp->prev=NULL;
 
-				tmp->localmin = std::min(head->localmin,x);
-				tmp->localmax = std::max(head->localmax,x);
+				tmp->localmin = getmin(head->localmin,x);
+				tmp->localmax = getmax(head->localmax,x);
 				
 				head=tmp;
 			}
@@ -147,11 +147,10 @@ namespace wufuheng{
 				delete tmp;
 				st--;
 			}
-			
 		}
 
 
-		T min(){
+		T getmin(){
 			if (head==NULL){
 				return INT_MAX;
 			}else{
@@ -159,7 +158,7 @@ namespace wufuheng{
 			}
 		}
 
-		T max(){
+		T getmax(){
 			if (head==NULL){
 				return INT_MIN;
 			}else{
@@ -180,27 +179,27 @@ namespace wufuheng{
 
 			stackwithminmax<double> swm;
 			swm.push(1.3);
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.push(13.1);
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.push(4.9);
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.push(0.1);
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.push(7.5);
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.pop();
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.pop();
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.pop();
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.pop();
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.pop();
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 			swm.pop();
-			cout << swm.min() << " " << swm.max() << endl;
+			cout << swm.getmin() << " " << swm.getmax() << endl;
 
 			
 		}

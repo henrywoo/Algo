@@ -10,14 +10,15 @@
 #include <unordered_map>
 #include <hash_set>
 #include "heap.h"
+#include "util.h"
 
 namespace Augmentation{
 
     namespace kthmax{
         ///@todo
-        ///1. kth max in a given unsorted array
-        ///2. kth max in two given unsorted arrays
-        ///3. kth max in x given unsorted/sorted arrays
+        ///1. kth mymax in a given unsorted array
+        ///2. kth mymax in two given unsorted arrays
+        ///3. kth mymax in x given unsorted/sorted arrays
         ///http://www.mitbbs.com/article_t/JobHunting/32494041.html
     }
 
@@ -578,7 +579,235 @@ namespace DP{
 	using namespace std;
 
 	namespace Palindrome{
-		/// substring -consecutive; subsequence - not necessarily consecutive
+	/// substring -consecutive; subsequence - not necessarily consecutive
+
+    ///@ O(n)
+    bool ispalindromesubstr(const string& s){
+            if(s.empty()){
+                //return false;
+                return true;///@note be careful of the boundary condition
+            }else{
+                if(s.size()==1){
+                    return true;
+                }else{
+                    if(*s.begin()==s.back()){
+                        return ispalindromesubstr(s.substr(1,s.size()-2));
+                    }else{
+                        return false;
+                    }
+                }
+            }
+    }
+
+    bool ispalinstr(const string& s){
+        if (s.empty() || s.size()==1){
+            return true;
+        }
+        const char* ph=&*s.begin();
+        const char* pt=&s.back();
+        while(ph<pt){
+            if(*ph++!=*pt--) return false;
+        }
+        return true;
+    }
+
+
+#define PSS pair<string,string>
+    
+    /// O(n)
+    PSS Longest_Palindrome_Substring_fromindex0(const string& s){
+        if (s.empty()){
+            return PSS("","");
+        }else{
+            if (s.size()==1){
+                return PSS(s,"");
+            }else if(s.size()==2){
+                if (s[0]==s[1]){
+                    return PSS(s,"");
+                }else{
+                    return PSS(s.substr(0,1),s.substr(1,1));
+                }
+            }else{
+                int pos=s.rfind(s[0]);
+                if (pos==0){//string::npos is -1
+                    return PSS(s.substr(0,1),s.substr(1,s.size()-1));
+                }else{
+                    ///@example aba, pos=2, substr(1,1)
+                    if (ispalinstr(s.substr(1,pos-1-1+1))){
+                        return PSS(s.substr(0,pos+1),s.substr(pos+1,s.size()-1-(pos+1)+1));
+                    }else{
+                        PSS pr=Longest_Palindrome_Substring_fromindex0(s.substr(0,pos-1));
+                        return PSS(pr.first,
+                            s.substr(pr.first.size(),s.size()-1-pr.first.size()+1));
+                    }
+                }
+            }
+        }
+    }
+
+    PSS Longest_Palindrome_Substring_fromend(const string& s){
+        if (s.empty()){
+            return PSS("","");
+        }else{
+            if (s.size()==1){
+                return PSS("",s);
+            }else if(s.size()==2){
+                if (s[0]==s[1]){
+                    return PSS("",s);
+                }else{
+                    return PSS(s.substr(0,1),s.substr(1,1));
+                }
+            }else{
+                int pos=s.find(s.back());
+                if (pos==s.size()-1){//string::npos is -1
+                    return PSS(s.substr(0,s.size()-1),s.substr(s.size()-1,1));
+                }else{
+                    ///@example aba, pos=2, substr(1,1)
+                    //if (ispalindromesubstr(s.substr(pos+1,s.size()-1-(pos+1)))){
+                    if (ispalinstr(s.substr(pos+1,s.size()-1-(pos+1)))){
+                        return PSS(s.substr(0,pos),s.substr(pos,s.size()-pos));
+                    }else{
+                        PSS pr=Longest_Palindrome_Substring_fromend(s.substr(pos+1,s.size()-pos-1));
+                        return PSS(s.substr(0,pos+1+pr.first.size()),
+                            pr.second);
+                    }
+                }
+            }
+        }
+    }
+
+    unordered_map<string,unsigned int> str2mc;
+    ///@brief complexity??
+    int minCut(const string& s){
+        if (s.empty()){
+            return 0;
+        }else if(s.size()==1){
+            return 0;//1;
+        }else{
+            int r=0x7fffffff;
+            if(str2mc.find(s)==str2mc.end()){
+                int sz=s.size();
+                /// O(n*x)
+                for(int i=0;i<=sz-1;i++){//i - index
+                    string s1=s.substr(0,i);
+                    string s2=s.substr(i,sz-i);
+                    int extra=0;
+                    if (!s1.empty()&&!s2.empty()){
+                        extra=1;
+                    }
+                    PSS pr=Longest_Palindrome_Substring_fromindex0(s2);//O(n)
+                    int incr=1;
+                    if (pr.first.empty()||pr.second.empty()){
+                        incr=0;
+                    }
+                    int tmp=minCut(s1)+incr+extra+minCut(pr.second);//????
+                    if (r>tmp){
+                        r=tmp;
+                        if (tmp==0){
+                            str2mc[s]=tmp;
+                            return 0;
+                        }
+                    }
+                }
+            }else{
+                return str2mc[s];
+            }
+            str2mc[s]=r;
+            return r;
+        }
+    }
+
+    ///????
+    int minCut2(string s){
+        int len = s.size();
+        int *dp = new int[len];//pointer to array
+        bool **p = new bool*[len];//2-D array to store boolean
+        for(int i=0; i<len; i++)
+            p[i] = new bool[len];//initialize 2-D array
+
+        for(int i=0; i<len; i++) dp[i]=i;
+
+        for(int i=0; i<len; i++){
+            for(int j=0; j<len; j++){
+                p[i][j] = (i == j);// assign true to the diagonal elements
+            }
+        }
+        for(int i=1; i<len; i++){
+            for(int j=0; j<=i; j++){
+                if(s[i] == s[j] && (i-j<2 || p[j+1][i-1])){
+                    p[j][i] = true;
+                    if(j == 0){//??
+                        dp[i] = 0;
+                        break;
+                    } else {
+                        printf("%d = mymin(%d,%d+1) i=%d j=%d\n",dp[i],dp[i],dp[j-1],i,j);
+                        dp[i] = mymin(dp[i],dp[j-1]+1);
+                    }
+                }
+            }
+        }
+#ifdef _DEBUG
+        for (int i=0;i<=len-1;i++){
+            for (int j=0;j<=len-1;j++){
+                printf("%d ",p[i][j]);
+            }
+            printf("\n");
+        }
+#endif
+        return dp[len-1];
+    }
+
+
+    ///@brief flawless
+    int minCut3(const string& s){
+        if (s.empty()){
+            return 0;
+        }else if(s.size()==1){
+            return 0;//1;
+        }else{// at least s has two chars inside
+            if(str2mc.find(s)==str2mc.end()){
+                PSS pr=Longest_Palindrome_Substring_fromend(s);//first could be empty, second will be at least one char
+                assert(pr.second.size()>=1);
+                //when first is empty, return 0 immediately
+                if(pr.first.empty()){
+                    str2mc[s]=0;
+                    return 0;
+                }
+                if(pr.second.size()==1){
+                    int tmp=minCut3(s.substr(0,s.size()-1))+1;
+                    str2mc[s]=tmp;
+                    return tmp;
+                }else{
+                    int tmp=minCut3(pr.first);
+                    //cout<< pr.first.c_str() << endl;
+                    //cout << minCut3(pr.first) << endl;
+                    if (tmp==0){//optimization
+                        str2mc[s]=1;
+                        return 1;
+                    }
+                    /*tmp=mymin(tmp+1,// because pr.second is a palin now
+                        minCut3(s.substr(0,s.size()-1))+1);*/
+                    tmp=tmp+1;
+                    int sz=s.size();
+                    for (int i=1;i<=sz-2;i++){// must not start from 0, or the recursive will be endless
+                        int x=minCut3(s.substr(0,i));
+                        if (x>=tmp){
+                            break;
+                        }
+                        int y=minCut3(s.substr(i,sz-i));
+                        if (x+y+1<tmp){
+                            tmp=x+y+1;
+                        }
+                    }
+                    str2mc[s]=tmp;
+                    return tmp;
+                }
+            }else{
+                return str2mc[s];
+            }
+        }
+    }
+
 	///@
 	bool IsContainChar(const char* p,char const *q, const char c){
 		while (p<=q){
@@ -607,9 +836,8 @@ namespace DP{
 	if x[i]==x[j]
 	  = 2+longest(i+1,j-1)
 	else
-	  = max(longest(i+1,j),longest(i,j-1))
+	  = mymax(longest(i+1,j),longest(i,j-1))
 	************************************************************************/
-    #define MAX(x,y) (x>y?x:y)
 	///@brief top down method
 	int Longest_Palindrome_SubSequence(const char* x,const char*y){
 		static map<string,int> m;
@@ -624,7 +852,7 @@ namespace DP{
 			if(*x==*y){
 				r=2+Longest_Palindrome_SubSequence(x+1,y-1);
 			}else{
-				r=MAX(Longest_Palindrome_SubSequence(x,y-1),Longest_Palindrome_SubSequence(x+1,y));
+				r=mymax(Longest_Palindrome_SubSequence(x,y-1),Longest_Palindrome_SubSequence(x+1,y));
 			}
 		}
 		m[string(x,y+1)]=r;
@@ -698,7 +926,7 @@ namespace DP{
 				if (*tail==*newtail){
 					return helper(head,newtail);/// 
 				}else{
-					return std::max(helper(head,newtail),getfromright(head,newtail,*tail)); /// O(n) + ...
+					return mymax(helper(head,newtail),getfromright(head,newtail,*tail)); /// O(n) + ...
 				}
 			}    
 		}
@@ -733,7 +961,7 @@ namespace DP{
 			bool exist[256] = { false };
 			while (j < n) {
 				if (exist[s[j]]) {
-					maxLen = max(maxLen, j-i);
+					maxLen = mymax(maxLen, j-i);
 					while (s[i] != s[j]) {
 						exist[s[i]] = false;
 						i++;
@@ -745,7 +973,7 @@ namespace DP{
 					j++;
 				}
 			}
-			maxLen = max(maxLen, n-i);
+			maxLen = mymax(maxLen, n-i);
 			return maxLen;
 		}
 
@@ -762,20 +990,25 @@ namespace DP{
 				}else{
 					i=uomap[s[i]]+1;
 					uomap.clear();//wrong!
-					globalmax=std::max(globalmax,localmax);
+					globalmax=mymax(globalmax,localmax);
 					if (globalmax+i>s.size()){break;}
 					localmax=1;
 					printf("\n%c",s[i]);
 				}
 				uomap[s[i]]=i;
 			}
-			globalmax=std::max(globalmax,localmax);
+			globalmax=mymax(globalmax,localmax);
 			printf("\n");
 			return globalmax;
 		}
 	};
 
 	void test(){
+        string sp="bcbaab";//"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";//"ababacdcab";//"eegiicgaeadbcfacfhifdbiehbgejcaeggcgbahfcajfhjjdgj";
+        //int i=Palindrome::minCut(sp);
+        int j=Palindrome::minCut2(sp);
+        int k=Palindrome::minCut3(sp);
+        cout << DP::Palindrome::str2mc.size() << endl;
 		/*int LP_sz1=Longest_Palindrome("character");
 		cout << LP_sz1<< endl;
 		int LP_sz2=Longest_Palindrome("charcater");

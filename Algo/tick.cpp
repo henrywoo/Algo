@@ -107,7 +107,7 @@ void tickseries::printbycolumn(){
 		*tmp++ = i->changes.vwap;
 	}
 
-	/// statistics: max, min, mean
+	/// statistics: mymax, mymin, mean
 	double ma=INT_MIN,mi=INT_MAX;
 	double *tmp2=pc.get()+len;
 	tmp=pc.get();
@@ -119,7 +119,7 @@ void tickseries::printbycolumn(){
 	double mean=getmean(pc.get(),len);
 	cout << mean << endl;
 
-	//get the max sum sub array
+	//get the mymax sum sub array
 	double * head=NULL, * tail=NULL;
 	double maxsum=maxsubarray(pc.get(),len,head,tail);
 	copy(head,tail+1,ostream_iterator<double>(cout," "));

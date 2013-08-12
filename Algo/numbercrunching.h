@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace mymath{
+namespace statistics{
 
     /// integer overflow?
     ///@todo overflow?
@@ -78,6 +78,12 @@ namespace mymath{
         }
         return 1-r;
     }
+
+    ///three color(r,y,b), draw three times with equal probability for the three colors
+    ///given one of the three draws is red, what is the probability of exact one is yellow?
+    ///original probability space: 3*3*3=27
+    ///conditional probability space: [1- P(no red at all)]*27 = 19
+    ///scenarios: 1y 2r; 1y 1r 1b
 
     bool test(){
         cout << choose(23,3) << endl;

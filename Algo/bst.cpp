@@ -61,11 +61,20 @@ void bst::insert(int* p,int size){
 		p++;
 	}	
 }
+
 void bst::insert(const vector<int>& v){
 	for(vector<int>::const_iterator i=v.begin();i!=v.end();++i){
 		insert(*i);
 	}
 }
+
+///@brief delete an integer i from the binary tree
+///@return false - no key found; true - delete successfully
+bool bst::remove(int i){
+    ///@todo
+    return true;
+}
+
 
 
 vector<int> bst::walk_from_node(btnode* p, WALKORDER wo) const{
@@ -175,7 +184,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 	}else if(wo==POSTORDER){
 		if (norecursive){
 			// http://www.geeksforgeeks.org/iterative-postorder-traversal/
-#define GEEK
+#define NOGEEK
 #ifdef GEEK
 			stack<btnode*> stk;
 			btnode*tmp=proot;
@@ -188,18 +197,28 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 					helper_pushallrightsidenodes(tmp->l,stk,v);
 				}
 			}
-			reverse(v.begin(),v.end());
+			std::reverse(v.begin(),v.end());
 #else
 			stack<btnode*> stk;
 			btnode*tmp=proot;
 			helper_pushallleftsidenodes(proot,stk);
-			while (!stk.empty())
-			{
+            btnode* dummy=NULL;
+			while (!stk.empty()){
 				btnode* tmp=stk.top();
-				stk.pop();
-				if (tmp)
-				{
-				}
+				//stk.pop(); ///@note different with other methods here, NO pop here
+                if (tmp==dummy){
+                    stk.pop();
+                    tmp=stk.top();
+                    v.push_back(tmp->d);///3
+                    stk.pop();
+                    continue;
+                }if (tmp->r){
+                    stk.push(dummy);
+                    helper_pushallleftsidenodes(tmp->r,stk);
+				}else{
+                    v.push_back(tmp->d);///1,2
+                    stk.pop();
+                }
 			}
 #endif
 		}else{
@@ -401,7 +420,7 @@ size_t bst::height(btnode* pn){//inclusive
     }
     int lh=pn->l?height(pn->l):0;
     int rh=pn->r?height(pn->r):0;
-    return max(lh,rh);
+    return mymax(lh,rh);
 }
 
 size_t bst::diameter(btnode* pn){//inclusive
@@ -417,7 +436,7 @@ size_t bst::diameter(btnode* pn){//inclusive
             int lh=pn->l?height(pn->l):0;
             int rh=pn->r?height(pn->r):0;
 
-            return max(lh+rh+1,max(ld,rd));
+            return mymax(lh+rh+1,mymax(ld,rd));
         }
     }
 }

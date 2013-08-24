@@ -51,13 +51,21 @@ namespace util{
 	void swap(int& a,int& b);
 	template<typename T>
 	void swap(T& x,T& y){
-		if (x!=y)
-		{
+		if (x!=y){
 			x^=y;
 			y^=x;
 			x^=y;
 		}
 	}
+
+    template<typename T>
+    void swap(T* x,T* y){
+        if (x!=y){
+            x^=y;
+            y^=x;
+            x^=y;
+        }
+    }
 }
 
 

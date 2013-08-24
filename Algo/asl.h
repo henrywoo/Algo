@@ -25,7 +25,7 @@ namespace ASL{
         }
     };
 
-    //classA operator+()
+    classA operator+(int a,const classA& b);
 
     void checkASL(void *src);
 

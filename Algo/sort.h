@@ -14,7 +14,7 @@ namespace sorting{
 	void selectionsort(int *p,int *q);
 
     bool greater(int a,int b);
-    bool lesser(int a,int b);
+    bool less(int a,int b);
 
 	void insertionsort(int* head,int* tail, bool(*cmp)(int,int)=greater);
 

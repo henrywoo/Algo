@@ -64,7 +64,6 @@ namespace Augmentation{
 	}
 
 
-#define MYARRAYSIZE(x,t) (sizeof(x)/sizeof(t))
 	///@brief Maximums in Sliding Windows
 	///Time Complexity -> All cases: O(N*logM)
 	///[N-size of the big array; M-size of the window]
@@ -182,12 +181,12 @@ namespace Augmentation{
 #endif
 
 		int a[]={2, 3, 4, 2, 6, 2, 5, 1};
-		vector<int> v=MaxInSlidingWindows<int>(a,a+MYARRAYSIZE(a,int)-1,3);
+		vector<int> v=MaxInSlidingWindows<int>(a,a+_countof(a)-1,3);
         //4 4 6 6 6 5
 		copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));cout << endl;
 
 		int b[]={9,7,8,6,5,4,3,2,1};
-		vector<int> ip(b,b+MYARRAYSIZE(b,int)-1);
+		vector<int> ip(b,b+_countof(b)-1);
 		v=maxInWindows(ip, 1);//requires size of SD>1
 		copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));cout << endl;
 		return true;

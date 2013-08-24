@@ -31,6 +31,13 @@
 #include "radixsort.h"
 #include "asl.h"
 #include <new>
+#include "mymap.h"
+#include "anagrams.h"
+#include "Valid_Parentheses.h"
+#include "triangle.h"
+#include "boggle.h"
+//#include <boost/python.hpp>
+
 //#include <boost/graph/adjacency_list.hpp>
 using namespace std;
 int foo(){
@@ -38,6 +45,8 @@ int foo(){
     _asm mov x,1000b
     printf("%d\n",x);
 }
+
+/// replace % with %%
 string processpercentsign(const string& sss){
     string r(sss);
     size_t st=-2;
@@ -56,6 +65,19 @@ string processpercentsign(const string& sss){
 
 //using namespace boost;
 int main(int argc,char* argv[]){
+    boggle::test();
+    triangle::test();
+    cout << boolalpha << stackapplication::IsValidParentheses("{([])}{}()") << endl;
+    anagrams::test();
+    bitops::test();
+    mymap::test();
+    sorting::test();
+    bt::test();
+    const int N=static_cast<int>(1e3);
+    int* a=new int[N];
+    for(int i=0;i<N;i++){a[i]=i;}
+    mtmerge(a,a+N-1);
+    Sleep(10*1000);
     ASL::test();
     sorting::test();
     cout << boolalpha << algo::test_GetLongestRange() << endl;
@@ -95,7 +117,7 @@ int main(int argc,char* argv[]){
 
     heaping::heap::test();
     int i=014;
-    bitops::test();
+    
     cout << bitops::BitCount(90) << endl;
 
     ::graph::test();

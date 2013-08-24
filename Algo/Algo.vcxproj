@@ -54,12 +54,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <HeapReserveSize>
+      </HeapReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,11 +83,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="asl.cpp" />
     <ClCompile Include="bst.cpp" />
     <ClCompile Include="dlist.cpp" />
     <ClCompile Include="graph.cpp" />
     <ClCompile Include="heap.cpp" />
     <ClCompile Include="m.cpp" />
+    <ClCompile Include="mt.cpp" />
+    <ClCompile Include="sort.cpp" />
+    <ClCompile Include="ss.cpp" />
     <ClCompile Include="tick.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="ziplist.c" />
@@ -93,23 +99,39 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algo.h" />
+    <ClInclude Include="anagrams.h" />
     <ClInclude Include="bitops.h" />
+    <ClInclude Include="boggle.h" />
     <ClInclude Include="bst.h" />
+    <ClInclude Include="bt.h" />
     <ClInclude Include="deque.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="dp.h" />
     <ClInclude Include="heap.h" />
     <ClInclude Include="htable.h" />
+    <ClInclude Include="longestrange.h" />
+    <ClInclude Include="MaximalRectangle.h" />
+    <ClInclude Include="msinterview.h" />
     <ClInclude Include="mt.h" />
+    <ClInclude Include="mymap.h" />
+    <ClInclude Include="numbercrunching.h" />
     <ClInclude Include="queue.h" />
     <ClCompile Include="slist.cpp" />
+    <ClInclude Include="radixsort.h" />
+    <ClInclude Include="reservoir_sampling.h" />
+    <ClInclude Include="rpn.h" />
     <ClInclude Include="searching.h" />
     <ClInclude Include="SkipListTmpl.h" />
     <ClInclude Include="sort.h" />
+    <ClInclude Include="ss.h" />
     <ClInclude Include="stack.h" />
     <ClInclude Include="tick.h" />
+    <ClInclude Include="asl.h" />
+    <ClInclude Include="triangle.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="Valid_Parentheses.h" />
+    <ClInclude Include="wordladder.h" />
     <ClInclude Include="ziplist.h" />
     <ClInclude Include="zipmap.h" />
   </ItemGroup>

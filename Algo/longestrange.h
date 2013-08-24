@@ -226,17 +226,16 @@ namespace algo{
         return GetLongestRange(&num.front(),&num.back());
     }
 
-    #define MYARRAYSIZE(a) sizeof(a)/sizeof(a[0])
     bool test_GetLongestRange(){
         {
             int a[]={2, 10, 3, 12, 5, 4, 11, 8, 7, 6, 15};
-            if (GetLongestRange(a,a+MYARRAYSIZE(a)-1)!=7){
+            if (GetLongestRange(a,a+_countof(a)-1)!=7){
                 return false;
             }
         }
         {
             int a[]={0};
-            if (GetLongestRange(a,a+MYARRAYSIZE(a)-1)!=1){
+            if (GetLongestRange(a,a+_countof(a)-1)!=1){
                 return false;
             }
         }
@@ -248,31 +247,31 @@ namespace algo{
         }
         {
             int a[]={2, 10, 3, 12, 5, 4, 11, 8, 7, 6, 15};
-            if (GetLongestRange(a+MYARRAYSIZE(a)-1,a)!=INVALIDRANGE){
+            if (GetLongestRange(a+_countof(a)-1,a)!=INVALIDRANGE){
                 return false;
             }
         }
         {
             int a[]={1,2,2,2};
-            if (GetLongestRange(a,a+MYARRAYSIZE(a)-1)!=2){
+            if (GetLongestRange(a,a+_countof(a)-1)!=2){
                 return false;
             }
         }
         {
             int a[]={1,2,3,2,3,4};
-            if (GetLongestRange(a,a+MYARRAYSIZE(a)-1)!=4){
+            if (GetLongestRange(a,a+_countof(a)-1)!=4){
                 return false;
             }
         }
         {
             int a[]={1,2,3,100,101,102};
-            if (GetLongestRange(a,a+MYARRAYSIZE(a)-1)!=3){
+            if (GetLongestRange(a,a+_countof(a)-1)!=3){
                 return false;
             }
         }
         {
             int a[]={1,2,3,4,5,100,101,102};
-            if (GetLongestRange(a,a+MYARRAYSIZE(a)-1)!=5){
+            if (GetLongestRange(a,a+_countof(a)-1)!=5){
                 return false;
             }
         }

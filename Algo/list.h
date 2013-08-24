@@ -139,9 +139,10 @@ public:
 	///Time - O(n) where n is the length of the list; Space - O(1)
 	const slist_node* __cdecl FindKthToTail(int k) const throw();
 
+    static void swap(slist_node* sn1, slist_node* sn2) throw();
+
 	///@brief if there is a circle inside the single list
-	bool HasCircle() const {
-	}
+	bool HasCircle() const;
 private:
 	slist_node* head;
 	size_t lsize;

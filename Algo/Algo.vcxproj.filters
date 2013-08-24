@@ -13,7 +13,13 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="multithread">
+    <Filter Include="Header Files\server">
+      <UniqueIdentifier>{8624c982-9524-4ec4-982f-c58f0f27604f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\algo">
+      <UniqueIdentifier>{d41888d7-1f8e-4161-8888-a1955dddf484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\multithread">
       <UniqueIdentifier>{26986d27-431d-42f9-a644-782f78685e9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -46,6 +52,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="heap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sort.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ss.cpp">
+      <Filter>Header Files\server</Filter>
+    </ClCompile>
+    <ClCompile Include="asl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -102,10 +120,58 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mt.h">
-      <Filter>multithread</Filter>
+      <Filter>Header Files\multithread</Filter>
     </ClInclude>
     <ClInclude Include="graph.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="numbercrunching.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="msinterview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ss.h">
+      <Filter>Header Files\server</Filter>
+    </ClInclude>
+    <ClInclude Include="longestrange.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="reservoir_sampling.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="radixsort.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="asl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wordladder.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="mymap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rpn.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="anagrams.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="Valid_Parentheses.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="MaximalRectangle.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="boggle.h">
+      <Filter>Header Files\algo</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

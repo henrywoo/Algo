@@ -11,32 +11,42 @@ using namespace std;
 namespace sorting{
 
     bool greater(int a,int b){return a>b;}
-    bool lesser(int a,int b){return a<b;}
+    bool less(int a,int b){return a<b;}
 
-    void selectionsort(int *p,int *q){
-        int sz=q-p;
-        int *tmp=p;
-        for (int i=0;i<=sz;i++){
-            copy(p,q,ostream_iterator<int>(cout," "));cout << endl;
+    ///@brief selection sort - find the maximum or minimum value repeatedly
+    ///@note from big to small
+    ///@remarks O(n^2); good for linked list sorting which doesnt require random access?!
+    void selectionsort(int *head,int *tail, bool(*comp)(int,int)){
+        int sz=tail-head+1;
+        int *tmp=head;
+        for (int i=0;i<=sz-1;i++){//i -index of the array
+            //copy(p,q,ostream_iterator<int>(cout," "));cout << endl;
+            /// find the min/max from [tmp,tail] ans swap it with tmp
             int *ma=tmp;
-            int sz2=q-tmp;
-            for (int j=0;j<=sz2;j++){
-                if (*ma<tmp[j])
+            int sz2=tail-tmp+1;
+            for (int j=0;j<=sz2-1;j++){
+                //if (*ma<tmp[j])
+                if (comp(*ma,tmp[j])) // n*(n-1)/2 compare -worst& average
                     ma=tmp+j;
             }
-            util::swap(*ma,*(tmp));
+            
+            util::swap(*ma,*tmp); // n swap
             tmp++;
         }
     }
 
+    ///@brief compare and swap:-)
+    ///@as for list sort, not as good as selection sort because more swap times
     void insertionsort(int* head,int* tail,bool(*cmp)(int,int)){
         int sz=tail-head+1;
         for(int i=1;i<=sz-1;i++){
             for (int j = i-1; j>=0; j--){
                 //if (head[j] > head[j+1]){
-                if (cmp(head[j], head[j+1])){
-                    swap(head[j],head[j+1]);
-                }else{break;}
+                if (cmp(head[j], head[j+1])){ //less compare than selection sort, - see break below
+                    swap(head[j],head[j+1]); // more swap than selection sort
+                }else{
+                    break;
+                }
             }
         }
     }
@@ -343,6 +353,19 @@ INNER:
             //printf("memnum:%d\n",memnum);
 #endif
         }
+
+        {
+            int b[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
+            selectionsort(b,b+_countof(b)-1,greater);
+            copy(b,b+ARRSIZE(b,int),ostream_iterator<int>(cout," "));cout << endl;
+        }
+
+        {
+            int b[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
+            insertionsort(b,b+_countof(b)-1,greater);
+            copy(b,b+ARRSIZE(b,int),ostream_iterator<int>(cout," "));cout << endl;
+        }
+
         {
             int b[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
             RadixSort<int*>(b,b+sizeof(b)/sizeof(int));

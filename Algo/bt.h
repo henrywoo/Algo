@@ -89,8 +89,55 @@ public:
         return r;
     }
 
+    ///@link http://discuss.leetcode.com/questions/288/binary-tree-maximum-path-sum
+    /*we can declare a global member variable ‘maxValue’ to store the possible 
+    max sum value and recursively to compute the max single path sum of and max 
+    subtree path sum. The final max sum value can be max(root.value, root.val + 
+    leftSubtreeMaxSum, root.val + rightSubTreeMaxSum, root.val + leftSubtreeMaxSum +
+    rightSubTreeMaxSum, maxValue).*/
+    int maxPathSum(){
+        return maxPathSum(proot);
+    }
+
+    int maxPathSum(btnode *root) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int csum;
+        int maxsum = INT_MIN;
+        maxPathSumHelper(root, csum, maxsum);
+        return maxsum;
+    }
+
+#define max3(a,b,c) (max(a,max(b,c)))
+#define max4(a,b,c,d) (max(max(a,b),max(b,c)))
+    void maxPathSumHelper(btnode *node, int &csum, int &maxsum) {
+        if (!node) {
+            csum = 0;
+            return;
+        }
+        printf("%d\n",node->d);
+        int lsum = 0, rsum = 0;
+        maxPathSumHelper(node->l, lsum, maxsum);
+        maxPathSumHelper(node->r, rsum, maxsum);
+        csum = max3(node->d,
+            node->d + lsum,
+            node->d + rsum);
+        maxsum = max3(maxsum,
+            csum,
+            node->d + lsum + rsum);
+    }
+
     static bool test(){
         //construct a binary tree
+        //         1
+        //       /   \
+        //     2       9
+        //   /   \
+        // 3      4
+        //  \     /
+        //  8     5
+        //       /\
+        //      6  7
         bt mybt;
         mybt.proot = new btnode(1);
         mybt.proot->l = new btnode(2);
@@ -103,11 +150,14 @@ public:
         tmp->r=new btnode(8);
         tmp2->l=new btnode(5);
         tmp=tmp2->l;
-        tmp->l=new btnode(6);
-        tmp->r=new btnode(7);
+        tmp->l=new btnode(600);
+        tmp->r=new btnode(700);
 
         int s=mybt.Sum_Root2Leaf_Numbers();
         cout << s << endl;
+
+        int mps=mybt.maxPathSum();
+        cout << mps << endl;
         return true;
     }
 

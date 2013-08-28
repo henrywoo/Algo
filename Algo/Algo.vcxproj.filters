@@ -173,5 +173,14 @@
     <ClInclude Include="boggle.h">
       <Filter>Header Files\algo</Filter>
     </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="boggle2.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="bigint.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

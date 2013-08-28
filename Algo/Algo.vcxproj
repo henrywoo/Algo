@@ -100,8 +100,10 @@
   <ItemGroup>
     <ClInclude Include="algo.h" />
     <ClInclude Include="anagrams.h" />
+    <ClInclude Include="bigint.h" />
     <ClInclude Include="bitops.h" />
     <ClInclude Include="boggle.h" />
+    <ClInclude Include="boggle2.h" />
     <ClInclude Include="bst.h" />
     <ClInclude Include="bt.h" />
     <ClInclude Include="deque.h" />
@@ -111,6 +113,7 @@
     <ClInclude Include="heap.h" />
     <ClInclude Include="htable.h" />
     <ClInclude Include="longestrange.h" />
+    <ClInclude Include="matrix.h" />
     <ClInclude Include="MaximalRectangle.h" />
     <ClInclude Include="msinterview.h" />
     <ClInclude Include="mt.h" />

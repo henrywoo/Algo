@@ -36,6 +36,9 @@
 #include "Valid_Parentheses.h"
 #include "triangle.h"
 #include "boggle.h"
+#include "matrix.h"
+#include "boggle2.h"
+#include "bigint.h"
 //#include <boost/python.hpp>
 
 //#include <boost/graph/adjacency_list.hpp>
@@ -65,9 +68,17 @@ string processpercentsign(const string& sss){
 
 //using namespace boost;
 int main(int argc,char* argv[]){
+    bigint::test();
+    cout << boolalpha << testpower() << endl;
+
+    for (int i=2;i<100;i<<=1){}
+    MS::test1();
+    MS::boggle2::test();
+    matrix::test();
     boggle::test();
     triangle::test();
-    cout << boolalpha << stackapplication::IsValidParentheses("{([])}{}()") << endl;
+    cout << boolalpha << 
+        stackapplication::IsValidParentheses("{([])}{}()") << endl;
     anagrams::test();
     bitops::test();
     mymap::test();
@@ -90,7 +101,7 @@ int main(int argc,char* argv[]){
 #endif
 
 
-    cout << boolalpha << testpower() << endl;
+    
 #if 0
     wstring hello=L"巫富珩";
     wcout<< hello.c_str() << endl;

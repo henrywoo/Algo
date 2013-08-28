@@ -1,4 +1,4 @@
-#ifndef __ALGO_DLIST__
+﻿#ifndef __ALGO_DLIST__
 #define __ALGO_DLIST__
 
 #include <vector>
@@ -143,11 +143,25 @@ public:
 
 	///@brief if there is a circle inside the single list
 	bool HasCircle() const;
+
+    ///@note 3 temporary variables!!!
+    void reverse(){// h->a->b->c->NULL
+        slist_node* tmp=head;
+        slist_node* n=tmp->next;
+        slist_node* p=NULL;
+
+        while(tmp){
+            tmp->next=p;//保存next
+            p=tmp;
+            tmp=n;
+            if(tmp){///EP(error prone)
+                n=tmp->next;//a->next=h
+            }
+        }
+    };
 private:
 	slist_node* head;
 	size_t lsize;
-
-	
 };
 
 ///@brief A Circular Single Liked List with a head only

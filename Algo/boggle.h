@@ -167,7 +167,7 @@ namespace boggle{
 
     vector<vector<int>> bogglesolver(vector<string>& vvc, string& target){
         vector<vector<int>> result;
-        //binary matrix
+        //adjacency matrix
         int sz=vvc.size();
         vector<bool> vb(sz*sz,false);
         vector<vector<bool>> udagmatrix(sz*sz,vb);

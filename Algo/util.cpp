@@ -67,21 +67,26 @@ string StringReplace(const string& str, const string& pattern, const string& new
 	}
 }
 
-/// O(logN)
+/// T - O(logN) - bottom up divide and conquer
+///@return -1 -> integer flowover
 int power(unsigned int base, unsigned int exponent){
     int counter=0;
     if (exponent==0 || base==1){return 1;}
     if (base==0){return 0;}
     if (exponent==1){return base;}
-    vector<int> p(exponent,0);
-    //int *p=static_cast<int*>(malloc(exponent*sizeof(int)));// an array to store tmp result p[0]=1 p[2]=a**2
-    //memset(p,0,exponent*sizeof(int));
-    p[0]=1;
-    p[1]=base;
+    vector<int> p(exponent,0);// for the purpose of caching the record
+    p[0]=1;// base^0=1
+    p[1]=base;// base^1=base
     int e=2;
     int r=base;
-    while (e<=exponent){
-        r *= p[e>>1];// 0, 1, 2, 4
+    // fill the cache p
+    while (e<=exponent){// for (int i=2;i<exponent;i<<=1)
+        r *= p[e>>1];// base^2, base^4, base^8...
+        if (p[e>>1]!=0 && r/p[e>>1]!=p[e>>1]){// integer overflow handling
+            cout << base << "^" << (e>>1) << "=" << p[e>>1] << endl;
+            cout<< "integer overflow!" << endl;
+            return -1;
+        }
         counter++;
         if (e==exponent){
             cout << "number of multiplication:" << counter << endl;
@@ -121,25 +126,31 @@ int power(unsigned int base, unsigned int exponent){
     return r;
 }
 
-unsigned int Power(unsigned int n, unsigned int p){
-    unsigned odd = 1; //oddk用来计算“剩下的”乘积
-    int counter=0;
-    while (p > 1){ // 一直计算到指数小于或等于1
-        if (( p & 1 )!=0){ // 判断p是否奇数，偶数的最低位必为0
-            odd *= n; // 若odd为奇数，则把“剩下的”乘起来
+// 2^5 (5==101)
+unsigned int Power(unsigned int base, unsigned int exponent){
+    if(!(base>=0 && exponent>=0)){return -1;}
+    if (base==0){return 0;}
+    if (exponent==0){return 1;}
+    if (exponent==1){return base;}
+
+    unsigned int result = 1;
+    int counter = 0; // counter of multiplication
+
+    while(exponent){
+        if (exponent&1){ // if the last bit is 1
+            result *= base;
             counter++;
         }
-        n *= n; // 主体乘方
+        base *= base;
         counter++;
-        p >>= 1; // 指数除以2
-        
+        exponent >>= 1;
     }
-    counter++;
     cout << "number of multiplication:" << counter << endl;
-    return n * odd; // 最后把主体和“剩下的”乘起来作为结果
+    return result;
 }
 
 bool testpower(){
+    power(5,1000);
     for(int i=0;i<50;i++){
         cout << "old" << Power(2,i) << endl;
         cout << "new" << power(2,i) << endl;

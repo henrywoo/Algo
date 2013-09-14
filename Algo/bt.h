@@ -127,6 +127,12 @@ public:
             node->d + lsum + rsum);
     }
 
+    bt getMirror(){
+        bt newbt;
+        ///@todo
+        return newbt;
+    }
+
     static bool test(){
         //construct a binary tree
         //         1

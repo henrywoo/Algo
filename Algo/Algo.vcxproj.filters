@@ -22,6 +22,9 @@
     <Filter Include="Header Files\multithread">
       <UniqueIdentifier>{26986d27-431d-42f9-a644-782f78685e9b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sorting">
+      <UniqueIdentifier>{556e4844-1eb3-410b-8760-612fb0a16115}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m.cpp">
@@ -180,6 +183,12 @@
       <Filter>Header Files\algo</Filter>
     </ClInclude>
     <ClInclude Include="bigint.h">
+      <Filter>Header Files\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="sorting.h">
+      <Filter>Header Files\sorting</Filter>
+    </ClInclude>
+    <ClInclude Include="threesum.h">
       <Filter>Header Files\algo</Filter>
     </ClInclude>
   </ItemGroup>

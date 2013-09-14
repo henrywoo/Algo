@@ -20,17 +20,17 @@ namespace sorting{
 
 	void insertionsort(int a[],int start=0,int end=32);
 
-	vector<int> merge_sub(int* head1,int* tail1, int* head2, int* tail2);
-	void merge_sub(int* head1,int* tail1, int* tail2);
+	vector<int> merge_pair(int* head1,int* tail1, int* head2, int* tail2);
+	void merge_pair(int* head1,int* tail1, int* tail2);
 	// head tail != begin end
 	void mergesort_bottomup(int* head,int* tail);
 
 	void mergesort_topdown(int* head,int* tail);
 
 	///@brief merge two sorted disjoint spaces from small to big
-	vector<int> merge_sub(int* head1,int* tail1, int* head2, int* tail2);
+	vector<int> merge_pair(int* head1,int* tail1, int* head2, int* tail2);
 	///@brief merge two sorted consecutive spaces from small to big
-	void merge_sub(int* head1,int* tail1, int* tail2);
+	void merge_pair(int* head1,int* tail1, int* tail2);
 
 
 	int* quicksort_sub_comparision(int* head,int* tail);
@@ -52,8 +52,6 @@ namespace sorting{
 	///@brief A matrix using linear memory space
 	///@author WuFuheng(fuhengwu@gmail.com)
 	struct matrix;
-
-	
 
     class TOPOLOGICAL_SORT{
         int INDEG[MAXEDGE];

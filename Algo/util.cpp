@@ -1,7 +1,5 @@
 ﻿#include "util.h"
 
-
-
 vector<string> split(const string& str_,char delim){
     if (str_.empty()){
         return vector<string>();
@@ -65,6 +63,21 @@ string StringReplace(const string& str, const string& pattern, const string& new
 		}
 		return s;
 	}
+}
+
+string processpercentsign(const string& sss){
+    string r(sss);
+    size_t st=-2;
+    //When pos is specified, the search only includes characters
+    //at or after position pos
+    while(( st = r.find('%',st+2))!=string::npos){
+        // find return The position of the first character of the first match.
+        string s1=r.substr(0,st);
+        s1.push_back('%');
+        string s2=r.substr(st,r.size()-s1.size()+1);
+        r=s1+s2;
+    }
+    return r;
 }
 
 /// T - O(logN) - bottom up divide and conquer

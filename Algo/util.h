@@ -44,6 +44,8 @@ unsigned Power(unsigned n, unsigned p);
 /// start - pointer to start of mymax subarray
 /// end   - pointer to end of mymax subarray
 double maxsubarray(double *p, size_t sz, double*& start, double*& end);
+/// replace % with %%
+string processpercentsign(const string& sss);
 
 namespace util{
 	void test();

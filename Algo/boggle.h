@@ -58,6 +58,8 @@ OGNA
 #include <map>
 #include <math.h>
 
+#pragma warning( disable : 4018 )
+
 namespace boggle{
     using namespace std;
 

@@ -4,6 +4,7 @@
 #include <iostream>
 using namespace std;
 
+#pragma warning (disable:4010)
 namespace wufuheng{
 
 	// stack as a linked list

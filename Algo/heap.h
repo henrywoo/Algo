@@ -23,7 +23,8 @@ namespace heaping{
 
     ///@brief heap is implemented in terms of a binary tree
     ///private inheritance/composition+public inheritance
-    ///which means: heap is NOT a binary tree, but heap can be implemented as a binary tree
+    ///which means: heap is NOT a binary tree, but heap can
+    ///be implemented as a binary tree
     ///default mymax heap
     typedef bool(*COMP)(int,int);
     class heap: public bt_complete

@@ -12,6 +12,10 @@
 #include "heap.h"
 #include "util.h"
 
+#pragma warning( disable : 4018 )
+#pragma warning( disable : 4244 )
+#pragma warning( disable : 4267 )
+
 namespace Augmentation{
 
     namespace kthmax{
@@ -395,6 +399,7 @@ namespace integerrelated{
             return false;
         }
     }
+
     bool isPalindromeInt(int x) {
         return isPalindromeInt(x, x);
     }
@@ -430,7 +435,8 @@ namespace stringrelated{
 			char c=strs[0][j-1];
 			bool allthesame=false;
 			for(int i=1;i<=sz-1;++i){
-				if(strs[i].size()<j){goto longestCommonPrefix_DONE;}//jump out of multiple loops with goto
+				if(strs[i].size()<j){goto longestCommonPrefix_DONE;}
+                //jump out of multiple loops with goto
 				if(c!=strs[i][j-1]){
 					goto longestCommonPrefix_DONE;
 				}

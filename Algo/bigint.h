@@ -102,7 +102,8 @@ namespace bigint{
                     result=BigIntMultiply2(result,base,k);
                 }
                 base=BigIntMultiply2(base,base,k);
-                copy(base.begin(),base.end(),ostream_iterator<unsigned int>(cout,""));cout<<endl;
+                copy(base.begin(),base.end(),
+                    ostream_iterator<unsigned int>(cout,""));cout<<endl;
                 exponent>>=1;
             }
             return result;

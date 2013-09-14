@@ -48,9 +48,7 @@ slist_node* slist::begin(){
 	return head;
 }
 
-#define BR __asm{int 3}
 const slist_node* __cdecl slist::FindKthToTail(int k) const throw(){
-	BR
 	try{
 		if(k<0){
 			return NULL;

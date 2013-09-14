@@ -1,21 +1,13 @@
 ﻿#include "ss.h"
-#include <iostream>
-#include <fstream>
-#include <iterator>
 #include "bst.h"
 #include "list.h"
-#include <string>
-#include <algorithm>
 #include "util.h"
 #include "tick.h"
 #include <memory>//shared_ptr
-#include <time.h>
 #include "sort.h"
 #include "algo.h"
 #include "deque.h"
 #include "stack.h"
-//#include "ziplist.h"
-//#include "zipmap.h"
 #include "SkipListTmpl.h"
 #include "searching.h"
 #include "bitops.h"
@@ -24,9 +16,7 @@
 #include "heap.h"
 #include "numbercrunching.h"
 #include "msinterview.h"
-#include <thread>
 #include <complex>
-#include <queue>
 #include "longestrange.h"//algo
 #include "radixsort.h"
 #include "asl.h"
@@ -39,35 +29,30 @@
 #include "matrix.h"
 #include "boggle2.h"
 #include "bigint.h"
-//#include <boost/python.hpp>
+#include "sorting.h"
+#include "threesum.h"
 
+//You need to add the Python include directory (e.g. c:\python33\include) 
+//to the list of include paths. You'll need to do the same for the library
+//directory (e.g. c:\python33\libs)
+#define BOOST_PYTHON_STATIC_LIB
+#include <boost/python.hpp>
+
+#pragma comment(lib, "boost_python-vc110-mt-gd-1_54.lib")
 //#include <boost/graph/adjacency_list.hpp>
 using namespace std;
-int foo(){
-    int x;
-    _asm mov x,1000b
-    printf("%d\n",x);
-}
-
-/// replace % with %%
-string processpercentsign(const string& sss){
-    string r(sss);
-    size_t st=-2;
-    //When pos is specified, the search only includes characters at or after position pos
-    while(( st = r.find('%',st+2))!=string::npos){
-        // find return The position of the first character of the first match.
-        string s1=r.substr(0,st);
-        s1.push_back('%');
-        string s2=r.substr(st,r.size()-s1.size()+1);
-        r=s1+s2;
-    }
-    return r;
-}
-///@note negative number is one more than positive number!! -128(-2**7) and 127(2**7-1); 2**31-1 and -2**31
-
+///@note negative number is one more than positive number!!
+//-128(-2**7) and 127(2**7-1); 2**31-1 and -2**31
 
 //using namespace boost;
 int main(int argc,char* argv[]){
+    TestVolatile();
+    boggle::test();
+    //set<set<int>> ssi;
+    //unordered_set<set<int>> ussi;
+    algo::threesum::test();
+    //ShowMeDeadLock();
+    sorting2::test();
     bigint::test();
     cout << boolalpha << testpower() << endl;
 
@@ -100,8 +85,6 @@ int main(int argc,char* argv[]){
     x++++;//left operand must be l-value
 #endif
 
-
-    
 #if 0
     wstring hello=L"巫富珩";
     wcout<< hello.c_str() << endl;
@@ -122,7 +105,6 @@ int main(int argc,char* argv[]){
     getchar();
     statistics::test();
     //cout << boolalpha << bool(true^true) << endl;// xor can be used on bool
-    foo();
     
     Augmentation::test();
 
@@ -152,7 +134,7 @@ int main(int argc,char* argv[]){
 	adjacency_list<>::vertex_iterator vertexIt, vertexEnd;
 	adjacency_list<>::adjacency_iterator neighbourIt, neighbourEnd;
 #endif
-	__asm{int 3}
+	//__asm{int 3}
 
 	//bst::test();
 	//dclist::test();

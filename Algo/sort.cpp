@@ -5,7 +5,17 @@
 #include <algorithm>
 #include <vector>
 #include <queue>
-
+/*
+ * insertion sort
+ * selection sort
+ * merge sort (bottom-up and top-down) crux is merge
+ * quick sort
+ * radix sort
+ * bucket sort
+ * heap sort
+ * counting sort
+ * topological sort
+ * */
 using namespace std;
 
 namespace sorting{
@@ -94,7 +104,7 @@ namespace sorting{
                 }
                 int* tail2=&v[tmpindex4];
 
-                merge_sub(head1, tail1, tail2);
+                merge_pair(head1, tail1, tail2);
             }
             blocksize*=2;
         }
@@ -109,12 +119,12 @@ namespace sorting{
         int tmp=sz/2;
         mergesort_topdown(head,head+tmp-1);
         mergesort_topdown(head+tmp,tail);
-        merge_sub(head,head+tmp-1,tail);
+        merge_pair(head,head+tmp-1,tail);
     }
 
     ///@brief merge two sorted disjoint spaces from small to big
     ///Space complexity is O(n)
-    vector<int> merge_sub(int* head1,int* tail1, int* head2, int* tail2)
+    vector<int> merge_pair(int* head1,int* tail1, int* head2, int* tail2)
     {
         if (head1==head2/* && head1==tail1 && head2==tail2 && tail1==tail2*/){
             return vector<int>(head1,head1+1);
@@ -145,12 +155,12 @@ namespace sorting{
     }
 
     ///@brief merge two sorted consecutive spaces from small to big
-    void merge_sub(int* head1,int* tail1, int* tail2){
+    void merge_pair(int* head1,int* tail1, int* tail2){
         if (/*head1==tail1 && */tail1==tail2){
             return;
         }
         int* head2=tail1+1;
-        vector<int>v= merge_sub(head1, tail1, head2, tail2);
+        vector<int>v= merge_pair(head1, tail1, head2, tail2);
         copy(v.begin(),v.end(),head1);
     }
 
@@ -417,14 +427,14 @@ INNER:
         {
             int a1[]={5,7 ,9 ,13 ,19 ,23 ,40, 50};
             int b1[]={6,7 ,8 ,9 ,10 ,19 ,21 ,23 ,25,50};
-            vector<int> v=merge_sub(a1,a1+sizeof(a1)/sizeof(int)-1,b1,b1+sizeof(b1)/sizeof(int)-1);
+            vector<int> v=merge_pair(a1,a1+sizeof(a1)/sizeof(int)-1,b1,b1+sizeof(b1)/sizeof(int)-1);
             copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));
             cout << endl;
         }
         {
             int a1[]={5,7 ,9 ,13 ,19 ,23 ,40, 50};
             int b1[]={6,7 ,8 ,9 ,10 ,19 ,21 ,23 ,25,50};
-            vector<int> v=merge_sub(a1,a1,b1,b1);
+            vector<int> v=merge_pair(a1,a1,b1,b1);
             copy(v.begin(),v.end(),ostream_iterator<int>(cout," "));
             cout << endl;
         }

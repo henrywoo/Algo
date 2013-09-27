@@ -224,7 +224,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 		}else{
 			v=walk_from_node(proot,POSTORDER);
 		}
-	}else if(wo==LAYERBYLAYER){
+	}else if(wo==LAYERBYLAYER){// BFS (breadth first search)
 #if 0
 		deque<btnode*> dbn;
 		dbn.push_back(proot);

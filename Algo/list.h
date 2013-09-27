@@ -2,6 +2,7 @@
 #define __ALGO_DLIST__
 
 #include <vector>
+#include <iostream>
 using namespace std;
 
 /**@remarks
@@ -13,6 +14,7 @@ using namespace std;
 *5. others: xorlist
 */
 
+// circular的好处.不用维护两个pointer:head,tail.一个就够了.
 
 struct dlist_node{
 	int d;
@@ -93,6 +95,9 @@ public:
 	/// @brief swap pointer prev and next for every node including sentinel
 	void reverse();
 	static bool test();
+
+    void remove1(int n);
+    void removeall(int n);
 };
 
 struct slist_node{
@@ -158,7 +163,31 @@ public:
                 n=tmp->next;//a->next=h
             }
         }
-    };
+    }
+
+    void printall(){
+        slist_node* tmp=head;
+        while (tmp!=NULL){
+            cout << tmp->d << endl;
+            tmp= tmp->next;
+        }
+    }
+
+    void printall_reversely(){
+        slist_node* tmp=head;
+        prhelper(tmp);
+    }
+    void prhelper(slist_node* sn){
+        if (sn){
+            slist_node* tmp=sn->next;
+            prhelper(tmp);
+            //cout << tmp->d << endl;
+            cout << sn->d << endl;
+        }
+        
+    }
+
+
 private:
 	slist_node* head;
 	size_t lsize;

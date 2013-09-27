@@ -31,6 +31,7 @@
 #include "bigint.h"
 #include "sorting.h"
 #include "threesum.h"
+#include "DisjointSet.h"
 
 //You need to add the Python include directory (e.g. c:\python33\include) 
 //to the list of include paths. You'll need to do the same for the library
@@ -46,6 +47,9 @@ using namespace std;
 
 //using namespace boost;
 int main(int argc,char* argv[]){
+    ASL::test();
+    bst::test();
+    slist::test();
     TestVolatile();
     boggle::test();
     //set<set<int>> ssi;
@@ -98,7 +102,7 @@ int main(int argc,char* argv[]){
 
     ss::test();
     heaping::test();
-    bst::test();
+    
     bt::test();
     MS::drawCircle(10);
     DP::test();

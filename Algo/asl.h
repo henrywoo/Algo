@@ -21,7 +21,7 @@ namespace ASL{
             return tmp;
         }
         ~classA(){
-            i=1;
+            //i=1;
         }
     };
 

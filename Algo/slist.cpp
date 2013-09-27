@@ -89,6 +89,7 @@ void slist::swap(slist_node* sn1, slist_node* sn2){
 bool slist::test(){
 	int a[]={10,5,7,6,40,25,50,13,21,16,19,9,23,8};
 	slist sl(a,a+(sizeof(a)/sizeof(int)>>1));
+    sl.printall_reversely();
 	int j=(sizeof(a)/sizeof(int)-1);
 	for (int i=-1;i<=j;++i){// test case 1
 		const slist_node* p=sl.FindKthToTail(i);

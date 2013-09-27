@@ -169,8 +169,10 @@ int islst( ){
     return 1;
 }
 
+//////////////////////////////////////////////////////////////////////////
 // A surely deadlock example
-class gard_mutex:public guard{
+template<class T>
+class gard_mutex:public guard<T>{
 public:
     gard_mutex(){
         h=CreateMutex(NULL,FALSE,NULL);
@@ -186,6 +188,22 @@ public:
     }
 };
 
+template<class T>
+class gard_criticalsection:public guard<T>{
+public:
+    gard_criticalsection(){
+        InitializeCriticalSection(&h);
+    }
+    ~gard_criticalsection(){
+        DeleteCriticalSection(&h);
+    }
+    void lock(){
+        EnterCriticalSection(&h);
+    }
+    void unlock(){
+        LeaveCriticalSection(&h);
+    }
+};
 
 //global var
 HANDLE ghMutexA;
@@ -226,7 +244,7 @@ void ShowMeDeadLock(){
     //The state of a mutex object is signaled when it is not owned by any thread.
     ghMutexA=CreateMutex(NULL,NOT_OWNED,NULL);
     ghMutexB=CreateMutex(NULL,NOT_OWNED,NULL);
-    _beginthreadex(NULL,0,transfer1,NULL,NULL,NULL);
+    ::_beginthreadex(NULL,0,transfer1,NULL,NULL,NULL);
     //_beginthreadex(NULL,0,transfer2,NULL,NULL,NULL);
 
     DWORD db=WaitForSingleObject(ghMutexB,INFINITE);//LOCK
@@ -238,14 +256,13 @@ void ShowMeDeadLock(){
     ReleaseMutex(ghMutexB);//UNLOCK
 }
 
-//volatile 
+//////////////////////////////////////////////////////////////////////////
+//volatile
 bool Sentinel = true;
 int CriticalData = 0;
-
 unsigned ThreadFunc1( void* pArguments ) {
     while (Sentinel)
         Sleep(0);   // volatile spin lock
-
     // CriticalData load guaranteed after every load of Sentinel
     cout << "Critical Data = " << CriticalData << endl;
     return 0;

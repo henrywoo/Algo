@@ -47,7 +47,7 @@ size_t dclist::size(){
 void dclist::push_front(int n){
 	dlist_node* ln=new (std::nothrow) dlist_node(n);
 
-	dlist_node* tmp=psentinel->next;
+	dlist_node* tmp=psentinel->next;//head
 
 	psentinel->next=ln;
 	ln->prev=psentinel;
@@ -70,7 +70,7 @@ void dclist::push_front(int* p,int* q){
 void dclist::push_end(int n){
 	dlist_node* ln=new dlist_node(n);
 
-	dlist_node* tmp=psentinel->prev;
+	dlist_node* tmp=psentinel->prev;//tail
 
 	psentinel->prev=ln;
 	ln->next=psentinel;
@@ -79,7 +79,13 @@ void dclist::push_end(int n){
 	tmp->next=ln;
 
 	lsize++;
-};
+}
+
+void remove1(int n){
+    
+}
+
+void removeall(int n){}
 
 void dclist::reverse(){
 	dlist_node* tmp=psentinel;

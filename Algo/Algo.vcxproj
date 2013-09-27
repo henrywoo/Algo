@@ -184,6 +184,7 @@
     <ClInclude Include="bst.h" />
     <ClInclude Include="bt.h" />
     <ClInclude Include="deque.h" />
+    <ClInclude Include="DisjointSet.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="dp.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="longestrange.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="MaximalRectangle.h" />
+    <ClInclude Include="mempool.h" />
     <ClInclude Include="msinterview.h" />
     <ClInclude Include="mt.h" />
     <ClInclude Include="mymap.h" />
@@ -207,6 +209,7 @@
     <ClInclude Include="sorting.h" />
     <ClInclude Include="ss.h" />
     <ClInclude Include="stack.h" />
+    <ClInclude Include="threadpool.h" />
     <ClInclude Include="threesum.h" />
     <ClInclude Include="tick.h" />
     <ClInclude Include="asl.h" />

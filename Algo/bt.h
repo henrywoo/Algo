@@ -8,7 +8,9 @@
 #include <iostream>
 
 using namespace std;
-
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
 enum WALKORDER{
     PREORDER=1, /// head->left->right
     INORDER,    /// left->head->right

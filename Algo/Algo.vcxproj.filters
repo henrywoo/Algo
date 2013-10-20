@@ -203,5 +203,8 @@
     <ClInclude Include="threadpool.h">
       <Filter>Header Files\pool</Filter>
     </ClInclude>
+    <ClInclude Include="h.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

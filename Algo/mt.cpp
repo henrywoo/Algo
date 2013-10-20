@@ -291,4 +291,5 @@ int TestVolatile() {
         cout << "Success" << endl;
     else
         cout << "Failure" << endl;
+	return 0;
 }

@@ -14,13 +14,14 @@ For example, ["tea","and","ace","ad","eat","dan"]
 
 namespace anagrams{
     ///This algorithm runs in time O(n) and uses O(n) space
-    vector<string> GetAnagrams(const vector<string> &vs) {
+    vector<string> GetAnagrams(vector<string> vs) {
 #define PROCESS1stITEM -1
         vector<string> r;
         map<string, int> anagram;
-        for (int i = 0; i < vs.size(); ++i){
-            string s = vs[i];
-            sort(s.begin(), s.end());//??? NlogN
+		string s;
+		for (int i = 0; i < vs.size(); ++i){
+            s = vs[i];
+            std::sort(s.begin(), s.end());//??? NlogN
             if (anagram.find(s) == anagram.end()){
                 anagram[s] = i;
             }else{
@@ -40,13 +41,15 @@ namespace anagrams{
 
 
     void test(){
-        const char *ca[]=
-        {"tea","and","ace","ad","eat","dan","ate"};
-        vector<string> vs(ca,ca+_countof(ca));
+        //const char *ca[]={"tea","and","ace","ad","eat","dan","ate"};
+		vector<string> vs = { "tea", "and", "ace", "ad", "eat", "dan", "ate" };
+        //vector<string> vs(ca,ca+_countof(ca));
         vs=anagrams::GetAnagrams(vs);
-        for (vector<string>::const_iterator i=vs.begin();i!=vs.end();++i){
+		for (auto& s : vs)
+			cout << s << endl;
+        /*for (vector<string>::const_iterator i=vs.begin();i!=vs.end();++i){
             cout << i->c_str() << endl;
-        }
+        }*/
     }
 }
 

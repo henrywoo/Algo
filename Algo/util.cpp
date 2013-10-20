@@ -298,7 +298,13 @@ namespace util{
 		if (a!=b){
 			a=a^b;
 			b=a^b;
-			a=b^a;
+			a=a^b;
 		}
 	}
 }
+
+void nonstaticfunc(){
+	cout << "nonstaticfunc" << endl;
+}
+
+char nonstaticvar = 'A';

@@ -238,6 +238,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 				dbn.push_back(tmp->r);
 		}
 #else
+        ///***************///
 		queue<btnode*> dbn;
 		dbn.push(proot);
 		while (!dbn.empty()){
@@ -253,13 +254,16 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 	}else if (wo==ZIGZAG){
 		stack<btnode*> stk1;
 		stack<btnode*> stk2;
+        ///***************///
 		stack<btnode*> *sp1=&stk1,*sp2=&stk2;
 		sp1->push(proot);
+        // left2right is an indicator for a specific layer's order
+        // controlling the order of left&right children entering the stack
 		bool left2right=true;
 		while (true){
 			btnode* tmp=sp1->top();
 			v.push_back(tmp->d);
-			sp1->pop();
+			sp1->pop();///
 
 			if (left2right){
 				if (tmp->r){sp2->push(tmp->r);}
@@ -268,9 +272,9 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
 				if (tmp->l){sp2->push(tmp->l);}
 				if (tmp->r){sp2->push(tmp->r);}
 			}
-			if (sp1->empty()){
+			if (sp1->empty()){///
 				if (!sp2->empty()){
-					swap(sp1,sp2);
+					swap(sp1,sp2);/////////
 					left2right=!left2right;
 				}else{
 					break;
@@ -420,7 +424,7 @@ size_t bst::height(btnode* pn){//inclusive
     }
     int lh=pn->l?height(pn->l):0;
     int rh=pn->r?height(pn->r):0;
-    return mymax(lh,rh);
+    return mymax(lh,rh)+1;
 }
 
 size_t bst::diameter(btnode* pn){//inclusive

@@ -1,52 +1,88 @@
-﻿#include "ss.h"
-#include "bst.h"
-#include "list.h"
-#include "util.h"
-#include "tick.h"
-#include <memory>//shared_ptr
-#include "sort.h"
-#include "algo.h"
-#include "deque.h"
-#include "stack.h"
-#include "SkipListTmpl.h"
-#include "searching.h"
-#include "bitops.h"
-#include "mt.h"
-#include "graph.h"
-#include "heap.h"
-#include "numbercrunching.h"
-#include "msinterview.h"
-#include <complex>
-#include "longestrange.h"//algo
-#include "radixsort.h"
-#include "asl.h"
-#include <new>
-#include "mymap.h"
-#include "anagrams.h"
-#include "Valid_Parentheses.h"
-#include "triangle.h"
-#include "boggle.h"
-#include "matrix.h"
-#include "boggle2.h"
-#include "bigint.h"
-#include "sorting.h"
-#include "threesum.h"
-#include "DisjointSet.h"
+﻿#include "h.h"
 
 //You need to add the Python include directory (e.g. c:\python33\include) 
 //to the list of include paths. You'll need to do the same for the library
 //directory (e.g. c:\python33\libs)
-#define BOOST_PYTHON_STATIC_LIB
-#include <boost/python.hpp>
+//#define BOOST_PYTHON_STATIC_LIB
+//#include <boost/python.hpp>
 
-#pragma comment(lib, "boost_python-vc110-mt-gd-1_54.lib")
+//#pragma comment(lib, "boost_python-vc110-mt-gd-1_54.lib")
 //#include <boost/graph/adjacency_list.hpp>
 using namespace std;
 ///@note negative number is one more than positive number!!
 //-128(-2**7) and 127(2**7-1); 2**31-1 and -2**31
+struct AAA{
+	int a;
+	AAA(){cout<<endl;}
+	//AAA(AAA&&){ cout << endl; }
+};
+
+template<typename T> struct is_int{
+    static const bool ISINT = false; 
+}; 
+template<> struct is_int<int>{
+    static const bool ISINT = true;
+};
+
+void simon(){
+    static int ccc;
+    static int ddd=100;
+    static AAA aaa;
+    ccc=10;
+    ddd=1;
+}
+template<class T> class A{public:A(){}}; 
+template<class T> class B{
+public:
+    B() {};
+    //friend class A<T>;
+    //template friend class A<T>;
+    /* add something here to make A a friend */
+};
+static void func1(){}
 
 //using namespace boost;
+template<typename...>
+class newtemp{};
+
 int main(int argc,char* argv[]){
+	bigint::test();
+	anagrams::test();
+	cout << std::thread::hardware_concurrency() << endl;
+	cout << std::this_thread::get_id() << "\t" << endl;
+	extern char nonstaticvar;
+	extern void nonstaticfunc();
+
+	cout << nonstaticvar << endl;
+	nonstaticfunc();
+    string ss("1234567890");
+    vector<string> vs;
+    std::fill_n(std::back_inserter(vs), 5, "hello");
+
+    {
+        shared_ptr<int> spi(new int(50));
+		spi.reset(new int(100));
+        //std::swap();
+    }
+
+    reverse_copy(ss.begin(),ss.end(),ostream_iterator<char>(cout));
+    set<int> si;
+    while(1){
+        pair<set<int>::iterator,bool> tmp1= si.insert(1);
+        if (tmp1.second){
+            cout << "inserted a new value " << *tmp1.first << ".\n";
+            set<int>::iterator tmp2=si.insert(tmp1.first,2);
+        }else{
+            cout << "an equivalent element "<< *tmp1.first<< " exists already!" << endl;
+            int a[]={2,3,4};
+            si.insert(a,a+_countof(a));
+            break;
+        }
+    }
+    copy(si.begin(),si.end(),ostream_iterator<int>(cout," "));cout<<endl;
+
+    simon();
+    static int ccc=0;
     ASL::test();
     bst::test();
     slist::test();

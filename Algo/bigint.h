@@ -10,8 +10,7 @@ namespace bigint{
 
     ///big integer multiplication
     ///naive method
-    vector<unsigned char> BigIntMultiply1(vector<unsigned char> lhs,
-        vector<unsigned char> rhs)
+    vector<unsigned char> BigIntMultiply1(vector<unsigned char> lhs, vector<unsigned char> rhs)
     {
         int sz1=lhs.size();
         int sz2=rhs.size();
@@ -43,8 +42,7 @@ namespace bigint{
 
     ///big integer multiplication - just return LSB k digits
     ///naive method
-    vector<unsigned char> BigIntMultiply2(vector<unsigned char> lhs,
-        vector<unsigned char> rhs, int k)
+    vector<unsigned char> BigIntMultiply2(vector<unsigned char> lhs, vector<unsigned char> rhs, int k)
     {
         int sz1=lhs.size();
         int sz2=rhs.size();
@@ -61,16 +59,15 @@ namespace bigint{
         for (int i=0;i<sz1;++i){
             for (int j=0;j<sz2;++j){
                 if (i+j<k){
-                    result[i+j] += lhs[i] * rhs[j];///
+                    result[ i + j ] += lhs[i] * rhs[j];///Note the index!!!
                 }
-                
             }
         }
         int carry=0;
         for (int j=0;j<k;++j){///
             carry = result[j] / 10;
             result[j] = result[j] % 10;
-            if(j+1<k){
+            if( j + 1 < k ){
                 result[j+1] += carry;///carry to higher digit
             }
         }
@@ -83,14 +80,8 @@ namespace bigint{
         return result;
     }
 
-    //写一个程序,找出 5^1234566789893943的从底位开始的1000位数字
-    //ULONG_MAX;INT_MAX;
-
-    vector<unsigned char> GetLSBofPower(vector<unsigned char>& base,
-        ULL exponent, int k)
-    {
-        assert(exponent==1234566789893943);
-        // divide and conquer bottom up
+    //写一个程序,找出 5^1234566789893943的从底位开始的1000位数字//ULONG_MAX;INT_MAX;
+    vector<unsigned char> GetLSBofPower(vector<unsigned char>& base, ULL exponent, int k){
         if (exponent==0){
             return vector<unsigned char>(1,1);
         }else if(exponent==1){
@@ -98,7 +89,7 @@ namespace bigint{
         }else{
             vector<unsigned char> result=vector<unsigned char>(1,1);
             while(exponent){
-                if (exponent&1){
+                if (exponent&1){ // odd number
                     result=BigIntMultiply2(result,base,k);
                 }
                 base=BigIntMultiply2(base,base,k);
@@ -126,9 +117,12 @@ namespace bigint{
         {
             vector<unsigned char> v1(200,0);
             srand(time(NULL));
-            for (int i=0;i<v1.size();++i){
+			for (auto& t : v1){
+				t = rand() % 10;
+			}
+            /*for (int i=0;i<v1.size();++i){
                 v1[i]=rand()%10;
-            }
+            }*/
             vector<unsigned char> v2=v1;
             random_shuffle(v2.begin(),v2.end());
             v2.resize(100);

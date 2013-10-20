@@ -46,167 +46,168 @@ template<typename...>
 class newtemp{};
 
 int main(int argc,char* argv[]){
-	bigint::test();
-	anagrams::test();
-	cout << std::thread::hardware_concurrency() << endl;
-	cout << std::this_thread::get_id() << "\t" << endl;
-	extern char nonstaticvar;
-	extern void nonstaticfunc();
+  bigint::test();
+  anagrams::test();
+  cout << std::thread::hardware_concurrency() << endl;
+  cout << std::this_thread::get_id() << "\t" << endl;
+  extern char nonstaticvar;
+  extern void nonstaticfunc();
 
-	cout << nonstaticvar << endl;
-	nonstaticfunc();
-    string ss("1234567890");
-    vector<string> vs;
-    std::fill_n(std::back_inserter(vs), 5, "hello");
+  cout << nonstaticvar << endl;
+  nonstaticfunc();
+  string ss("1234567890");
+  vector<string> vs;
+  std::fill_n(std::back_inserter(vs), 5, "hello");
 
-    {
-        shared_ptr<int> spi(new int(50));
-		spi.reset(new int(100));
-        //std::swap();
+  {
+    shared_ptr<int> spi(new int(50));
+    spi.reset(new int(100));
+    //std::swap();
+  }
+
+  reverse_copy(ss.begin(), ss.end(), ostream_iterator<char>(cout));
+  set<int> si;
+  while (1){
+    pair<set<int>::iterator, bool> tmp1 = si.insert(1);
+    if (tmp1.second){
+      cout << "inserted a new value " << *tmp1.first << ".\n";
+      set<int>::iterator tmp2 = si.insert(tmp1.first, 2);
     }
-
-    reverse_copy(ss.begin(),ss.end(),ostream_iterator<char>(cout));
-    set<int> si;
-    while(1){
-        pair<set<int>::iterator,bool> tmp1= si.insert(1);
-        if (tmp1.second){
-            cout << "inserted a new value " << *tmp1.first << ".\n";
-            set<int>::iterator tmp2=si.insert(tmp1.first,2);
-        }else{
-            cout << "an equivalent element "<< *tmp1.first<< " exists already!" << endl;
-            int a[]={2,3,4};
-            si.insert(a,a+_countof(a));
-            break;
-        }
+    else{
+      cout << "an equivalent element " << *tmp1.first << " exists already!" << endl;
+      int a[] = { 2, 3, 4 };
+      si.insert(a, a + _countof(a));
+      break;
     }
-    copy(si.begin(),si.end(),ostream_iterator<int>(cout," "));cout<<endl;
+  }
+  copy(si.begin(), si.end(), ostream_iterator<int>(cout, " ")); cout << endl;
 
-    simon();
-    static int ccc=0;
-    ASL::test();
-    bst::test();
-    slist::test();
-    TestVolatile();
-    boggle::test();
-    //set<set<int>> ssi;
-    //unordered_set<set<int>> ussi;
-    algo::threesum::test();
-    //ShowMeDeadLock();
-    sorting2::test();
-    bigint::test();
-    cout << boolalpha << testpower() << endl;
+  simon();
+  static int ccc = 0;
+  ASL::test();
+  bst::test();
+  slist::test();
+  TestVolatile();
+  boggle::test();
+  //set<set<int>> ssi;
+  //unordered_set<set<int>> ussi;
+  algo::threesum::test();
+  //ShowMeDeadLock();
+  sorting2::test();
+  bigint::test();
+  cout << boolalpha << testpower() << endl;
 
-    for (int i=2;i<100;i<<=1){}
-    MS::test1();
-    MS::boggle2::test();
-    matrix::test();
-    boggle::test();
-    triangle::test();
-    cout << boolalpha << 
-        stackapplication::IsValidParentheses("{([])}{}()") << endl;
-    anagrams::test();
-    bitops::test();
-    mymap::test();
-    sorting::test();
-    bt::test();
-    const int N=static_cast<int>(1e3);
-    int* a=new int[N];
-    for(int i=0;i<N;i++){a[i]=i;}
-    mtmerge(a,a+N-1);
-    Sleep(10*1000);
-    ASL::test();
-    sorting::test();
-    cout << boolalpha << algo::test_GetLongestRange() << endl;
-    int x=5;
-    ++++x;
-    cout << x << endl;
+  for (int i = 2; i<100; i <<= 1){}
+  MS::test1();
+  MS::boggle2::test();
+  matrix::test();
+  boggle::test();
+  triangle::test();
+  cout << boolalpha <<
+    stackapplication::IsValidParentheses("{([])}{}()") << endl;
+  anagrams::test();
+  bitops::test();
+  mymap::test();
+  sorting::test();
+  bt::test();
+  const int N = static_cast<int>(1e3);
+  int* a = new int[N];
+  for (int i = 0; i<N; i++){ a[i] = i; }
+  mtmerge(a, a + N - 1);
+  Sleep(10 * 1000);
+  ASL::test();
+  sorting::test();
+  cout << boolalpha << algo::test_GetLongestRange() << endl;
+  int x = 5;
+  ++++x;
+  cout << x << endl;
 
 #if 0
-    x++++;//left operand must be l-value
+  x++++;//left operand must be l-value
 #endif
 
 #if 0
-    wstring hello=L"巫富珩";
-    wcout<< hello.c_str() << endl;
+  wstring hello=L"巫富珩";
+  wcout<< hello.c_str() << endl;
 #endif
-    string sss="hello%20world%simon";
-    string r=processpercentsign(sss);
-    printf(r.c_str());
-    printf("\n");
-    printf("%s\n",r.c_str());
-    cout << r.c_str() << endl;
+  string sss = "hello%20world%simon";
+  string r = processpercentsign(sss);
+  printf(r.c_str());
+  printf("\n");
+  printf("%s\n", r.c_str());
+  cout << r.c_str() << endl;
 
-    ss::test();
-    heaping::test();
-    
-    bt::test();
-    MS::drawCircle(10);
-    DP::test();
-    getchar();
-    statistics::test();
-    //cout << boolalpha << bool(true^true) << endl;// xor can be used on bool
-    
-    Augmentation::test();
+  ss::test();
+  heaping::test();
 
-    heaping::heap::test();
-    int i=014;
-    
-    cout << bitops::BitCount(90) << endl;
+  bt::test();
+  MS::drawCircle(10);
+  DP::test();
+  getchar();
+  statistics::test();
+  //cout << boolalpha << bool(true^true) << endl;// xor can be used on bool
 
-    ::graph::test();
+  Augmentation::test();
 
-    std::thread t(hello);
-    t.join();
-    UINT tid;
-    uintptr_t ut=::_beginthreadex(0,0,threadfunc,0,0,&tid);
+  heaping::heap::test();
+  int i = 014;
 
-    //WaitForSingleObject()
-    cout << GetThreadId((HANDLE)ut) << endl;
-    searching::test();
-    //cout<< 0111010101010b << endl;
-	exotic_datastructure::test();
+  cout << bitops::BitCount(90) << endl;
+
+  ::graph::test();
+
+  std::thread t(hello);
+  t.join();
+  UINT tid;
+  uintptr_t ut = ::_beginthreadex(0, 0, threadfunc, 0, 0, &tid);
+
+  //WaitForSingleObject()
+  cout << GetThreadId((HANDLE)ut) << endl;
+  searching::test();
+  //cout<< 0111010101010b << endl;
+  exotic_datastructure::test();
 #if 0
-	adjacency_list<> mygraph;
-	add_edge(1, 2, mygraph);
-	add_edge(1, 3, mygraph);
-	add_edge(1, 4, mygraph);
-	add_edge(2, 4, mygraph);
-	adjacency_list<>::vertex_iterator vertexIt, vertexEnd;
-	adjacency_list<>::adjacency_iterator neighbourIt, neighbourEnd;
+  adjacency_list<> mygraph;
+  add_edge(1, 2, mygraph);
+  add_edge(1, 3, mygraph);
+  add_edge(1, 4, mygraph);
+  add_edge(2, 4, mygraph);
+  adjacency_list<>::vertex_iterator vertexIt, vertexEnd;
+  adjacency_list<>::adjacency_iterator neighbourIt, neighbourEnd;
 #endif
-	//__asm{int 3}
+  //__asm{int 3}
 
-	//bst::test();
-	//dclist::test();
-	slist::test();
-	//util::test();
-	//tickseries::test();
-	//sandbox::heap<double> h;
-	//h.insert(0.2);
+  //bst::test();
+  //dclist::test();
+  slist::test();
+  //util::test();
+  //tickseries::test();
+  //sandbox::heap<double> h;
+  //h.insert(0.2);
 
-	//heap::test();
-	//sorting::test();
-	//DP::test();
-	//deque2::test();
-	//wufuheng::stackwithminmax<double>::test();
-	//vector<int> v;v.back();
-	//Augmentation::test();
-	//sorting::test();
-	//addTwoArbitraryNumbers_::test();
-	//integerrelated::test();
+  //heap::test();
+  //sorting::test();
+  //DP::test();
+  //deque2::test();
+  //wufuheng::stackwithminmax<double>::test();
+  //vector<int> v;v.back();
+  //Augmentation::test();
+  //sorting::test();
+  //addTwoArbitraryNumbers_::test();
+  //integerrelated::test();
 #if 0
-	int i=0x80000000;
-	cout << i << endl;
-	i>>=1;
-	cout << i << endl;
-	cout << hex << i << endl;
-	char a='a';
-	char b='b';
-	util::swap<char>(a,b);
-	cout << a << b << endl;
+  int i=0x80000000;
+  cout << i << endl;
+  i>>=1;
+  cout << i << endl;
+  cout << hex << i << endl;
+  char a='a';
+  char b='b';
+  util::swap<char>(a,b);
+  cout << a << b << endl;
 #endif
-	//stringrelated::test();
-	//integerrelated::test();
-	return getchar();
+  //stringrelated::test();
+  //integerrelated::test();
+  return getchar();
 }
 

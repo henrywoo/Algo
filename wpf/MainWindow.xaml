@@ -1,0 +1,16 @@
+﻿<Window x:Class="wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+  <Grid>
+    <Button Content="Button" HorizontalAlignment="Left" Margin="371,46,0,0" VerticalAlignment="Top" Width="110" Height="34"/>
+    <RichTextBox HorizontalAlignment="Left" Height="299" Margin="10,10,0,0" VerticalAlignment="Top" Width="249">
+      <FlowDocument>
+        <Paragraph>
+          <Run Text="C++ Code here"/>
+        </Paragraph>
+      </FlowDocument>
+    </RichTextBox>
+
+  </Grid>
+</Window>

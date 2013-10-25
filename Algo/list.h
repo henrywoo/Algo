@@ -144,16 +144,16 @@ public:
 	///Time - O(n) where n is the length of the list; Space - O(1)
 	const slist_node* __cdecl FindKthToTail(int k) const throw();
 
-    static void swap(slist_node* sn1, slist_node* sn2) throw();
+  static void swap(slist_node* sn1, slist_node* sn2) throw();
 
 	///@brief if there is a circle inside the single list
 	bool HasCircle() const;
 
     ///@note 3 temporary variables!!!
-    void reverse(){// h->a->b->c->NULL
+  void reverse(){// h->a->b->c->NULL
         slist_node* tmp=head;
         slist_node* n=tmp->next;
-        slist_node* p=NULL;
+        slist_node* p=nullptr;
 
         while(tmp){
             tmp->next=p;//保存next
@@ -163,15 +163,15 @@ public:
                 n=tmp->next;//a->next=h
             }
         }
-    }
+  }
 
-    void printall(){
+  void printall(){
         slist_node* tmp=head;
         while (tmp!=NULL){
             cout << tmp->d << endl;
             tmp= tmp->next;
         }
-    }
+  }
 
     void printall_reversely(){
         slist_node* tmp=head;

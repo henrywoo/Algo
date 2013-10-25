@@ -1,210 +1,206 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
+    <Filter Include="cpp">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="h">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header Files\server">
+    <Filter Include="h\server">
       <UniqueIdentifier>{8624c982-9524-4ec4-982f-c58f0f27604f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\algo">
+    <Filter Include="h\algo">
       <UniqueIdentifier>{d41888d7-1f8e-4161-8888-a1955dddf484}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\multithread">
+    <Filter Include="h\multithread">
       <UniqueIdentifier>{26986d27-431d-42f9-a644-782f78685e9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\sorting">
+    <Filter Include="h\sorting">
       <UniqueIdentifier>{556e4844-1eb3-410b-8760-612fb0a16115}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\pool">
+    <Filter Include="h\pool">
       <UniqueIdentifier>{3618130d-bb64-44f1-a049-fe375d23a4c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="bst.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="dlist.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="slist.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="tick.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="util.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="ziplist.c">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="zipmap.c">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="graph.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="heap.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="sort.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="ss.cpp">
-      <Filter>Header Files\server</Filter>
+      <Filter>h\server</Filter>
     </ClCompile>
     <ClCompile Include="asl.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="mt.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bst.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="deque.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="dp.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="heap.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="htable.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="list.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="queue.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="util.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="tick.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="algo.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="sort.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="searching.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="stack.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="ziplist.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="zipmap.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="SkipListTmpl.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="bitops.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="mt.h">
-      <Filter>Header Files\multithread</Filter>
+      <Filter>h\multithread</Filter>
     </ClInclude>
     <ClInclude Include="graph.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="numbercrunching.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="msinterview.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="bt.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="ss.h">
-      <Filter>Header Files\server</Filter>
+      <Filter>h\server</Filter>
     </ClInclude>
     <ClInclude Include="longestrange.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="reservoir_sampling.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="radixsort.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="asl.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="wordladder.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="mymap.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="rpn.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="anagrams.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="Valid_Parentheses.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="triangle.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="MaximalRectangle.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="boggle.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="matrix.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="boggle2.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="bigint.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="sorting.h">
-      <Filter>Header Files\sorting</Filter>
+      <Filter>h\sorting</Filter>
     </ClInclude>
     <ClInclude Include="threesum.h">
-      <Filter>Header Files\algo</Filter>
+      <Filter>h\algo</Filter>
     </ClInclude>
     <ClInclude Include="DisjointSet.h">
-      <Filter>Header Files</Filter>
+      <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="mempool.h">
-      <Filter>Header Files\pool</Filter>
+      <Filter>h\pool</Filter>
     </ClInclude>
     <ClInclude Include="threadpool.h">
-      <Filter>Header Files\pool</Filter>
+      <Filter>h\pool</Filter>
     </ClInclude>
     <ClInclude Include="h.h">
-      <Filter>Source Files</Filter>
+      <Filter>cpp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

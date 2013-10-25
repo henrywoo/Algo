@@ -31,25 +31,72 @@ void simon(){
     ccc=10;
     ddd=1;
 }
-template<class T> class A{public:A(){}}; 
+template<class T> class A{
+public:
+  A(){}
+}; 
 template<class T> class B{
+  int x = 10;
 public:
     B() {};
     //friend class A<T>;
     //template friend class A<T>;
     /* add something here to make A a friend */
 };
-static void func1(){}
+static void func1(){
+  cout << "func1" << endl;
+}
 
 //using namespace boost;
 template<typename...>
 class newtemp{};
 
+#include <initializer_list>
+#include <tuple>
+#include <future>
+
+void funct() throw(int){
+  int i = 0;
+  throw 0.1;// as long as we can catch it with (...) for example.
+}
+
 int main(int argc,char* argv[]){
+  heaping::heap::test();
+  int *p = (int*)malloc(sizeof(int)*30000);
+  free(p);
+  try{
+    funct();
+  }catch (int i){
+    cout << i << endl;
+  }catch (double d){
+    cout << d << endl;
+  }catch (...){
+    cout << "ERROR" << endl;
+  }
+  util::test();
+  bst::test();
+  bt::test();
+  cout << std::thread::hardware_concurrency() 
+    << " threads will be the best!" << endl;
+  int v2[] = {1,2};
+  for (int x : v2){
+    cout << x << endl;
+  }
+  std::async(std::launch::async, func1);
+  vector<int> vx{1,2,3,4};
+  vx.shrink_to_fit();
+  vector<int>(vx).swap(vx);
+  int tmp = vx.size();
+  for_each(vx.begin(), vx.end(), [&](int x){cout << x; if (--tmp == 0){ cout << endl; }});
+  { unique_ptr<int[]> uniquepoint(new int[5]); }
+  int localvar = 0;
+  [&localvar]()mutable->int{localvar++; return 1; }();
+  
   bigint::test();
   anagrams::test();
   cout << std::thread::hardware_concurrency() << endl;
   cout << std::this_thread::get_id() << "\t" << endl;
+
   extern char nonstaticvar;
   extern void nonstaticfunc();
 
@@ -128,7 +175,7 @@ int main(int argc,char* argv[]){
 
 #if 0
   wstring hello=L"巫富珩";
-  wcout<< hello.c_str() << endl;
+  cout<< hello.c_str() << endl;
 #endif
   string sss = "hello%20world%simon";
   string r = processpercentsign(sss);

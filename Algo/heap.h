@@ -10,12 +10,12 @@
 namespace heaping{
     using namespace std;
 
-    typedef priority_queue<int> MaxIntHeap;///typedef bool(*COMP)(int,int);
-    typedef priority_queue<int,vector<int>,greater<int>> MinIntHeap;
+    typedef priority_queue<int> MaxHeapInt;///typedef bool(*COMP)(int,int);
+    typedef priority_queue<int,vector<int>,greater<int>> MinHeapInt;
 
     class MedianConstantAccess{
-        MaxIntHeap maxh;
-        MinIntHeap minh;
+        MaxHeapInt maxh;
+        MinHeapInt minh;
     public:
         void insert(int);
         double get();
@@ -25,7 +25,7 @@ namespace heaping{
     ///private inheritance/composition+public inheritance
     ///which means: heap is NOT a binary tree, but heap can
     ///be implemented as a binary tree
-    ///default mymax heap
+    ///default min heap
     typedef bool(*COMP)(int,int);
     class heap: public bt_complete
     {
@@ -33,7 +33,7 @@ namespace heaping{
         static bool greater(int x,int y){return x>y;}
         static bool lessorequal(int x,int y){return x<=y;}
         COMP comp;
-        int minvec[10];///mymin node of every layer!!
+        //int minvec[10];///mymin node of every layer!!
         void heapify(int pos);
     public:
 
@@ -43,14 +43,16 @@ namespace heaping{
         }
         void insert(int n);
         int pop();
+
         void print();
         void print2();
         void print2()const;
 
-        void erase(int pos);
         int* head();
         int* tail();
         int search(int i);
+
+        void erase(int pos);
         void update(int* p,int n);
         void update(int pos,int n);
 

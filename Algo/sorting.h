@@ -6,7 +6,7 @@ namespace sorting2{
     //qsort说到底是一个递归函数
     template<typename T>
     void qsort(T* head, T* tail){
-        if (head==tail || head==NULL  ||tail==NULL){
+      if (head == tail || head == nullptr || tail == nullptr){
             return;
         }
         T* h=head;

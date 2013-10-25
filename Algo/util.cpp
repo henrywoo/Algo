@@ -225,7 +225,8 @@ double maxsubarray_fixed_reverse(double *p, size_t sz, double*& end){
 /// start - pointer to start of mymax subarray\n
 /// end   - pointer to end of mymax subarray\n
 ///@remarks bottom up dynamic programming
-double maxsubarray(double *p, size_t sz, double*& start, double*& end)
+double maxsubarray(double *p, size_t sz, double*& start, 
+  double*& end)
 {
 	if (sz==0){return INT_MIN;}
 	double totalsum=INT_MIN;
@@ -274,6 +275,32 @@ double maxsubarray(double *p, size_t sz, double*& start, double*& end)
 	return totalsum;
 }
 
+#define INVALIDPOINTER 1
+double maxsubarray(double *head, double *tail) throw(int)
+{
+  if (head >= tail) throw INVALIDPOINTER;
+  int sz = tail - head + 1;
+  double localsum=0,maxsum=0;
+  for (int i = 0; i < sz; ++i){
+    localsum += head[i];
+    if (localsum<0){
+      localsum = 0;
+    }
+    if (localsum>maxsum){
+      maxsum = localsum;
+    }
+  }
+  if (maxsum == 0){
+    maxsum = head[0];
+    for (int i = 1; i < sz;++i){
+      if (maxsum<head[i]){
+        maxsum = head[i];
+      }
+    }
+  }
+  return maxsum;
+}
+#include <numeric>
 namespace util{
 	void test(){
 #if 0
@@ -290,8 +317,17 @@ namespace util{
 		double test[8]={-0.2,-0.3,0.4,-.1,-.2,.1,.5,-.3};
 		double * head, * tail;
 		double totalsum=maxsubarray(test,sizeof(test)/sizeof(double),head,tail);
-		copy(head,tail+1,ostream_iterator<double>(cout," "));
-
+    copy(head, tail + 1, ostream_iterator<double>(cout, " ")); cout << endl;
+    double sum = 0;
+    sum=std::accumulate(head, tail + 1, sum);
+    cout << sum << endl;
+    try{
+      sum = maxsubarray(test + _countof(test), test);
+    }catch (int i){
+      if (i == INVALIDPOINTER)
+        cout << "INVALIDPOINTER" << endl;
+    }
+    cout << sum << endl;
 	}
 
 	void swap(int& a,int& b){

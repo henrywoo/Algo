@@ -23,7 +23,7 @@ class bt_full:public bt{
 	vector<int> v;
 public:
 };
-
+//////////////////////////////////////////////////////////////////////////
 ///@brief an binary search tree
 ///BST is-a Binary Tree
 class bst:public bt{
@@ -74,7 +74,7 @@ private:
     ///@todo: to be optimised
     size_t diameter(btnode*);
 };
-
+//////////////////////////////////////////////////////////////////////////
 class treeiterator{
 public:
 	virtual btnode* next()=0;
@@ -86,7 +86,7 @@ public:
 	//virtual int operator--()=0;
 	//virtual int operator--(int)=0;
 };
-
+//////////////////////////////////////////////////////////////////////////
 ///@brief a postorder Binary Search Tree iterator
 class bst_iterator_postorder:public treeiterator{
 	bst& t;

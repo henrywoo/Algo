@@ -28,6 +28,8 @@ vector<string> split(const string& str_,char delim);
 /// StringReplace("opoq","o","abc") return string("abcpabcq")
 string StringReplace(const string& str, const string& oldstr, const string& newstr);
 
+void removeWhiteSpace(char* p,size_t sz);
+
 double getmean(double *p, size_t sz);
 
 double maxsubarray_fixed(double *p, size_t sz, double*& end);

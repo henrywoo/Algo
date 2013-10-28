@@ -64,6 +64,22 @@ string StringReplace(const string& str, const string& pattern, const string& new
 		return s;
 	}
 }
+/*
+  char a[]="1 2 3";
+  removeWhiteSpace(a,_countof(a));
+*/
+void removeWhiteSpace(char* p, size_t sz){
+  int count = 0;
+  for (int i = 0; i < sz; ++i){
+    if (p[i] == ' '){
+      ++count;
+    }else{
+      if (count>0){
+        p[i - count] = p[i];
+      }
+    }
+  }
+}
 
 string processpercentsign(const string& sss){
     string r(sss);

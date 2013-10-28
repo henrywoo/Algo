@@ -61,6 +61,10 @@ void funct() throw(int){
 }
 
 int main(int argc,char* argv[]){
+  { 
+    char a[] = "1 2 3";//1_2_3
+    removeWhiteSpace(a, _countof(a));//_countof算进了最后的null char
+  }
   bt::test();
   char bbg[] = "dogcat";
   recursion::permute(bbg);

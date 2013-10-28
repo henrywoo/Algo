@@ -399,12 +399,12 @@ namespace sorting{
       int k = 0;
       if (sz & 0x1 == 1){
         k = sz / 2 + 1;
-        int median = findKthsmallest(b, b + sizeof(b) / sizeof(int)-1, k);// the smallest one
+        int median = findKthsmallest(b, b + _countof(b), k);// the smallest one
       }
       else{
         k = sz / 2;
-        int median1 = findKthsmallest(b, b + sizeof(b) / sizeof(int)-1, k);// the smallest one
-        int median2 = findKthsmallest(b, b + sizeof(b) / sizeof(int)-1, k + 1);// the smallest one
+        int median1 = findKthsmallest(b, b + _countof(b), k);// the smallest one
+        int median2 = findKthsmallest(b, b + _countof(b), k + 1);// the smallest one
         int median = median1 / 2 + median2 / 2;
       }
 

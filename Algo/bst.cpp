@@ -264,7 +264,7 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
   }
   else if (wo == ZIGZAG){
 #if 1
-    stack<btnode*> stk1;
+    stack<btnode*> stk1;//必须用stack
     stack<btnode*> stk2;
     stack<btnode*> *sp1 = &stk1, *sp2 = &stk2;
     sp1->push(proot);
@@ -445,8 +445,7 @@ bool compnode_recursive(const btnode* n1, const btnode* n2){
       }
     }
     return true;
-  }
-  else{
+  }else{
     return false;
   }
 
@@ -543,8 +542,7 @@ btnode* bst_iterator_postorder::next()
       processed_nodes.insert(p2curr_node);
       if (p2curr_node->l){
         p2curr_node = p2curr_node->l;
-      }
-      else if (p2curr_node->r){
+      }else if (p2curr_node->r){
         p2curr_node = p2curr_node->r;
       }
       else{
@@ -569,15 +567,16 @@ btnode* bst_iterator_postorder::next()
   return NULL;
 }
 
+//返回reference,因为this不会消失!!!
 bst_iterator_postorder& bst_iterator_postorder::operator++(){
   p2curr_node = next();
   return *this;
 }
 
-///post-autoincrement
+///post-autoincrement记住post形式要麻烦些,传int,函数中有临时变量,而且要call对应的prefix版本
 bst_iterator_postorder bst_iterator_postorder::operator++(int){
   bst_iterator_postorder ti = *this;
-  ++*this;//++ti;
+  ++*this;//++ti;!!!!!!!!!!!!!!
   return ti;
 }
 

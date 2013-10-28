@@ -43,6 +43,49 @@ public:
     bt():proot(NULL){}
     btnode *getroot(){return proot;}
 
+    //////////////////////////////////////////////////////////////////////////
+    void printRoot2Leaf() const{
+      auto isleaf = [](btnode* n)->bool{
+        ////ERROR
+        return (n!=NULL) && (!n->l) && (!n->r);
+      };
+      auto printvector = [](vector<btnode*>& vb){
+        for (auto p : vb){
+          /////ERROR
+          if (p) cout << p->d;
+        }
+        cout << endl;
+      };
+      vector<btnode*> vb;//因为stack doesnt have iterators, so use vector here
+      /*Stack does not have iterators, by definition of stack. If you need stack with iterators, 
+      you'll need to implement it yourself on top of other container (std::list, std::vector, etc). Stack doc is here.
+      P.S. According to a comment i got from Iraimbilanja, std::stack by default uses std::deque for implementation.*/
+      //bootstrap
+      auto addleft = [&](btnode* tmp){
+        while (tmp){
+        vb.push_back(tmp);
+        tmp = tmp->l;
+      }};
+      addleft(proot);
+      while (!vb.empty()){
+        btnode* tmp2 = vb.back();
+        if (isleaf(tmp2)){
+          printvector(vb);
+          vb.pop_back();
+        }else{
+          if (tmp2==nullptr){
+            vb.pop_back();// pop the dummy
+            vb.pop_back();// pop the parent
+          }else if(tmp2->r){
+            vb.push_back(static_cast<btnode*>(nullptr));// push the dummy
+            addleft(tmp2->r);
+          }else{
+            vb.pop_back();
+          }
+        }
+      }
+    }
+
     ///@brief todo
     ///@link http://leetcode.com/onlinejudge#question_129
     /*
@@ -197,6 +240,8 @@ subtree path sum". The final max sum value can be:
         tmp=tmp2->l;
         tmp->l=new btnode(6);
         tmp->r=new btnode(7);
+
+        mybt.printRoot2Leaf();
 
         int s=mybt.Sum_Root2Leaf_Numbers();
         cout << s << endl;

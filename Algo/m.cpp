@@ -61,6 +61,11 @@ void funct() throw(int){
 }
 
 int main(int argc,char* argv[]){
+  bt::test();
+  char bbg[] = "dogcat";
+  recursion::permute(bbg);
+  recursion::permute(bbg,0,_countof(bbg));
+  green_turtle::test();
   heaping::heap::test();
   int *p = (int*)malloc(sizeof(int)*30000);
   free(p);
@@ -75,7 +80,7 @@ int main(int argc,char* argv[]){
   }
   util::test();
   bst::test();
-  bt::test();
+  
   cout << std::thread::hardware_concurrency() 
     << " threads will be the best!" << endl;
   int v2[] = {1,2};

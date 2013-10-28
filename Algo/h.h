@@ -32,3 +32,6 @@
 #include "sorting.h"
 #include "threesum.h"
 #include "DisjointSet.h"
+#include "htable.h"
+
+#include "permutation.h"

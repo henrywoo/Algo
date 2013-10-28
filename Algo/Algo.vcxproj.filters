@@ -85,9 +85,6 @@
     <ClInclude Include="htable.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="list.h">
-      <Filter>h</Filter>
-    </ClInclude>
     <ClInclude Include="queue.h">
       <Filter>h</Filter>
     </ClInclude>
@@ -201,6 +198,12 @@
     </ClInclude>
     <ClInclude Include="h.h">
       <Filter>cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="permutation.h">
+      <Filter>h\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="list.h">
+      <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

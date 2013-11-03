@@ -81,6 +81,8 @@ void removeWhiteSpace(char* p, size_t sz){
   }
 }
 
+// string substr (size_t pos = 0, size_t len = npos) const;
+// substr is const, wont change the current string
 string processpercentsign(const string& sss){
     string r(sss);
     size_t st=-2;

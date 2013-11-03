@@ -71,7 +71,7 @@ namespace statistics{
         if (n==1){
             return 0;
         }
-        static const int ndayperyear=366;
+        const int& ndayperyear=366;
         double r=1.0;
         for (int i=2;i<=n;i++){
             r = (ndayperyear-i+1)*r/ndayperyear;

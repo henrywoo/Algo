@@ -35,3 +35,5 @@
 #include "htable.h"
 
 #include "permutation.h"
+#include "printring.h"
+#include "hmm.h"

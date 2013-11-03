@@ -60,7 +60,21 @@ void funct() throw(int){
   throw 0.1;// as long as we can catch it with (...) for example.
 }
 
+int _1darray[3][2] = { { 0,3 }, { 1,4 }, { 2 } };
+// pass array by reference!!!
+// 必须加括号,传引用的时候必须指明array的size
+size_t getsize1darray(int (&_1darray)[3][2]){
+  int tmp1 = sizeof(_1darray);
+  int tmp2 = sizeof _1darray[0];
+  int tmp3 = sizeof _1darray[0][0];
+  return tmp1 / tmp2;
+}
+
 int main(int argc,char* argv[]){
+  hmm::test();
+  RING::printMatrixHelix(5);
+  cout << getsize1darray(_1darray) << endl;
+  RING::PrintRing();
   { 
     char a[] = "1 2 3";//1_2_3
     removeWhiteSpace(a, _countof(a));//_countof算进了最后的null char
@@ -166,10 +180,10 @@ int main(int argc,char* argv[]){
   mymap::test();
   sorting::test();
   bt::test();
-  const int N = static_cast<int>(1e3);
-  int* a = new int[N];
-  for (int i = 0; i<N; i++){ a[i] = i; }
-  mtmerge(a, a + N - 1);
+  const int NN = static_cast<int>(1e3);
+  int* a = new int[NN];
+  for (int i = 0; i<NN; i++){ a[i] = i; }
+  mtmerge(a, a + NN - 1);
   Sleep(10 * 1000);
   ASL::test();
   sorting::test();

@@ -189,6 +189,7 @@
     <ClInclude Include="h.h" />
     <ClInclude Include="dp.h" />
     <ClInclude Include="heap.h" />
+    <ClInclude Include="hmm.h" />
     <ClInclude Include="htable.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="longestrange.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="mymap.h" />
     <ClInclude Include="numbercrunching.h" />
     <ClInclude Include="permutation.h" />
+    <ClInclude Include="printring.h" />
     <ClInclude Include="queue.h" />
     <ClCompile Include="slist.cpp" />
     <ClInclude Include="radixsort.h" />

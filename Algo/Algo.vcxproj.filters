@@ -24,6 +24,9 @@
     <Filter Include="h\pool">
       <UniqueIdentifier>{3618130d-bb64-44f1-a049-fe375d23a4c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="h\HMM">
+      <UniqueIdentifier>{ac6aac6e-1caa-4f59-8411-6607e079e39d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m.cpp">
@@ -204,6 +207,12 @@
     </ClInclude>
     <ClInclude Include="list.h">
       <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="printring.h">
+      <Filter>h\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="hmm.h">
+      <Filter>h\HMM</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

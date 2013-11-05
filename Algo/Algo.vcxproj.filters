@@ -214,5 +214,8 @@
     <ClInclude Include="hmm.h">
       <Filter>h\HMM</Filter>
     </ClInclude>
+    <ClInclude Include="rangecounting.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

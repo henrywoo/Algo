@@ -37,3 +37,4 @@
 #include "permutation.h"
 #include "printring.h"
 #include "hmm.h"
+#include <forward_list>

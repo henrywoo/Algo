@@ -153,10 +153,12 @@ public:
   }
   
   void debug(){
+#ifdef DEBUG
     for (int i = 0; i < ucount;++i){
       cout << ptree[i] << endl;
     }
     cout << "***********************" << endl;
+#endif // DEBUG
   }
 
   void preprocess(){
@@ -183,15 +185,11 @@ public:
         uint n2 = FindBucketNo(numbers[i + 1], n1 - 1);
         ++umi[numbers[i+1]];
         update(n1, n2);
-        debug();
+        //debug();
       }
     }
-
     debug();
   }
-
-  
-
 
   //binary search O(logN)
   uint FindBucketNo(int target, uint lo=0, bool tagging=true){
@@ -236,73 +234,17 @@ int main(void){
   exit(0);
 #endif
   BigTest bt;
-#if 0
+#if 1
   bt.getrawdata("extents.txt");
 #else 
   bt.getrawdata("test.txt");
 #endif
   bt.preprocess();
-  int n=bt.query(18);
+  int n = bt.query(102731);
   cout << n << endl;
-  for (int i = 0; i < 30; ++i){
+  for (int i = 300; i < 350; ++i){
     int n = bt.query(i);
     cout << i << "\t" << n << endl;
-  }
-  
-  
-
-  vector<interval> vi = {
-    { 16, 16 }, { 16, 21 }, { 17, 19 }, { 17, 23 }, { 15, 23 }, { 26, 26 },{ 5, 8 }, { 8, 9 }, { 25, 30 }, { 19, 20 }, { 6, 10 }, { 0, 3 }
-  };
-  unordered_map<unsigned int, unsigned int> umi;
-
-  // 1. sort
-  set<int> dataset;
-  for (interval& i: vi){
-    dataset.insert(i.first);
-    dataset.insert(i.second);
-  }
-
-  indices idx;
-  for (interval& j : vi){
-    // 2. find index, which bucket the point is in
-    if (j.first == j.second){
-      umi[j.first]++;
-      continue;
-    }
-    int i=0;
-    for (int k: dataset){//////////////////
-      if (j.first==k){
-        idx.first = i+1; // to increment
-      }else if (j.second == k){
-        idx.second = i+1; // to decrement
-        break;
-      }
-      i++;
-    }
-    if (idx.first>idx.second){
-      idx.second = dataset.size();
-    }
-
-    // 3. update
-    cout << idx.first << "\t" << idx.second << endl;
-    ++umi[j.second];
-    update(idx);
-  }
-
-  /// QUERY
-  auto Q = [&](int i){
-    int bucketNo = getBucketNo(dataset, i);
-    if (bucketNo > 0){
-      int count = query(bucketNo);
-      if (umi.find(i)!=umi.end()){
-        count += umi[i];
-      }
-      cout << i << "\t" << count << endl;
-    }
-  };
-  for (int i = 0; i < 30; ++i){
-    Q(i);
   }
   return 0;
 }

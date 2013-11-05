@@ -43,28 +43,28 @@ private:
   unordered_map<uint, uint> umi;
   enum { CAPACITY = MAXLINE / 5 * 2 };
 protected:
-  void __update(int first, int second){
-    int i = first, tmp = 0;
+  void __update(uint first, uint second){
+    uint i = first, tmp = 0;
     while (i >= 0 && i <= ucount){
       tmp = i - 1;
       ++ptree[tmp];
-      i += (i & -i);
+      i += (i & -(int)i);
     }
     i = second;
     while (i >= 0 && i <= ucount){
       tmp = i - 1;
       --ptree[tmp];
-      i += (i & -i);
+      i += (i & -(int)i);
     }
   }
 
-  int __query(int target){
-    int idx = (int)__getbucketno(target, 0, false);
-    int sum = 0, tmp = 0;
+  uint __query(uint target){
+    uint idx = __getbucketno(target, 0, false);
+    uint sum = 0, tmp = 0;
     while (idx > 0){
       tmp = idx - 1;
       sum += ptree[tmp];
-      idx -= (idx&-idx);
+      idx -= (idx&-(int)idx);
     }
     if (umi.find(target) != umi.end()){
       sum += umi[target];
@@ -98,6 +98,7 @@ protected:
         //debug();
       }
     }
+    delete numbers;
     __debug();
   }
 
@@ -143,25 +144,25 @@ protected:
   }
 
 public:
-  BigTest():rcount(0){
+  BigTest():rcount(0),bucket(NULL){
     ptree = new int[CAPACITY]();
   }
 
   ~BigTest(){
-    delete ptree;
-    delete bucket;
+    if (ptree) delete ptree;
+    if (bucket)delete bucket;
   }
 
   bool GetExtents(const char* filename){
-    FILE *stream;
+    FILE *stream=NULL;
     timer t;
     errno_t err = freopen_s(&stream, filename, "r", stdin);
     if (err==0){
       int* tmp = numbers = new int[CAPACITY];
-      while (scanf_s("%d %d\n", tmp, tmp + 1, 20) != EOF){
+      while (scanf_s("%d %d\n", tmp, tmp + 1) != EOF){
         tmp += 2;
       }
-      fclose(stream);
+      if(stream) fclose(stream);
       rcount = tmp - numbers;
       __preprocess();
       return true;
@@ -169,14 +170,31 @@ public:
       return false;
   }
 
+  struct ofile{
+    FILE* o;
+    ofile():o(NULL){ fopen_s(&o,"output.txt", "w"); }
+    ~ofile(){ fclose(o); }
+    void put(int i){o!=NULL && fprintf_s(o, "%d\n", i);}
+  };
+
   void QueryFromFile(const char* filename){
-    FILE *stream;
-    freopen_s(&stream, filename, "r", stdin);
-    int qint;
-    while (scanf_s("%d\n", &qint, 1) != EOF){
-      int n = __query(qint);
-      printf("%d\n",n);
+    FILE *stream = NULL;
+    errno_t err = freopen_s(&stream, filename, "r", stdin);
+    if (err == 0){
+      int qint;
+#if NDEBUG
+      ofile of;
+#endif
+      while (scanf_s("%d\n", &qint) != EOF){
+        int n = __query(qint);
+#if NDEBUG
+        of.put(n);
+#else
+        printf("%d\n", n);
+#endif
+      }
     }
+    if (stream)fclose(stream);
   }
 
 };
@@ -188,11 +206,13 @@ int main(void){
   exit(0);
 #endif
   BigTest bt;
+  
 #if 1
-  bt.GetExtents("extents.txt");
+  if (bt.GetExtents("extents.txt")){
 #else 
-  bt.GetExtents("test.txt");
+  if (bt.GetExtents("extents.txt")){
 #endif
-  bt.QueryFromFile("numbers.txt");
+    bt.QueryFromFile("numbers.txt");
+  }
   return 0;
 }

@@ -10,28 +10,14 @@
 
 using namespace std;
 typedef unsigned int uint;
-#define MAXLINE 50*1000*1000
+#define MAXLINE 51*1000*1000
 
 struct timer{
   int start;
-  timer():start(clock()){}
-  ~timer(){ printf("Time Cost: %.3lf\n", double(clock() - start) / CLOCKS_PER_SEC); }
+  const char* str;
+  timer(const char* s=""):start(clock()),str(s){}
+  ~timer(){ printf("[%s] Time Cost: %.3lf\n", str, double(clock() - start) / CLOCKS_PER_SEC); }
 };
-
-void gen(){
-  ofstream f("randompair.txt", std::ofstream::out | std::ofstream::app);
-  time_t start = time(0);
-  srand((unsigned int)time(NULL));
-  for (int i = 0; i<5 * 1000000; ++i){
-    int t1 = rand() % 212343;
-    int t2 = rand() % 23433723;
-    if (t1>t2){
-      swap(t1, t2);
-    }
-    f << t1 << " " << t2 << endl;
-  }
-  time_t end = time(0);
-}
 
 class BigTest{
 private:
@@ -41,7 +27,7 @@ private:
   uint rcount;
   uint ucount;
   unordered_map<uint, uint> umi;
-  enum { CAPACITY = MAXLINE / 5 * 2 };
+  enum { CAPACITY = MAXLINE * 2 };
 protected:
   void __update(uint first, uint second){
     uint i = first, tmp = 0;
@@ -73,7 +59,7 @@ protected:
   }
 
   void __preprocess(){
-    timer t;
+    timer t(__FUNCSIG__);
     bucket = new int[rcount];
     memcpy(bucket, numbers, rcount * sizeof(int));
     /*{timer r;
@@ -155,15 +141,19 @@ public:
 
   bool GetExtents(const char* filename){
     FILE *stream=NULL;
-    timer t;
     errno_t err = freopen_s(&stream, filename, "r", stdin);
     if (err==0){
-      int* tmp = numbers = new int[CAPACITY];
-      while (scanf_s("%d %d\n", tmp, tmp + 1) != EOF){
-        tmp += 2;
+      // read file
+      {
+        timer t(__FUNCSIG__ " Read File");
+        //[bool __thiscall BigTest::GetExtents(const char *) Read File] Time Cost: 224.450, MM 800M
+        int* tmp = numbers = new int[CAPACITY];
+        while (scanf_s("%d %d\n", tmp, tmp + 1) != EOF){
+          tmp += 2;
+        }
+        if (stream) fclose(stream);
+        rcount = tmp - numbers;
       }
-      if(stream) fclose(stream);
-      rcount = tmp - numbers;
       __preprocess();
       return true;
     }else
@@ -199,19 +189,12 @@ public:
 
 };
 
-int main(void){
+
+
+int main(int argc, char* argv[]){
   timer t;
-#if 0
-  gen();
-  exit(0);
-#endif
   BigTest bt;
-  
-#if 1
-  if (bt.GetExtents("extents.txt")){
-#else 
-  if (bt.GetExtents("extents.txt")){
-#endif
+  if (bt.GetExtents("randompair.txt")){
     bt.QueryFromFile("numbers.txt");
   }
   return 0;

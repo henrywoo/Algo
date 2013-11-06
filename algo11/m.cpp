@@ -1,25 +1,7 @@
-#include <utility>
-#include <stdio.h>
-#include <algorithm>
-#include <random>
-#include <time.h>
-#include <fstream>
-#include <set>
-#include <unordered_map>
-#include <string>
+#include "robot.h"
+#include <process.h>
 
-#include <windows.h>
-
-using namespace std;
-typedef unsigned int uint;
-#define MAXLINE 51*1000*1000
-
-struct timer{
-  int start;
-  const char* str;
-  timer(const char* s=""):start(clock()),str(s){}
-  ~timer(){ printf("[%s] Time Cost: %.3lf\n", str, double(clock() - start) / CLOCKS_PER_SEC); }
-};
+#define USINGCOUNTINGSORT
 
 ///@return true - full read; false - incomplete read
 ///@todo add function to deal with \n only linux file
@@ -50,193 +32,106 @@ void FastScan(uint*& des,PBYTE src,DWORD slen,uint& remain){
 }
 
 class BigTest{
-private:
-  int* ptree;//int array
-  uint* numbers;
-  int* bucket;
-  vector<vector<int>> bucket2;
-  uint rcount;
-  uint ucount;
-  unordered_map<uint, uint> umi;
-  enum { CAPACITY = MAXLINE * 2 };
-protected:
-  void __update(uint first, uint second){
-    uint i = first, tmp = 0;
-    while (i >= 0 && i <= ucount){
-      tmp = i - 1;
-      ++ptree[tmp];
-      i += (i & -(int)i);
-    }
-    i = second;
-    while (i >= 0 && i <= ucount){
-      tmp = i - 1;
-      --ptree[tmp];
-      i += (i & -(int)i);
-    }
-  }
-
-  uint __query(uint target){
-    uint idx = __getbucketno(target, 0, false);
-    uint sum = 0, tmp = 0;
-    while (idx > 0){
-      tmp = idx - 1;
-      sum += ptree[tmp];
-      idx -= (idx&-(int)idx);
-    }
-    if (umi.find(target) != umi.end()){
-      sum += umi[target];
-    }
-    return sum;
-  }
-
-
-
-  //binary search O(logN) - todo
-  uint __getbucketno(int target, uint lo = 0, bool tagging = true){
-    uint hi = ucount - 1, mid;
-    if (tagging){
-      while (lo <= hi){
-        mid = lo + (hi - lo) / 2;
-        if (bucket[mid] == target)
-          return mid + 1;
-        else if (bucket[mid] < target)
-          lo = mid + 1;
-        else
-          hi = mid - 1;
-      }
-    }
-    else{
-      while (lo < hi){
-        if (target >= bucket[hi]) return hi + 1;
-        if (lo + 1 == hi && bucket[lo] < target && target < bucket[hi]){
-          return lo + 1;
-        }
-        mid = lo + (hi - lo) / 2;
-        if (bucket[mid] == target)
-          return mid + 1;
-        else if (bucket[mid] < target)
-          lo = mid;
-        else
-          hi = mid;
-      }
-    }
-    return -1;// not found
-  }
-
-  void __debug(){
-#ifdef DEBUG
-    for (int i = 0; i < ucount; ++i){
-      cout << ptree[i] << endl;
-    }
-    cout << "***********************" << endl;
-#endif // DEBUG
-  }
-
 public:
-  BigTest():rcount(0),bucket(NULL){
-    ptree = new int[CAPACITY]();
+  BigTest(){
   }
 
   ~BigTest(){
-    if (ptree) delete ptree;
-    if (bucket)delete bucket;
   }
 
-  void __preprocess(int n){
-    rcount = n;
-    timer t(__FUNCSIG__);
-    bucket = new int[rcount];
-    memcpy(bucket, numbers, rcount * sizeof(int));
-    /*{timer r;
-    set<int> si(bucket, bucket + count * 2 + 1); // 9 seconds
-    }*/
-    sort(bucket, bucket + rcount);//0.8 seconds
-    int *p = unique(bucket, bucket + rcount);
-    //cout << p - bucket << endl;// size of the unique array
-    /*for (int i = 0; bucket + i != p;++i){
-    cout << bucket[i] << endl;
-    }*/
-    ucount = p - bucket;
-    for (uint i = 0; i < rcount - 1; i = i + 2){
-      if (numbers[i] == numbers[i + 1]){
-        ++umi[numbers[i]];
-      }
-      else{
-        uint n1 = __getbucketno(numbers[i]);
-        uint n2 = __getbucketno(numbers[i + 1], n1 - 1);
-        ++umi[numbers[i + 1]];
-        __update(n1, n2);
-        //debug();
-      }
-    }
-    delete numbers;
-    __debug();
-  }
 
   //return # of int
   uint GetExtents(const char* filename){
     timer t(__FUNCSIG__ " Read File");
     SYSTEM_INFO sinf;
     GetSystemInfo(&sinf);
-    HANDLE hFile = CreateFile(TEXT(filename), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+    HANDLE hFile = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ, NULL, 
+      OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
     HANDLE hFileMapping = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
     DWORD dwFileSizeHigh;
     __int64 qwFileSize = GetFileSize(hFile, &dwFileSizeHigh);
     qwFileSize += (((__int64)dwFileSizeHigh) << 32);
     CloseHandle(hFile);
 
-    uint* tmp = numbers = new uint[CAPACITY];
-
-
     __int64 qwFileOffset = 0, qwNumOf0s = 0;
     uint remain = 0;
+    DWORD dwBytesInBlock = sinf.dwAllocationGranularity*1<<10;
+
+    uint siz = dwBytesInBlock > qwFileSize ? qwFileSize : dwBytesInBlock / 5 * 2;
+    uint *phead = new uint[siz];//0 0\r\n
+    uint *ptail = phead;
+
+    vector<uint*> vures;
+
+    int residual = -1;
+    vector<HANDLE*> hs;
     while (qwFileSize > 0) {
       // Determine the number of bytes to be mapped in this view
-      DWORD dwBytesInBlock = sinf.dwAllocationGranularity;
-      if (qwFileSize < sinf.dwAllocationGranularity)
+      if (qwFileSize < dwBytesInBlock)
         dwBytesInBlock = (DWORD)qwFileSize;
       PBYTE pbFile = (PBYTE)MapViewOfFile(hFileMapping, FILE_MAP_READ, (DWORD)(qwFileOffset >> 32), // Starting byte
         (DWORD)(qwFileOffset & 0xFFFFFFFF), // in file
         dwBytesInBlock); // # of bytes to map 
+      if (residual>=0){
+        *ptail++ = residual;
+        residual = -1;
+      }
+      FastScan(ptail, pbFile, dwBytesInBlock, remain);
+      //printf("%d %d %d %d\n", *tmp, *(tmp - 1), *(tmp - 2), *(tmp - 3));
+      vector<int> rdata(phead, ptail);
+      size_t sz = rdata.size();
+      if (sz&1){
+         residual = rdata.back();
+         rdata.pop_back();
+         --sz;
+      }
+      vector<int> bkt(rdata);
+#ifdef USINGCOUNTINGSORT
+      {// can be optimized here min max
+        timer _t("counting sort");
+        int ma = INT_MIN, mi=INT_MAX;
+        for (int i = 0; i < sz; ++i){
+          if (ma < bkt[i]){
+            ma = bkt[i];
+          }
+          if (mi > bkt[i]){
+            mi = bkt[i];
+          }
+        }
+        counting_sort(bkt, ma);
+      }
+#else
+      // counting sort here
+      {
+        timer _t; sort(bkt.begin(), bkt.end());
+        bkt.erase(unique(bkt.begin(), bkt.end()), bkt.end());
+      }
+#endif
+      Robot rbt(bkt, rdata);
+      {
+        timer t;
+        rbt.BuildBIT();
+        /*unsigned thrdaddr;
+        hs.push_back((HANDLE)::_beginthreadex(NULL, NULL, submerge, &pir[i], NULL, &thrdaddr));*/
+      }
+      vr.push_back(rbt);
 
-      FastScan(tmp, pbFile, dwBytesInBlock, remain);
-
-
-      //printf("%d\n", tmp - numbers);
-
-      // Unmap the view; we don't want multiple views
-      // in our address space.
+      ptail = phead;
       UnmapViewOfFile(pbFile);
-      // Skip to the next set of bytes in the file.
       qwFileOffset += dwBytesInBlock;
       qwFileSize -= dwBytesInBlock;
     }
     CloseHandle(hFileMapping);// 2.3 seconds debug
-
-    return(tmp-numbers);
-    /*
-    FILE *stream=NULL;
-    errno_t err = freopen_s(&stream, filename, "r", stdin);
-    if (err==0){
-      // read file
-      {
-        timer t(__FUNCSIG__ " Read File");
-        //[bool __thiscall BigTest::GetExtents(const char *) Read File] Time Cost: 224.450, MM 800M
-        int* tmp = numbers = new int[CAPACITY];
-        while (scanf_s("%d %d\n", tmp, tmp + 1) != EOF){
-          ++++tmp;
-        }
-        if (stream) fclose(stream);
-        rcount = tmp - numbers;
-      }
-      __preprocess();
-      return true;
-    }else
-      return false;
-    */
+    return(ptail-phead);
   }
 
-  
+  uint Query(uint target){
+    uint r=0;
+    for (int i = 0; i < vr.size(); i++){
+      r += vr[i].query(target);
+    }
+    return r;
+  }
 
   void QueryFromFile(const char* filename){
     FILE *stream = NULL;
@@ -247,11 +142,12 @@ public:
       ofile of;
 #endif
       while (scanf_s("%d\n", &qint) != EOF){
-        int n = __query(qint);
+        //int n = __query(qint);
+        int n = Query(qint);
 #if NDEBUG
         of.put(n);
 #else
-        printf("%d\n", n);
+        printf("%d\t%d\n", qint, n);
 #endif
       }
     }
@@ -260,27 +156,46 @@ public:
 
   struct ofile{
     FILE* o;
-    ofile() :o(NULL){ fopen_s(&o, "output.txt", "w"); }
+    ofile() :o(NULL){ fopen_s(&o, "output5.txt", "w"); }
     ~ofile(){ fclose(o); }
     void put(int i){ o != NULL && fprintf_s(o, "%d\n", i); }
   };
 
+  vector<Robot> vr;
+
 };
 
-
+void gen(){
+  ofstream f("randompair2.txt", std::ofstream::out | std::ofstream::app);
+  time_t start = time(0);
+  srand((unsigned int)time(NULL));
+  for (int i = 0; i<50 * 1000000; ++i){
+    int t1 = rand() % 212343;
+    int t2 = rand();
+    if (t1>t2){
+      swap(t1, t2);
+    }
+    f << t1 << " " << t2 << endl;
+  }
+  time_t end = time(0);
+}
 
 int main(int argc, char* argv[]){
-
-  /*uint x[6] = {};
+  //gen(); exit(0);
+  /*vector<int> a = {0,0,2,1,3,1,2};
+  counting_sort(a,  6);
+  uint x[6] = {};
   char y[] = "121 221\n321 90\n434334 9890\n";
   FastScan(x, (PBYTE)y, _countof(y),0);*/
 
-  timer t;
+  timer t(__FUNCSIG__);
   BigTest bt;
   if (1){
-    uint u=bt.GetExtents("randompair.txt");
-    bt.__preprocess(u);
+    uint u=bt.GetExtents("randompair2.txt");
+    //uint u = bt.GetExtents("extents.txt");
+    //uint u = bt.GetExtents("test.txt");
     bt.QueryFromFile("numbers.txt");
+    //bt.QueryFromFile("q.txt");
   }
   return 0;
 }

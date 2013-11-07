@@ -48,6 +48,7 @@ Robot* vr[1 << 20] = {};//1M robots
 HANDLE hs[1 << 20] = {};//1M robots
 int robotsz = 0;
 #define SINGLEROBOTNUM 1
+
 typedef struct {
   uint* rdata;
   uint rdatasz;
@@ -56,7 +57,7 @@ typedef struct {
 
 unsigned int __stdcall Worker(void* p){
   threaddata* d = static_cast<threaddata*>(p);
-  timer _tss("AdaptiveSort");
+  //timer _tss("AdaptiveSort");
 
   uint* tmp = new uint[d->rdatasz];
   memcpy_s(tmp, d->rdatasz*sizeof(uint), d->rdata, d->rdatasz*sizeof(uint));
@@ -65,7 +66,7 @@ unsigned int __stdcall Worker(void* p){
   uint*pp= unique(tmp, tmp + bktsz);
 
   uint* bkt = new uint[bktsz];
-  resourcepointers.push_back(bkt);//bucket
+  resourcepointers.push_back(bkt);//bucket.....ERRORRRR
   memcpy_s(bkt, bktsz*sizeof(uint), tmp, bktsz*sizeof(uint));
   delete[]tmp;
   *d->prbt = new Robot(bkt, bktsz, d->rdata, d->rdatasz);
@@ -96,10 +97,6 @@ public:
 
     uint *phead = new uint[ByteNum/5*2];//0 0\r\n
     uint *ptail = phead;
-
-    vector<uint*> vures;
-    
-
     int residual = -1;
     //uint bktsz;
     while (qwFileSize > 0) {
@@ -127,29 +124,18 @@ public:
       memcpy_s(rdata, rdatasz*sizeof(uint), phead, rdatasz*sizeof(uint));
       if (robotsz<SINGLEROBOTNUM){
         //single thread
+        uint bktsz = AdaptiveSort(phead, ptail);
+        uint* bkt = new uint[bktsz];
+        resourcepointers.push_back(bkt);//bucket
+        memcpy_s(bkt, bktsz*sizeof(uint), phead, bktsz*sizeof(uint));
+        Robot* rbt = new Robot(bkt, bktsz, rdata, rdatasz);
+        rbt->BuildBIT();
+        vr[robotsz++] = rbt;
       }else{
-        //multithread
+        //multi-thread
+        threaddata* pdata = new threaddata{ rdata, rdatasz, &vr[robotsz] };
+        hs[robotsz++] = ((HANDLE)::_beginthreadex(NULL, NULL, Worker, pdata, NULL, NULL));
       }
-      #if 0
-{
-        timer _tss("AdaptiveSort");
-
-        bktsz = AdaptiveSort(phead, ptail);
-
-        
-
-
-      }
-      uint* bkt = new uint[bktsz];
-      resourcepointers.push_back(bkt);//bucket
-      memcpy_s(bkt, bktsz*sizeof(uint), phead, bktsz*sizeof(uint));
-      Robot* rbt = new Robot(bkt, bktsz, rdata, rdatasz);
-
-      //unsigned thrdaddr;
-      //hs[robotsz] = ((HANDLE)::_beginthreadex(NULL, NULL, BuildBIT, rbt, NULL, &thrdaddr));
-#endif
-      threaddata* pdata = new threaddata{ rdata, rdatasz, &vr[robotsz] };
-      hs[robotsz++] = ((HANDLE)::_beginthreadex(NULL, NULL, Worker, pdata, NULL, NULL));
 
       ptail = phead;
       UnmapViewOfFile(pbFile);
@@ -157,7 +143,9 @@ public:
       qwFileSize -= dwBytesInBlock;
     }
     CloseHandle(hFileMapping);// 2.3 seconds debug
-    DWORD d = WaitForMultipleObjects(robotsz-1, hs+1, true, INFINITE);
+    if (robotsz>SINGLEROBOTNUM){
+      WaitForMultipleObjects(robotsz - SINGLEROBOTNUM, hs + SINGLEROBOTNUM, true, INFINITE);
+    }
     return(ptail-phead);
   }
 
@@ -170,7 +158,9 @@ public:
   }
 
   void QueryFromFile(const char* filename){
+    timer t(__FUNCSIG__ " QueryFromFile");
     FILE *stream = NULL;
+    ios::sync_with_stdio(false);
     errno_t err = freopen_s(&stream, filename, "r", stdin);
     if (err == 0){
       int qint;

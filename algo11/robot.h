@@ -119,7 +119,7 @@ int AdaptiveSort(uint* head, uint* tail) {
   uint hsize = tail - head + 1;
   
   uint range = ma - mi - 1;
-  cout << "hsize:" << hsize << " span:" << range << endl;
+  //cout << "hsize:" << hsize << " span:" << range << endl;
   if (range > (1 << 27)){
     if (hsize < (1 << 21)){
       timer td("std sort");
@@ -137,18 +137,12 @@ int AdaptiveSort(uint* head, uint* tail) {
       return siz1 + siz2;
       //copy(head, tail + 1, ostream_iterator<int>(cout, " ")); cout << endl;
     }
-    
   }else{
     timer ts("counting sort");
     barray ba(range);
     for (uint i = 0; i < hsize; ++i){
       if (head[i] - mi > 0){
         ba.set(head[i] - mi - 1);
-        if (i < 100){
-          //cout << head[i] << endl;
-          //printBit(ba.p[ba.blocknum-1]);
-          //printBit(ba.p[0]);
-        }
       }
     }
     uint j = 0;

@@ -51,9 +51,9 @@ void mtmerge(int* head, int* tail, int threadnum){
         //pir[i].hevent=&hs[i];
         //todo
         ///@link http://msdn.microsoft.com/en-us/library/kdzttdcb%28v=vs.90%29.aspx
-        hs[i]=(HANDLE)::_beginthreadex(security,stacksize,submerge,
-            &pir[i],createflag,&thrdaddr);
+        hs[i]=(HANDLE)::_beginthreadex(security,stacksize,submerge,&pir[i],createflag,&thrdaddr);
     }
+
 #if 0
     DWORD d=WaitForMultipleObjects(threadnum,hs,true,INFINITE);
     switch(d){

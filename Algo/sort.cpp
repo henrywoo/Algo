@@ -214,35 +214,36 @@ namespace sorting{
 
     int* L = head;// the left of L is less than pivot
     int* R = tail - 1;// the right of R is greater than pivot
-  OUTTER:while (L<R){
-    if (*L>pivot){
-      //waiting for right node to find a node to swap
-      while (L<R){
-        if (*R<pivot){
-          util::swap(*L, *R);
-          //copy(head,tail+1,ostream_iterator<int>(cout," "));cout << endl;
+  OUTTER:
+    while (L<R){
+      if (*L>pivot){
+        //waiting for right node to find a node to swap
+        while (L < R){
+          if (*R < pivot){
+            util::swap(*L, *R);
+            //copy(head,tail+1,ostream_iterator<int>(cout," "));cout << endl;
+            R--;
+            goto INNER;
+          }
           R--;
-          goto INNER;
         }
-        R--;
+        goto OUTTER;// cannot find pair to swap, waiting is ended and R==L right now!
       }
-      goto OUTTER;// cannot find pair to swap, waiting is ended and R==L right now!
+    INNER:
+      L++;
     }
-  INNER:
-    L++;
-  }
-         //copy(head,tail+1,ostream_iterator<int>(cout," "));cout << endl;
-         if (*L>pivot){
-           util::swap(*tail, *L);
-         }
-         else if (pivot == *L){
-         }
-         else{
-           L++;
-           util::swap(*tail, *L);
-         }
-         //copy(head,tail+1,ostream_iterator<int>(cout," "));cout << endl;
-         return L;
+    //copy(head,tail+1,ostream_iterator<int>(cout," "));cout << endl;
+    if (*L > pivot){
+      util::swap(*tail, *L);
+    }
+    else if (pivot == *L){
+    }
+    else{
+      L++;
+      util::swap(*tail, *L);
+    }
+    //copy(head,tail+1,ostream_iterator<int>(cout," "));cout << endl;
+    return L;
   }
 
   int findKthsmallest(int* head, int* tail, int k){//smallest -> k=1

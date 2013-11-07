@@ -5,7 +5,7 @@
 
 ///@return true - full read; false - incomplete read
 ///@todo add function to deal with \n only linux file
-void FastScan(uint*& des,PBYTE src,DWORD slen,uint& remain){
+void FastAdaptiveScan(uint*& des,PBYTE src,DWORD slen,uint& remain){
   PBYTE endpos = src + slen -1;
   while (*src == ' ' || *src == '\n' || *src == '\r'){
     if (*src == ' ' || *src == '\r'){
@@ -14,32 +14,41 @@ void FastScan(uint*& des,PBYTE src,DWORD slen,uint& remain){
     }
     src++;
   }// remove non-digit character
-  int val = remain;
+  register uint val = remain;
+  register bool sawreturn = false;//for linux format
   while (src <= endpos) {
     //'\n' is the conventional ending on Unix machines, '\r' was (I think) used on old Mac operating systems, and Windows uses a pair, '\r' following by '\n'.
     if (*src == ' '){
       *des++ = val;
-      val ^= val;
+      val =0;
       src++;
     }else if (*src == '\r'){ // && *(src + 1) == '\n'
       *des++ = val;
-      val ^= val;
-      ++++src;
-    }else
+      val =0;
+      ++src;
+      sawreturn = true;
+    }else if (*src=='\n'){
+      if (sawreturn){
+        sawreturn = false;
+      }else{
+        *des++ = val;
+        val =0;
+      }
+      ++src;
+    }
+    else
       val = val * 10 + (*src++ - '0');
   }
   remain = val;
 }
+#include <list>
+
+list<uint*> resourcepointers;
+Robot* vr[1<<20] = {};//1M robots
+int robotsz = 0;
 
 class BigTest{
 public:
-  BigTest(){
-  }
-
-  ~BigTest(){
-  }
-
-
   //return # of int
   uint GetExtents(const char* filename){
     timer t(__FUNCSIG__ " Read File");
@@ -55,16 +64,17 @@ public:
 
     __int64 qwFileOffset = 0, qwNumOf0s = 0;
     uint remain = 0;
-    DWORD dwBytesInBlock = sinf.dwAllocationGranularity*1<<10;
+    DWORD dwBytesInBlock = sinf.dwAllocationGranularity*(1<<10);
 
-    uint siz = dwBytesInBlock > qwFileSize ? qwFileSize : dwBytesInBlock / 5 * 2;
-    uint *phead = new uint[siz];//0 0\r\n
+    uint ByteNum = dwBytesInBlock > qwFileSize ? qwFileSize : dwBytesInBlock;
+
+    uint *phead = new uint[ByteNum/5*2];//0 0\r\n
     uint *ptail = phead;
 
     vector<uint*> vures;
 
     int residual = -1;
-    vector<HANDLE*> hs;
+    uint bktsz;
     while (qwFileSize > 0) {
       // Determine the number of bytes to be mapped in this view
       if (qwFileSize < dwBytesInBlock)
@@ -76,45 +86,46 @@ public:
         *ptail++ = residual;
         residual = -1;
       }
-      FastScan(ptail, pbFile, dwBytesInBlock, remain);
+
+      FastAdaptiveScan(ptail, pbFile, dwBytesInBlock, remain);
       //printf("%d %d %d %d\n", *tmp, *(tmp - 1), *(tmp - 2), *(tmp - 3));
-      vector<int> rdata(phead, ptail);
-      size_t sz = rdata.size();
-      if (sz&1){
-         residual = rdata.back();
-         rdata.pop_back();
-         --sz;
+      int rdatasz = ptail - phead;
+      if (rdatasz & 1){
+        residual = *--ptail;
+        --rdatasz;
       }
-      vector<int> bkt(rdata);
-#ifdef USINGCOUNTINGSORT
-      {// can be optimized here min max
-        timer _t("counting sort");
-        int ma = INT_MIN, mi=INT_MAX;
-        for (int i = 0; i < sz; ++i){
-          if (ma < bkt[i]){
-            ma = bkt[i];
-          }
-          if (mi > bkt[i]){
-            mi = bkt[i];
+      uint* rdata = new uint[rdatasz];
+
+      for (int i = 0; i < rdatasz; ++i){
+        if (phead[i] == 133050368){
+          cout << "GG" << endl;
+        }
+      }
+
+      resourcepointers.push_back(rdata);//rdata
+      memcpy_s(rdata, rdatasz*sizeof(uint), phead, rdatasz*sizeof(uint));
+      {
+        timer _tss("counting sort");
+        bktsz = AdaptiveSort(phead, ptail);
+        if (!verify1(phead, phead + bktsz-1))
+          cout << "wrong" << endl;
+        for (int i = 0; i < bktsz;++i){
+          if (phead[i] == 133050368){
+            cout << "GG" << endl;
           }
         }
-        counting_sort(bkt, ma);
       }
-#else
-      // counting sort here
-      {
-        timer _t; sort(bkt.begin(), bkt.end());
-        bkt.erase(unique(bkt.begin(), bkt.end()), bkt.end());
-      }
-#endif
-      Robot rbt(bkt, rdata);
+      uint* bkt = new uint[bktsz];
+      resourcepointers.push_back(bkt);//bucket
+      memcpy_s(bkt, bktsz*sizeof(uint), phead, bktsz*sizeof(uint));
+      Robot* rbt = new Robot(bkt, bktsz, rdata, rdatasz);
       {
         timer t;
-        rbt.BuildBIT();
+        rbt->BuildBIT();
         /*unsigned thrdaddr;
         hs.push_back((HANDLE)::_beginthreadex(NULL, NULL, submerge, &pir[i], NULL, &thrdaddr));*/
       }
-      vr.push_back(rbt);
+      vr[robotsz++] = rbt;
 
       ptail = phead;
       UnmapViewOfFile(pbFile);
@@ -127,8 +138,8 @@ public:
 
   uint Query(uint target){
     uint r=0;
-    for (int i = 0; i < vr.size(); i++){
-      r += vr[i].query(target);
+    for (int i = 0; i < robotsz; i++){
+      r += vr[i]->query(target);
     }
     return r;
   }
@@ -161,41 +172,38 @@ public:
     void put(int i){ o != NULL && fprintf_s(o, "%d\n", i); }
   };
 
-  vector<Robot> vr;
+  
 
 };
 
 void gen(){
-  ofstream f("randompair2.txt", std::ofstream::out | std::ofstream::app);
-  time_t start = time(0);
+  ofstream f("randompair3.txt", std::ofstream::out | std::ofstream::app);
   srand((unsigned int)time(NULL));
-  for (int i = 0; i<50 * 1000000; ++i){
-    int t1 = rand() % 212343;
-    int t2 = rand();
+  for (int i = 0; i<50 * 1000* 1000; ++i){
+    uint t1 = rand() << i;
+    uint t2 = rand() << (i+sizeof(int)-2);
     if (t1>t2){
       swap(t1, t2);
     }
     f << t1 << " " << t2 << endl;
   }
-  time_t end = time(0);
+  exit(0);
 }
 
-int main(int argc, char* argv[]){
-  //gen(); exit(0);
-  /*vector<int> a = {0,0,2,1,3,1,2};
-  counting_sort(a,  6);
-  uint x[6] = {};
-  char y[] = "121 221\n321 90\n434334 9890\n";
-  FastScan(x, (PBYTE)y, _countof(y),0);*/
 
+
+int main(int argc, char* argv[]){
+  //gen();
   timer t(__FUNCSIG__);
   BigTest bt;
   if (1){
-    uint u=bt.GetExtents("randompair2.txt");
+    RAND_MAX;
+    //uint u = bt.GetExtents("extents2.txt");
+    //uint u=bt.GetExtents("test.txt");
     //uint u = bt.GetExtents("extents.txt");
-    //uint u = bt.GetExtents("test.txt");
-    bt.QueryFromFile("numbers.txt");
-    //bt.QueryFromFile("q.txt");
+    uint u = bt.GetExtents("randompair3.txt");
+    //bt.QueryFromFile("numbers.txt");
+    bt.QueryFromFile("q.txt");
   }
   return 0;
 }

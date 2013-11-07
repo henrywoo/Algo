@@ -31,26 +31,48 @@ struct timer{
       << " milliseconds\n" << endl;
   }
 };
+void myswap(uint& a, uint& b){
+  if (a != b){
+    a = a^b;
+    b = a^b;
+    a = a^b;
+  }
+}
+void printBit(uint i){
+  for (uint count = 0; count < 32; count++){
+    uint j = i & 1;
+    printf("%d", j);
+    i >>= 1;
+  }
+  printf("\n");
+}
 
 typedef struct bitarray{
-  bitarray(uint range){
+  explicit bitarray(uint range):p(NULL),
+  blocknum(range / (sizeof(uint)*CHAR_BIT) + 1),
+  bitnum(blocknum*(sizeof(uint)*CHAR_BIT))
+  {
     if (range>0){
-      p = new char[range / CHAR_BIT + 1]();
+      p = new uint[blocknum]();
+      
     }
   }
   ~bitarray(){
     if(p) delete [] p;
   }
-  char* p;
+  uint* p;
+  uint blocknum;
+  uint bitnum;
+  
   bool get(uint i){
-    uint x = i / (CHAR_BIT);
-    uint y = i % (CHAR_BIT);
-    return p[x] & (1 << y);
+    uint x = i / ((sizeof(uint)*CHAR_BIT));
+    uint y = i % ((sizeof(uint)*CHAR_BIT));
+    return (p[x] & (uint)(1 << y))!=0;
   }
   void set(uint i){
-    uint x = i / (CHAR_BIT);
-    uint y = i % (CHAR_BIT);
-    if ((p[x] & (1 << y))==0){
+    uint x = i / ((sizeof(uint)*CHAR_BIT));
+    uint y = i % ((sizeof(uint)*CHAR_BIT));
+    if ((p[x] & (uint)(1 << y)) == 0){
       p[x] |= (1 << y);
     }
   }
@@ -72,6 +94,7 @@ uint AnalysizeData(uint *head, size_t sz,uint& mi, uint& ma){
   return (uint)mean;
 }
 
+#if 0
 bool verify1(uint* head, uint* tail){
   for (uint i = 0; i < tail - head;i++){
     if (head[i] >= head[i + 1]){
@@ -81,6 +104,8 @@ bool verify1(uint* head, uint* tail){
   }
   return true;
 }
+#endif
+
 
 /// radix sort 2.806s
 // return size of the bucket
@@ -95,8 +120,8 @@ int AdaptiveSort(uint* head, uint* tail) {
   
   uint range = ma - mi - 1;
   cout << "hsize:" << hsize << " span:" << range << endl;
-  if (range > (1 << 28)){
-    if (hsize < (1 << 22)){
+  if (range > (1 << 27)){
+    if (hsize < (1 << 21)){
       timer td("std sort");
       //std::sort
       std::sort(head, tail + 1);//0.891
@@ -105,45 +130,10 @@ int AdaptiveSort(uint* head, uint* tail) {
     }else{
       //timer t("partition");
       //mypartition(head, tail, 16);
-      for (int i = 0; i < hsize; ++i){
-        if (head[i] == 133050368){
-          cout << "GG" << endl; break;
-        }
-      }
       uint* p = partition(head, tail + 1, bind2nd(less<uint>(), m));
-      for (int i = 0; i < hsize; ++i){
-        if (head[i] == 133050368){
-          cout << "GG" << endl; break;
-        }
-      }
       int siz1 = AdaptiveSort(head, p-1);
-      if (!verify1(head, head + siz1 - 1)){
-        cout << "wrong" << endl;
-      }
-      for (int i = 0; i < siz1; ++i){
-        if (head[i] == 133050368){
-          cout << "GG" << endl; break;
-        }
-      }
       int siz2 = AdaptiveSort(p, tail);
-      if (!verify1(p, p + siz2 - 1)){
-        cout << "wrong" << endl;
-      }
-      cout << head[siz1 - 1] << "\t" << *p << endl;
-      for (int i = 0; i < siz2; ++i){
-        if (p[i] == 133050368){
-          cout << "GG" << endl; break;
-        }
-      }
       memmove_s(head + siz1, (hsize - siz1)*sizeof(uint), p, siz2*sizeof(uint));
-      if (!verify1(head, head + siz1 + siz2 - 1)){
-        cout << "wrong" << endl;
-      }
-      for (int i = 0; i < siz1+siz2; ++i){
-        if (head[i] == 133050368){
-          cout << "GG" << endl; break;
-        }
-      }
       return siz1 + siz2;
       //copy(head, tail + 1, ostream_iterator<int>(cout, " ")); cout << endl;
     }
@@ -154,20 +144,18 @@ int AdaptiveSort(uint* head, uint* tail) {
     for (uint i = 0; i < hsize; ++i){
       if (head[i] - mi > 0){
         ba.set(head[i] - mi - 1);
+        if (i < 100){
+          //cout << head[i] << endl;
+          //printBit(ba.p[ba.blocknum-1]);
+          //printBit(ba.p[0]);
+        }
       }
     }
     uint j = 0;
     head[j++] = mi;
-    for (uint i = 0; i < range+CHAR_BIT; ++i){
+    for (uint i = 0; i < ba.bitnum; ++i){
       if (ba.get(i)){
-        head[j++] = i + mi + 1;
-      }
-    }
-    if (!verify1(head, head + j-1))
-      cout << "wrong" << endl;
-    for (int i = 0; i < j; ++i){
-      if (head[i] == 133050368){
-        cout << "GG" << endl; break;
+        head[j++] = mi + i+1;
       }
     }
     return j;
@@ -187,7 +175,10 @@ public:
   unordered_map<uint, uint> umi;
 
   Robot(uint* bkt_, uint bktsz_, uint* rdata_, uint rdatasz_) :
-    bkt(bkt_),bktsz(bktsz_), rdata(rdata_),rdatasz(rdatasz_), ptree(NULL){}
+    bkt(bkt_),bktsz(bktsz_), rdata(rdata_),rdatasz(rdatasz_), ptree(NULL)
+  {
+    ptree = new int[bktsz]();
+  }
 
   ~Robot(){
     if (!ptree) delete[] ptree;
@@ -224,8 +215,17 @@ public:
       uint* headbackup = head;
       uint* mid = 0;
       while (head < tail){
+#if 0
+        cout << tail - head << endl;
+        for (int x = 0; x < bktsz-1;x++)
+        {
+          if (bkt[x+1]-bkt[x]!=1){
+            cout << "wrong" << endl;
+          }
+        }
+#endif
         if (tail - head == *tail - *head){
-          num += target - *head + 1;
+          num += target - *head + 1 + (head-headbackup);
           return true;
         }else{
           if (fuzzy && head + 1 == tail && *head<target && *tail>target){
@@ -233,7 +233,13 @@ public:
             return false;
           }
           mid = head + ((tail - head + 1) >> 1);
-          if (target == *mid){
+          if (target == *head){
+            num += head - headbackup + 1;
+            return true;
+          }else if (target == *tail){
+            num += tail - headbackup + 1;
+            return true;
+          }else if (target == *mid){
             num += mid - headbackup + 1;
             return true;
           }else if (target > *mid){
@@ -249,7 +255,6 @@ public:
 
   void BuildBIT(){
     timer t(__FUNCSIG__);
-    ptree = new int[bktsz]();
     //printf("%d\n",bkt[bktsz-1]);
     for (uint i = 0; i < rdatasz - 1; i += 2){
       if (rdata[i] == rdata[i + 1]){
@@ -257,7 +262,7 @@ public:
       }else{
         uint n1=0;
         _GetBktNoInSortedArray(bkt, bkt + bktsz - 1, rdata[i],n1);
-        uint n2=n1;
+        uint n2=n1-1;
         _GetBktNoInSortedArray(bkt + n1 - 1, bkt + bktsz - 1, rdata[i + 1],n2);
         __update(n1, n2);
         //__debug();

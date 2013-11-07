@@ -372,6 +372,13 @@ namespace sorting{
     }
 
     {
+    unsigned int b[] = { 10, 4294967295, 7, 6, 40, 25, 50, 13, 21, 16, 19, 9, 23, 8 };
+    RadixSort<unsigned int*>(b, b + sizeof(b) / sizeof(unsigned int));
+    copy(b, b +_countof(b), ostream_iterator<unsigned int>(cout, " ")); cout << endl;
+  }
+
+
+    {
     int b[] = { 10, 5, 7, 6, 40, 25, 50, 13, 21, 16, 19, 9, 23, 8 };
     selectionsort(b, b + _countof(b) - 1, greater);
     copy(b, b + ARRSIZE(b, int), ostream_iterator<int>(cout, " ")); cout << endl;
@@ -383,12 +390,7 @@ namespace sorting{
       copy(b, b + ARRSIZE(b, int), ostream_iterator<int>(cout, " ")); cout << endl;
     }
 
-    {
-      int b[] = { 10, 5, 7, 6, 40, 25, 50, 13, 21, 16, 19, 9, 23, 8 };
-      RadixSort<int*>(b, b + sizeof(b) / sizeof(int));
-      copy(b, b + ARRSIZE(b, int), ostream_iterator<int>(cout, " ")); cout << endl;
-    }
-
+    
     {
       matrix mx(3, 4);
       mx(2, 3) = 1;

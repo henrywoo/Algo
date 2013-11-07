@@ -71,6 +71,7 @@ size_t getsize1darray(int (&_1darray)[3][2]){
 }
 
 int main(int argc,char* argv[]){
+  sorting::test();
   hmm::test();
   RING::printMatrixHelix(5);
   cout << getsize1darray(_1darray) << endl;

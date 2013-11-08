@@ -1,25 +1,37 @@
 #include <algorithm>
+#include <functional>//for windows 8
 #include <unordered_map>
 #include <windows.h>
 #include <process.h>
-#include <functional>
 
 #define SINGLEROBOTNUM 1
-#define RESMAXNUM (1<<15)
+#define RESMAXNUM (1<<20)
 #define UINT_BIT (sizeof(UINT)*CHAR_BIT)
 #define MINLINESZ _countof("0 0\n")
-#define NUMBEROFGRANULARITY (1<<10)
+#define NUMBEROFGRANULARITY (1<<8)
 #define MULTITHREADTHRESHOLD (600 * 1024 * 1024)
 #define MAXRANGEFORCOUNTINGSORT (1<<27)
 #define STDSORTTHRESHOLD (1<<21)
+#define SMALLFILETHRESHOLD 1
+#define FORCESINGLETHREAD false
+#pragma warning (disable: 4101)
+#define NONNEGATIVE(a) char xxx##a[a>=0?1:-1];
+NONNEGATIVE(SINGLEROBOTNUM);
+NONNEGATIVE(RESMAXNUM);
+NONNEGATIVE(NUMBEROFGRANULARITY);
+NONNEGATIVE(MULTITHREADTHRESHOLD);
+NONNEGATIVE(MAXRANGEFORCOUNTINGSORT);
+NONNEGATIVE(STDSORTTHRESHOLD);
+NONNEGATIVE(SMALLFILETHRESHOLD);
 
 using namespace std;
 
 class Robot;
-Robot* vr[RESMAXNUM] = {};
+Robot* robotpointers[RESMAXNUM] = {};
 HANDLE hs[RESMAXNUM] = {};
 UINT* resourcepointers[RESMAXNUM] = {};
 UINT robotsz = 0;
+UINT threadnum = 0;
 UINT resoursz = 0;
 
 typedef struct {
@@ -31,25 +43,28 @@ typedef struct {
 // Sorting Algorithm
 ///////////////////////////////////////////////////////////////
 ///@brief bit array for counting sort
-typedef struct bitarray{
-  explicit bitarray(UINT range) :p(NULL),
-  blocknum(range / (UINT_BIT)+1),
-  bitnum(blocknum*(UINT_BIT))
-  {
-    if (range > 0){ p = new UINT[blocknum](); }
-  }
-  ~bitarray(){
-    if (p) delete[] p;
-  }
+typedef struct _barray{
   UINT* p;
   UINT blocknum;
   UINT bitnum;
+
+  explicit _barray(UINT range) :p(NULL),
+    blocknum(range / (UINT_BIT)+1),
+    bitnum(blocknum*(UINT_BIT))
+  {
+    if (range > 0){ p = new UINT[blocknum](); }
+  }
+
+  ~_barray(){
+    if (p) delete[] p;
+  }
 
   bool get(UINT i){
     UINT x = i / ((UINT_BIT));
     UINT y = i % ((UINT_BIT));
     return (p[x] & (UINT)(1 << y)) != 0;
   }
+
   void set(UINT i){
     UINT x = i / ((UINT_BIT));
     UINT y = i % ((UINT_BIT));
@@ -57,7 +72,7 @@ typedef struct bitarray{
       p[x] |= (1 << y);
     }
   }
-} barray;
+} BitArray;
 
 ///@brief introspective analysis for counting sort without overflow
 UINT AnalysizeData(UINT *head, size_t sz, UINT& mi, UINT& ma){
@@ -99,7 +114,7 @@ int AdaptiveSort(UINT* head, UINT* tail) {
     }
   }
   else{
-    barray ba(range);
+    BitArray ba(range);
     for (UINT i = 0; i < hsize; ++i){
       if (head[i] - mi > 0){
         ba.set(head[i] - mi - 1);
@@ -246,7 +261,6 @@ public:
       return m1;
     }
   }
-
 };
 
 ///@brief scan and load number from buffer
@@ -314,6 +328,14 @@ unsigned int __stdcall WorkerThreadFunc(void* p){
   return 0;
 }
 
+///@brief if machine memory is less than 1G and the input file is 
+///maximum size, this might be invoked.
+void OutOfMem(){
+  printf("Memory Not Enough!\n");
+  printf("You can increase NUMBEROFGRANULARITY and try again.\n");
+  abort();
+}
+
 ///@brief load extends file and do all preprocessing work
 ///multi-threaded adaptively according to CPU core # and size of input data
 bool GetExtents(const char* filename){
@@ -328,36 +350,41 @@ bool GetExtents(const char* filename){
   DWORD dwFileSizeHigh;
   __int64 qwFileSize = GetFileSize(hFile, &dwFileSizeHigh);
   qwFileSize += (((__int64)dwFileSizeHigh) << 32);
-  CloseHandle(hFile);
   if (qwFileSize == 0){
     printf("[ERROR]Empty input file %s\n", filename);
     return false;
   }
 
-  bool smalldata = qwFileSize < sinf.dwAllocationGranularity;
-
+  set_new_handler(OutOfMem);
+  bool smalldata = qwFileSize < (sinf.dwAllocationGranularity*SMALLFILETHRESHOLD);
   HANDLE hFileMapping = NULL;
   PBYTE fbuffer = NULL;
   FILE* pFile = NULL;
-  hFileMapping = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
   if (!smalldata){
     hFileMapping = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
   }
+  CloseHandle(hFile);
+
   __int64 qwFileOffset = 0, qwNumOf0s = 0;
   UINT remain = 0;
+
   DWORD dwBytesInBlock = sinf.dwAllocationGranularity*NUMBEROFGRANULARITY;
   UINT ByteNum = (UINT)(dwBytesInBlock > qwFileSize ? qwFileSize : dwBytesInBlock);
-  UINT *phead = new UINT[(ByteNum / MINLINESZ) << 1];
+  UINT approximatesize = (ByteNum / MINLINESZ) << 1;
+  UINT *phead = new UINT[approximatesize];
+  UINT *pheadbackup = phead;
   UINT *ptail = phead;
   int residual = -1;
 
   while (qwFileSize > 0){
     if (qwFileSize < dwBytesInBlock)
       dwBytesInBlock = (DWORD)qwFileSize;
+
     if (!smalldata){
+      DWORD dwFileOffsetLow = (DWORD)(qwFileOffset & 0xFFFFFFFF);
       fbuffer = (PBYTE)MapViewOfFile(hFileMapping, FILE_MAP_READ,
         (DWORD)(qwFileOffset >> 32), // Starting byte
-        (DWORD)(qwFileOffset & 0xFFFFFFFF), // in file
+        dwFileOffsetLow, // in file
         dwBytesInBlock); // # of bytes to map 
     }
     else{
@@ -381,7 +408,7 @@ bool GetExtents(const char* filename){
     InterlockedExchangeAdd(&resoursz, 1);
     memcpy_s(rdata, rdatasz*sizeof(UINT), phead, rdatasz*sizeof(UINT));
     if ((sinf.dwNumberOfProcessors < 2) ||
-      ((qwFileSize < MULTITHREADTHRESHOLD) && (robotsz < SINGLEROBOTNUM)))
+      (FORCESINGLETHREAD || (qwFileSize < MULTITHREADTHRESHOLD) && (robotsz < SINGLEROBOTNUM)))
     {//single thread
       UINT bktsz = AdaptiveSort(phead, ptail);
       UINT* bkt = new UINT[bktsz];
@@ -390,14 +417,14 @@ bool GetExtents(const char* filename){
       memcpy_s(bkt, bktsz*sizeof(UINT), phead, bktsz*sizeof(UINT));
       Robot* rbt = new Robot(bkt, bktsz, rdata, rdatasz);
       rbt->BuildBIT();
-      vr[robotsz++] = rbt;
+      robotpointers[robotsz++] = rbt;
     }
     else{ //multi-thread
       threaddata* pdata = new threaddata;
       pdata->rdata = rdata;
       pdata->rdatasz = rdatasz;
-      pdata->prbt = &vr[robotsz];
-      hs[robotsz++] = ((HANDLE)::_beginthreadex(NULL, NULL, WorkerThreadFunc, pdata, NULL, NULL));
+      pdata->prbt = &robotpointers[robotsz++];
+      hs[threadnum++] = ((HANDLE)::_beginthreadex(NULL, NULL, WorkerThreadFunc, pdata, NULL, NULL));
     }
 
     ptail = phead;
@@ -410,10 +437,14 @@ bool GetExtents(const char* filename){
     qwFileOffset += dwBytesInBlock;
     qwFileSize -= dwBytesInBlock;
   }
+  delete[] pheadbackup;
   CloseHandle(hFileMapping);
   if (robotsz > SINGLEROBOTNUM){
-    //printf("%d num of threads\n", robotsz - SINGLEROBOTNUM);
+    printf("num of child threads: %d\n", threadnum);
     WaitForMultipleObjects(robotsz - SINGLEROBOTNUM, hs + SINGLEROBOTNUM, true, INFINITE);
+    for (UINT i = 0; i < threadnum; ++i){
+      if (hs[i])CloseHandle(hs[i]);
+    }
   }
   return true;
 }
@@ -437,20 +468,23 @@ void QueryFromFile(const char* filename, const char* ofname = NULL){
   while (scanf_s("%d\n", &qint) != EOF){
     UINT result = 0;
     for (UINT i = 0; i < robotsz; i++){
-      result += vr[i]->Query(qint);
+      result += robotpointers[i]->Query(qint);
     }
     (ostm != NULL) && fprintf_s(ostm, "%d\n", result);
     printf("%d\n", result);
   }
   if (istm)fclose(istm);
+  if (ostm)fclose(ostm);
 }
 
 ///@brief reclaim resources allocated
 void CleanUp(){
-  for (int i = 0; i < RESMAXNUM; ++i){
-    if (vr[i]){ delete vr[i]; }
-    if (hs[i]){ CloseHandle(hs[i]); }
-    if (resourcepointers[i]){ delete[] resourcepointers[i]; }
+  for (UINT i = 0; i < resoursz; ++i){
+    if (resourcepointers[i])
+      delete[] resourcepointers[i];
+  }
+  for (UINT i = 0; i < robotsz; ++i){
+    if (robotpointers[i])delete robotpointers[i];
   }
 }
 
@@ -458,8 +492,8 @@ void CleanUp(){
 //using namespace chrono;
 int main(int argc, char* argv[]){
   //time_point<system_clock> start = high_resolution_clock::now();
-  if (GetExtents("test.txt")){
-    QueryFromFile("numbers.txt");
+  if (GetExtents("extents.txt")){
+    QueryFromFile("numbers.txt","x");
     CleanUp();
   }
   //printf("%d ms\n",duration_cast<milliseconds>(high_resolution_clock::now() - start).count());

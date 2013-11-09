@@ -161,6 +161,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="asl.cpp" />
+    <ClCompile Include="BIT.cpp" />
     <ClCompile Include="bst.cpp" />
     <ClCompile Include="dlist.cpp" />
     <ClCompile Include="graph.cpp" />

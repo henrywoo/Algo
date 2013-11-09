@@ -1,8 +1,8 @@
 #include <algorithm>
-#include <functional>//for windows 8
 #include <unordered_map>
 #include <windows.h>
 #include <process.h>
+#include <functional>//for windows 8
 
 #define SINGLEROBOTNUM 1
 #define RESMAXNUM (1<<20)
@@ -14,8 +14,9 @@
 #define STDSORTTHRESHOLD (1<<21)
 #define SMALLFILETHRESHOLD 1
 #define FORCESINGLETHREAD false
+
 #pragma warning (disable: 4101)
-#define NONNEGATIVE(a) char xxx##a[a>=0?1:-1];
+#define NONNEGATIVE(a) namespace{char xxx##a[a>0?1:-1];}
 NONNEGATIVE(SINGLEROBOTNUM);
 NONNEGATIVE(RESMAXNUM);
 NONNEGATIVE(NUMBEROFGRANULARITY);
@@ -48,10 +49,8 @@ typedef struct _barray{
   UINT blocknum;
   UINT bitnum;
 
-  explicit _barray(UINT range) :p(NULL),
-    blocknum(range / (UINT_BIT)+1),
-    bitnum(blocknum*(UINT_BIT))
-  {
+  explicit _barray(UINT range) :p(NULL), blocknum(range / (UINT_BIT)+1),
+    bitnum(blocknum*(UINT_BIT)) {
     if (range > 0){ p = new UINT[blocknum](); }
   }
 
@@ -140,7 +139,7 @@ class Robot{
   UINT* bkt;
   UINT bktsz;
 
-  unordered_map<UINT, UINT> umi;
+  unordered_map<UINT, UINT> ZeroLenRange;//For zero range points
 
   UINT __query_BIT(UINT idx){
     if (idx == UINT_MAX){
@@ -170,6 +169,7 @@ class Robot{
     }
   }
 
+  ///@brief Binary search optimized for big data to target's bucket #
   ///@param target - query integer
   ///num [in|out] - bucket number(num == UINT_MAX means "not in any bucket")
   ///fuzzy - the query integer must be a boundary point(false) or in-between(true)
@@ -182,7 +182,6 @@ class Robot{
     else{
       UINT* headbackup = head;
       UINT* mid = 0;
-      //binary search optimized for big data
       while (head < tail){
         if (tail - head == *tail - *head){
           num += target - *head + 1 + (head - headbackup);
@@ -231,7 +230,7 @@ public:
   void BuildBIT(){
     for (UINT i = 0; i < rdatasz - 1; i += 2){
       if (rdata[i] == rdata[i + 1]){
-        ++umi[rdata[i]];
+        ++ZeroLenRange[rdata[i]];
       }
       else{
         UINT n1 = 0;
@@ -252,8 +251,8 @@ public:
       if (idx > 1)
         m2 = __query_BIT(idx - 1);
       int r = m2 > m1 ? m2 : m1;
-      if (umi.find(target) != umi.end()){
-        r += umi[target];
+      if (ZeroLenRange.find(target) != ZeroLenRange.end()){
+        r += ZeroLenRange[target];
       }
       return r;
     }
@@ -263,6 +262,7 @@ public:
   }
 };
 
+///////////////////////////////////////////////////////////////
 ///@brief scan and load number from buffer
 ///'\n' is the conventional ending on Unix machines;
 ///'\r' was (I think) used on old Mac operating systems
@@ -310,7 +310,6 @@ void FastAdaptiveScan(UINT*& des, PBYTE src, DWORD slen, UINT& remain){
   remain = val;
 }
 
-///////////////////////////////////////////////////////////////
 ///@brief Multi-thread Function Body, one thread -> one robot
 unsigned int __stdcall WorkerThreadFunc(void* p){
   threaddata* d = static_cast<threaddata*>(p);
@@ -328,8 +327,8 @@ unsigned int __stdcall WorkerThreadFunc(void* p){
   return 0;
 }
 
-///@brief if machine memory is less than 1G and the input file is 
-///maximum size, this might be invoked.
+///@brief if machine memory is less than 1G and the input file has
+///maximum size(50 million lines), this might be invoked.
 void OutOfMem(){
   printf("Memory Not Enough!\n");
   printf("You can increase NUMBEROFGRANULARITY and try again.\n");
@@ -362,6 +361,11 @@ bool GetExtents(const char* filename){
   FILE* pFile = NULL;
   if (!smalldata){
     hFileMapping = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+    if (hFileMapping == NULL){
+      printf("File Map could not be opened.\n");
+      CloseHandle(hFile);
+      return false;
+    }
   }
   CloseHandle(hFile);
 
@@ -437,10 +441,9 @@ bool GetExtents(const char* filename){
     qwFileOffset += dwBytesInBlock;
     qwFileSize -= dwBytesInBlock;
   }
-  delete[] pheadbackup;
-  CloseHandle(hFileMapping);
+  if (pheadbackup)delete[] pheadbackup;
+  if (hFileMapping)CloseHandle(hFileMapping);
   if (robotsz > SINGLEROBOTNUM){
-    printf("num of child threads: %d\n", threadnum);
     WaitForMultipleObjects(robotsz - SINGLEROBOTNUM, hs + SINGLEROBOTNUM, true, INFINITE);
     for (UINT i = 0; i < threadnum; ++i){
       if (hs[i])CloseHandle(hs[i]);
@@ -450,11 +453,11 @@ bool GetExtents(const char* filename){
 }
 
 ///@brief Query interface
-void QueryFromFile(const char* filename, const char* ofname = NULL){
+void QueryFromFile(const char* queryfilename, const char* ofname = NULL){
   FILE *istm = NULL, *ostm = NULL;
-  errno_t err = freopen_s(&istm, filename, "r", stdin);
+  errno_t err = freopen_s(&istm, queryfilename, "r", stdin);
   if (err != 0){
-    printf("[ERROR]Cannot read file %s\n", filename);
+    printf("[ERROR]Cannot read file %s\n", queryfilename);
     return;
   }
   if (ofname){
@@ -464,9 +467,9 @@ void QueryFromFile(const char* filename, const char* ofname = NULL){
       return;
     }
   }
-  UINT qint = 0;
+  UINT qint = 0, result = 0;
   while (scanf_s("%d\n", &qint) != EOF){
-    UINT result = 0;
+    result = 0;
     for (UINT i = 0; i < robotsz; i++){
       result += robotpointers[i]->Query(qint);
     }
@@ -480,22 +483,17 @@ void QueryFromFile(const char* filename, const char* ofname = NULL){
 ///@brief reclaim resources allocated
 void CleanUp(){
   for (UINT i = 0; i < resoursz; ++i){
-    if (resourcepointers[i])
-      delete[] resourcepointers[i];
+    if (resourcepointers[i])delete[] resourcepointers[i];
   }
   for (UINT i = 0; i < robotsz; ++i){
     if (robotpointers[i])delete robotpointers[i];
   }
 }
 
-//#include <chrono>
-//using namespace chrono;
 int main(int argc, char* argv[]){
-  //time_point<system_clock> start = high_resolution_clock::now();
-  if (GetExtents("extents.txt")){
-    QueryFromFile("numbers.txt","x");
+  if (GetExtents("extentss.txt")){
+    QueryFromFile("numbers.txt");
     CleanUp();
   }
-  //printf("%d ms\n",duration_cast<milliseconds>(high_resolution_clock::now() - start).count());
   return 0;
 }

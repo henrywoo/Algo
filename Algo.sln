@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "algo11", "algo11\algo11.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{4037B123-8C62-443D-8F5D-E56B0EC811A2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "extents", "extents\extents.vcxproj", "{3685CC5C-7931-4EAA-8F36-B09C77658E76}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,6 +145,18 @@ Global
 		{4037B123-8C62-443D-8F5D-E56B0EC811A2}.Release|Win32.ActiveCfg = Release|Win32
 		{4037B123-8C62-443D-8F5D-E56B0EC811A2}.Release|Win32.Build.0 = Release|Win32
 		{4037B123-8C62-443D-8F5D-E56B0EC811A2}.Release|x64.ActiveCfg = Release|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Debug|Win32.Build.0 = Debug|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Debug|x64.ActiveCfg = Debug|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Release|Any CPU.ActiveCfg = Release|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Release|Win32.ActiveCfg = Release|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Release|Win32.Build.0 = Release|Win32
+		{3685CC5C-7931-4EAA-8F36-B09C77658E76}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

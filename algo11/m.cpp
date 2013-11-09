@@ -122,7 +122,7 @@ public:
 
       resourcepointers.push_back(rdata);//rdata
       memcpy_s(rdata, rdatasz*sizeof(uint), phead, rdatasz*sizeof(uint));
-      if (robotsz<SINGLEROBOTNUM){
+      if (sinf.dwNumberOfProcessors<2 || robotsz<SINGLEROBOTNUM){
         //single thread
         uint bktsz = AdaptiveSort(phead, ptail);
         uint* bkt = new uint[bktsz];
@@ -190,20 +190,6 @@ public:
   
 
 };
-
-void gen(){
-  ofstream f("randompair3.txt", std::ofstream::out | std::ofstream::app);
-  srand((unsigned int)time(NULL));
-  for (int i = 0; i<50 * 1000* 1000; ++i){
-    uint t1 = rand() << i;
-    uint t2 = rand() << (i+sizeof(int)-2);
-    if (t1>t2){
-      swap(t1, t2);
-    }
-    f << t1 << " " << t2 << endl;
-  }
-  exit(0);
-}
 
 
 int main(int argc, char* argv[]){

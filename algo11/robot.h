@@ -13,7 +13,7 @@
 #include <bitset>
 #include <functional>
 #include <chrono>
-
+using namespace chrono;
 using namespace std;
 typedef unsigned int uint;
 #define MAXLINE 51*1000*1000

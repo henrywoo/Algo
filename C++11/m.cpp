@@ -75,11 +75,11 @@ namespace{
   };
   void e1(){
     try{
-      throw B();
-    }catch (A ex){
-      ex.f();
-    }catch (B& ex){
-      ex.f();
+      throw new B;
+    }catch (A* ex){
+      ex->f();
+    }catch (B* ex){
+      ex->f();
     }
   }
 }
@@ -102,7 +102,8 @@ namespace{
 }
 //------------------------------------------
 namespace ns1{
-  class A{
+  struct A{
+    A(){ n = 1; cout << __FUNCSIG__ << endl; }
     int n;
     void virtual f() throw(int, double, long){}
   };
@@ -117,6 +118,8 @@ namespace ns1{
   };
 
   void e3(){
+    A* p1 = new A;
+    A* p2 = new A();
     B b;
     b.f();
   }
@@ -140,13 +143,18 @@ namespace ns3{
   }
 }
 //////////////////////////////////////////////////////////////////////////
-
+extern void xx();
+void xx(){ cout << 1 << endl; }
 int main(int argc, char* argv[]){
-  ns2::t();
   ns1::e3();
+  xx();
+  e1();
+  list<int> l; l.sort(greater<int>());
+  ns2::t();
+  
   cout << hex << 18 << setbase(10) << 18<< endl;
   cout << hex << showbase << 18 << endl;
-  e1();
+  
   e2();
   cout << an << endl;
   mpc::test();

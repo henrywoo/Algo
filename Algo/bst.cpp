@@ -330,6 +330,53 @@ vector<int> bst::walk(WALKORDER wo, bool norecursive) const
   return v;
 }
 
+///@comment
+btnode* sub_func(btnode* root, bool asLeftSubTree){
+  if (root == NULL) return NULL;
+  auto f = [asLeftSubTree](btnode* tmp)->btnode*{
+    if (asLeftSubTree){
+      while (tmp && tmp->r){ tmp = tmp->r; }
+    }else{
+      while (tmp && tmp->l){ tmp = tmp->l; }
+    }
+    return tmp;
+  };
+
+  btnode* r = f(root);
+  btnode* n1 = sub_func(root->l, true);
+  if (n1){ root->l = n1; n1->r = root; }
+  btnode* n2 = sub_func(root->r, false);
+  if (n2){ root->r = n2; n2->l = root; }
+  return r;
+}
+
+void bst::converttodlist(){
+  btnode* root = proot;
+  if (root == NULL)return;
+  btnode* n1 = sub_func(root->l, true);
+  if (n1){ root->l = n1; n1->r = root; }
+  btnode* n2 = sub_func(root->r, false);
+  if (n2){ root->r = n2; n2->l = root; }
+}
+
+void bst::verifydlist(){
+  btnode* tmp = proot;
+  stack<btnode*> stk;
+  while (tmp){
+    stk.push(tmp);
+    tmp = tmp->l;
+  }
+  while (!stk.empty()){
+    printf("%d\n", stk.top()->d);
+    stk.pop();
+  }
+  tmp = proot;
+  while (tmp){
+    tmp = tmp->r;
+    if(tmp)cout << tmp->d << endl;
+  }
+}
+
 ///@todo could be optimized
 bool bst::isBST(const bst& t){
   vector<int> v = t.walk(INORDER);
@@ -588,10 +635,17 @@ bool bst::test(){
   }
   bst t;
   t.insert(a, sizeof(a) / sizeof(int));
+
+
   //t.save2XML();
   bst t2 = t.read4XML("_binarytree.xml");
   //bool b=bst::compareBST(t,t2);
   cout << "Are the two trees the same? " << boolalpha << bst::compareBST(t, t2) << endl;
+
+  bst t3;
+  t3.insert(a, _countof(a));
+  t3.converttodlist();
+  t3.verifydlist();
 
   /*
   10 5 7 6 9 8 40 25 13 21 16 19 23 50t

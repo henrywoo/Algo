@@ -11,11 +11,7 @@
 using namespace std;
 ///@note negative number is one more than positive number!!
 //-128(-2**7) and 127(2**7-1); 2**31-1 and -2**31
-struct AAA{
-	int a;
-	AAA(){cout<<endl;}
-	//AAA(AAA&&){ cout << endl; }
-};
+
 
 template<typename T> struct is_int{
     static const bool ISINT = false; 
@@ -47,15 +43,8 @@ static void func1(){
   cout << "func1" << endl;
 }
 
-//using namespace boost;
-template<typename...>
-class newtemp{};
-
-#include <initializer_list>
-#include <tuple>
-#include <future>
-
-void funct() throw(int){
+void funct()// throw(int)
+{
   int i = 0;
   throw 0.1;// as long as we can catch it with (...) for example.
 }
@@ -69,8 +58,41 @@ size_t getsize1darray(int (&_1darray)[3][2]){
   int tmp3 = sizeof _1darray[0][0];
   return tmp1 / tmp2;
 }
+int fx(){ cout << 1 << endl; return 1; }
+int fy(){ cout << 2 << endl; return 2; }
 
+extern int simonwoo;
+
+vector<int> testmove(int a){
+  if (a < 1){ throw invalid_argument(__FUNCSIG__); }
+  vector<int> v(1000);
+  return v;//move ctor
+}
+template<int N>
+class Foo {
+};
+
+Foo<(3 >> 1)> foo;
+#include <chrono>
 int main(int argc,char* argv[]){
+  bst::test();
+  using namespace std::chrono;
+  auto now = high_resolution_clock::now();
+  auto nanos = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+  std::cout << nanos << '\n';
+  std::cout << (double)std::chrono::high_resolution_clock::period::num
+    / std::chrono::high_resolution_clock::period::den << endl;
+  while (1){
+    Sleep(1000);
+    cout << "check" << endl;
+  }
+  vector<int> vi0=testmove(-1);
+  smartptr::test();
+  int simonwoo = 1;
+  //shared_ptr<int> p=make_shared<int>(new int());
+  vector<string> sv = { "Foo", "Bar", "Baz","Bee"};
+  cout << count_if(sv.begin(), sv.end(), bind2nd(greater<string>(), "Baz")) << endl;
+  int fz = fy() + fx();
   sorting::test();
   hmm::test();
   RING::printMatrixHelix(5);
@@ -156,7 +178,7 @@ int main(int argc,char* argv[]){
   simon();
   static int ccc = 0;
   ASL::test();
-  bst::test();
+  
   slist::test();
   TestVolatile();
   boggle::test();

@@ -38,3 +38,34 @@
 #include "printring.h"
 #include "hmm.h"
 #include <forward_list>
+#include <initializer_list>
+#include <tuple>
+#include <future>
+#include "smartptr.h"
+#include <thread>
+
+int ref1 = 10;
+class AAA{
+public:
+  int& ref = ref1;
+  int a = 60;
+  int b = 8;
+  static const int i = 10;
+  //AAA():a(ref1+1){ cout << a << endl; }
+  AAA() :a(ref + 1){ cout << a << endl; }
+
+  AAA& operator=(const AAA&);
+  const AAA& operator+(const AAA&) const;
+  const AAA& operator+(int);// const;
+  //AAA(AAA&&){ cout << endl; }
+};
+
+/*void whichoneillegal(){
+  AAA x, y, z;
+  x = x = z + y;
+  (z = x + x) = y + z;
+  //x = y + z + 5;
+  x = y + 5;
+  x = x + 5 + z;
+  cout << AAA::i << x.a << endl;
+}*/

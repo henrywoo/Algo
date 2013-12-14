@@ -194,6 +194,17 @@ public:
 
 int main(int argc, char* argv[]){
   //gen();
+  {
+    timer t;
+    int *p = new int[1024*1024*100]();
+    //210 137 300 nanoseconds new with 0
+    //189 121 400 nanoseconds
+    delete[] p;
+    //int* p = (int*)calloc(1024 * 1024 * 100,sizeof(int));
+    //297 194 900 nanoseconds - calloc
+    //188 123 600 nanoseconds - malloc
+    //free(p);
+  }
   SYSTEM_INFO sysinfo;
   GetSystemInfo(&sysinfo);
   cout << sysinfo.dwNumberOfProcessors << endl;

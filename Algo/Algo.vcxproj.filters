@@ -74,6 +74,9 @@
     <ClCompile Include="BIT.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="rts.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bst.h">
@@ -219,6 +222,12 @@
     </ClInclude>
     <ClInclude Include="rangecounting.h">
       <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="smartptr.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="objpool.h">
+      <Filter>h\pool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

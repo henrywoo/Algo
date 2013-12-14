@@ -12,13 +12,16 @@
 #include <windows.h>
 #include <bitset>
 #include <functional>
-#include <chrono>
-using namespace chrono;
+
+
 using namespace std;
+using namespace chrono;
+
 typedef unsigned int uint;
 #define MAXLINE 51*1000*1000
 #define COUNTINGSORTMAXNUM 1<<30
 
+#include <chrono>
 using namespace chrono;
 struct timer{
   time_point<system_clock> start;
@@ -26,9 +29,10 @@ struct timer{
   timer(const char* s = "") :start(chrono::high_resolution_clock::now()), str(s){}
   ~timer(){
     //printf("[%s] Time Cost: %.3lf\n", str, uint(clock() - start) / CLOCKS_PER_SEC);
-    cout << str << ": " << duration_cast<milliseconds>(high_resolution_clock::now() - start).count()
-    //cout << str << ": " << duration_cast<nanoseconds>(high_resolution_clock::now() - start).count()
-      << " milliseconds\n" << endl;
+    //cout << str << ": " << duration_cast<milliseconds>(high_resolution_clock::now() - start).count()
+    cout << str << ": " << duration_cast<nanoseconds>(high_resolution_clock::now() - start).count()
+    //  << " milliseconds\n" << endl;
+    << " nanoseconds\n" << endl;
   }
 };
 void myswap(uint& a, uint& b){
@@ -175,7 +179,7 @@ public:
   }
 
   ~Robot(){
-    if (!ptree) delete[] ptree;
+    if (ptree) delete[] ptree;
   }
 
 

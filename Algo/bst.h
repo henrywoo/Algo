@@ -47,6 +47,9 @@ public:
 
   vector<int> walk(WALKORDER wo, bool norecursive = true) const;
 
+  void converttodlist();
+  void verifydlist();
+
   ///set all the keys to NULL Do it iteratively in O(N) time with O(1)
   ///space complexity where N is the number of nodes in the tree.
   void nullify();

@@ -3,6 +3,16 @@
 #include <windows.h>
 #include <process.h>
 #include <functional>//for windows 8
+#include <memory>//unique_ptr
+//#include <vld.h>
+
+#if 0
+#if __cplusplus < 201103L
+#error Please use C++11 compatable compiler!
+#endif
+#endif
+using BIT8 = char;
+using fib = struct{ int a; };
 
 #define SINGLEROBOTNUM 1
 #define RESMAXNUM (1<<20)
@@ -27,6 +37,22 @@ NONNEGATIVE(SMALLFILETHRESHOLD);
 
 using namespace std;
 
+#include <chrono>
+#include <iostream>
+using namespace chrono;
+struct timer{
+  time_point<system_clock> start;
+  const char* str;
+  timer(const char* s = "") :start(chrono::high_resolution_clock::now()), str(s){}
+  ~timer(){
+    //printf("[%s] Time Cost: %.3lf\n", str, uint(clock() - start) / CLOCKS_PER_SEC);
+    //cout << str << ": " << duration_cast<milliseconds>(high_resolution_clock::now() - start).count()
+    cout << str << ": " << duration_cast<nanoseconds>(high_resolution_clock::now() - start).count()
+      // << " milliseconds\n" << endl;
+      << " nanoseconds\n" << endl;
+  }
+};
+
 class Robot;
 Robot* robotpointers[RESMAXNUM] = {};
 HANDLE hs[RESMAXNUM] = {};
@@ -45,23 +71,24 @@ typedef struct {
 ///////////////////////////////////////////////////////////////
 ///@brief bit array for counting sort
 typedef struct _barray{
-  UINT* p;
   UINT blocknum;
   UINT bitnum;
+  unique_ptr<UINT[]> p;
 
-  explicit _barray(UINT range) :p(NULL), blocknum(range / (UINT_BIT)+1),
-    bitnum(blocknum*(UINT_BIT)) {
-    if (range > 0){ p = new UINT[blocknum](); }
+  explicit _barray(UINT range) :blocknum(range / (UINT_BIT)+1),
+    bitnum(blocknum*(UINT_BIT)), p()
+  {
+    p = unique_ptr<UINT[]>(range ? new UINT[blocknum]() : NULL);
   }
 
   ~_barray(){
-    if (p) delete[] p;
+    //if (p) delete[] p;
   }
 
   bool get(UINT i){
     UINT x = i / ((UINT_BIT));
     UINT y = i % ((UINT_BIT));
-    return (p[x] & (UINT)(1 << y)) != 0;
+    return ((UINT)(p[x]) & (UINT)(1 << y)) != 0;
   }
 
   void set(UINT i){
@@ -75,6 +102,7 @@ typedef struct _barray{
 
 ///@brief introspective analysis for counting sort without overflow
 UINT AnalysizeData(UINT *head, size_t sz, UINT& mi, UINT& ma){
+  //timer t(__FUNCSIG__);
   UINT *end = head + sz;
   UINT *tmp = head;
   int i = 0;
@@ -133,11 +161,12 @@ int AdaptiveSort(UINT* head, UINT* tail) {
 ///////////////////////////////////////////////////////////////
 ///@brief Robot class implemented as a BIT(binary indexed tree)
 class Robot{
-  int* ptree;
+  //int* ptree;
   UINT* rdata;
   UINT rdatasz;
   UINT* bkt;
   UINT bktsz;
+  unique_ptr<int[]> ptree;
 
   unordered_map<UINT, UINT> ZeroLenRange;//For zero range points
 
@@ -219,12 +248,14 @@ class Robot{
 
 public:
   explicit Robot(UINT* bkt_, UINT bktsz_, UINT* rdata_, UINT rdatasz_) :
-    bkt(bkt_), bktsz(bktsz_), rdata(rdata_), rdatasz(rdatasz_), ptree(NULL){
-    ptree = new int[bktsz]();
+    bkt(bkt_), bktsz(bktsz_), rdata(rdata_), rdatasz(rdatasz_), ptree(new int[bktsz]()){
+    //ptree = { new int[bktsz]() };
+    //ptree = new int[bktsz]();
   }
 
   ~Robot(){
-    if (!ptree) delete[] ptree;
+    /*if (!ptree)
+      delete[] ptree;//TYPO*/
   }
 
   void BuildBIT(){
@@ -313,15 +344,16 @@ void FastAdaptiveScan(UINT*& des, PBYTE src, DWORD slen, UINT& remain){
 ///@brief Multi-thread Function Body, one thread -> one robot
 unsigned int __stdcall WorkerThreadFunc(void* p){
   threaddata* d = static_cast<threaddata*>(p);
-  UINT* tmp = new UINT[d->rdatasz];
-  memcpy_s(tmp, d->rdatasz*sizeof(UINT), d->rdata, d->rdatasz*sizeof(UINT));
-  UINT bktsz = AdaptiveSort(tmp, tmp + d->rdatasz - 1);
-  UINT*pp = unique(tmp, tmp + bktsz);
+  unique_ptr<UINT[]> tmp = unique_ptr<UINT[]>(new UINT[d->rdatasz]);
+  //UINT* tmp = new UINT[d->rdatasz];
+  memcpy_s(tmp.get(), d->rdatasz*sizeof(UINT), d->rdata, d->rdatasz*sizeof(UINT));
+  UINT bktsz = AdaptiveSort(tmp.get(), tmp.get() + d->rdatasz - 1);
+  //UINT*pp = unique(tmp, tmp + bktsz);
   UINT* bkt = new UINT[bktsz];
   resourcepointers[resoursz] = bkt;
   InterlockedExchangeAdd(&resoursz, 1);
-  memcpy_s(bkt, bktsz*sizeof(UINT), tmp, bktsz*sizeof(UINT));
-  delete[] tmp;
+  memcpy_s(bkt, bktsz*sizeof(UINT), tmp.get(), bktsz*sizeof(UINT));
+  //delete[] tmp;
   *d->prbt = new Robot(bkt, bktsz, d->rdata, d->rdatasz);
   (*d->prbt)->BuildBIT();
   return 0;
@@ -414,7 +446,7 @@ bool GetExtents(const char* filename){
     if ((sinf.dwNumberOfProcessors < 2) ||
       (FORCESINGLETHREAD || (qwFileSize < MULTITHREADTHRESHOLD) && (robotsz < SINGLEROBOTNUM)))
     {//single thread
-      UINT bktsz = AdaptiveSort(phead, ptail);
+      UINT bktsz = AdaptiveSort(phead, ptail-1);///////////
       UINT* bkt = new UINT[bktsz];
       resourcepointers[resoursz] = bkt;//bucket
       InterlockedExchangeAdd(&resoursz, 1);
@@ -474,7 +506,7 @@ void QueryFromFile(const char* queryfilename, const char* ofname = NULL){
       result += robotpointers[i]->Query(qint);
     }
     (ostm != NULL) && fprintf_s(ostm, "%d\n", result);
-    printf("%d\n", result);
+    //printf("%d\n", result);
   }
   if (istm)fclose(istm);
   if (ostm)fclose(ostm);
@@ -490,9 +522,63 @@ void CleanUp(){
   }
 }
 
+#include <vector>
+#include <map>
+#include <string>
+auto t(vector<int>&& a)->void{
+  a.push_back(4);
+  cout << a.size() << endl;
+}
+
+class A{
+  vector<int> v;
+public:
+  A(){}
+  A(A& a){
+    v = a.get();
+  }
+  /*A(A&& a){
+    swap(v, a.get());
+  }*/
+  vector<int>& get() { return v; }
+  //const vector<int>& get()const { return v; }
+  auto set(vector<int>&& lhs)->void{ v = lhs; }
+  auto set(vector<int>& lhs)->void{ v = lhs; }
+};
+
+A f(){
+  A v; v.set({1});
+  return v;
+}
+
 int main(int argc, char* argv[]){
-  if (GetExtents("extentss.txt")){
-    QueryFromFile("numbers.txt");
+  {
+    A x; x.set({ 1, 23, 4 });
+    x.get();
+    A y = move(x);
+    A z = f();
+    unique_ptr<int>  up1(new int(3));
+    unique_ptr<int> up2 = move(up1);
+  }
+  
+
+  map<string, int> m;
+  make_shared<int>(1);
+  for (string s; cin >> s;)
+    ++m[s];
+  for (const pair<string, int>& s : m){
+    cout << s.first << "->" << s.second << endl;
+  }
+  vector<int> vi = {1,2,3};
+  vector<int>& v2 = static_cast<vector<int>&>(vi);
+  t(std::move(vi));
+  cout << vi.size() << endl;
+  int x = 1, y = 2;
+  (x!=y) && (x ^= y ^= x ^= y);
+  timer t;
+  if (GetExtents("randompair4.txt")){
+  //if (GetExtents("extents.txt")){
+    //QueryFromFile("numbers.txt");
     CleanUp();
   }
   return 0;

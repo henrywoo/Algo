@@ -22,7 +22,7 @@ namespace mpc{
   template <int N,class T>
   class LastNBuf{//本质上是一个fixed length ListQueue
   public:
-    enum bszie class { BUFSIZE = N };
+    enum class bszie { BUFSIZE = N };
     node<T>* sentinel;//benefit is: both push and pop are O(1)
     mutex mu;
     int cur_size;//current size of list

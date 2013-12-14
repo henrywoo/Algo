@@ -96,7 +96,7 @@
       <HeapReserveSize>
       </HeapReserveSize>
       <AdditionalLibraryDirectories>c:\python33\libs;C:\boost\lib64-msvc-11.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <TargetMachine>MachineX64</TargetMachine>
+      <TargetMachine>NotSet</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -168,6 +168,7 @@
     <ClCompile Include="heap.cpp" />
     <ClCompile Include="m.cpp" />
     <ClCompile Include="mt.cpp" />
+    <ClCompile Include="rts.cpp" />
     <ClCompile Include="sort.cpp" />
     <ClCompile Include="ss.cpp" />
     <ClCompile Include="tick.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="mt.h" />
     <ClInclude Include="mymap.h" />
     <ClInclude Include="numbercrunching.h" />
+    <ClInclude Include="objpool.h" />
     <ClInclude Include="permutation.h" />
     <ClInclude Include="printring.h" />
     <ClInclude Include="queue.h" />
@@ -211,6 +213,7 @@
     <ClInclude Include="rpn.h" />
     <ClInclude Include="searching.h" />
     <ClInclude Include="SkipListTmpl.h" />
+    <ClInclude Include="smartptr.h" />
     <ClInclude Include="sort.h" />
     <ClInclude Include="sorting.h" />
     <ClInclude Include="ss.h" />

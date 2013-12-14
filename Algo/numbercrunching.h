@@ -79,6 +79,10 @@ namespace statistics{
         return 1-r;
     }
 
+    class FibonacciSeries{
+
+    };
+
     ///three color(r,y,b), draw three times with equal probability for the three colors
     ///given one of the three draws is red, what is the probability of exact one is yellow?
     ///original probability space: 3*3*3=27

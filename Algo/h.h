@@ -43,6 +43,7 @@
 #include <future>
 #include "smartptr.h"
 #include <thread>
+#include "rpn.h"
 
 int ref1 = 10;
 class AAA{

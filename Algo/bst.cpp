@@ -347,6 +347,7 @@ btnode* sub_func(btnode* root, bool asLeftSubTree){
   if (n1){ root->l = n1; n1->r = root; }
   btnode* n2 = sub_func(root->r, false);
   if (n2){ root->r = n2; n2->l = root; }
+  throw exception("121");
   return r;
 }
 

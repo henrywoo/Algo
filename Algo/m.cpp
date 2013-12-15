@@ -75,6 +75,8 @@ class Foo {
 Foo<(3 >> 1)> foo;
 #include <chrono>
 int main(int argc,char* argv[]){
+  RPN::Solution::test();
+  cout << atoi("-4") << endl;
   bst::test();
   using namespace std::chrono;
   auto now = high_resolution_clock::now();

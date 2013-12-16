@@ -75,6 +75,7 @@ class Foo {
 Foo<(3 >> 1)> foo;
 #include <chrono>
 int main(int argc,char* argv[]){
+  _NUMOFPOINTINLINEIN2DPLANE::test();
   RPN::Solution::test();
   cout << atoi("-4") << endl;
   bst::test();

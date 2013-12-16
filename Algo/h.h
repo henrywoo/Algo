@@ -44,6 +44,7 @@
 #include "smartptr.h"
 #include <thread>
 #include "rpn.h"
+#include "numOfPointInLineIn2DPlane.h"
 
 int ref1 = 10;
 class AAA{

@@ -202,6 +202,7 @@
     <ClInclude Include="mt.h" />
     <ClInclude Include="mymap.h" />
     <ClInclude Include="numbercrunching.h" />
+    <ClInclude Include="numOfPointInLineIn2DPlane.h" />
     <ClInclude Include="objpool.h" />
     <ClInclude Include="permutation.h" />
     <ClInclude Include="printring.h" />

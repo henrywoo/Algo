@@ -229,5 +229,8 @@
     <ClInclude Include="objpool.h">
       <Filter>h\pool</Filter>
     </ClInclude>
+    <ClInclude Include="numOfPointInLineIn2DPlane.h">
+      <Filter>h\algo</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
